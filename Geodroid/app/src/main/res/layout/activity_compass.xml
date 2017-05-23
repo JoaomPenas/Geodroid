@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.ps.geodroidapp.Activities.Compass">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#292626"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/compass_tv_session"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/compass_tc_direction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="24dp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/compass_tc_degrees"
+            android:layout_weight="1.78">
+
+
+            <ImageView
+                android:id="@+id/ic_arrow"
+                android:layout_width="match_parent"
+                android:layout_height="275dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="11dp"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/compass_des" />
+            <TextView
+                android:id="@+id/compass_tc_degrees"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/ic_arrow"
+                android:layout_alignTop="@id/ic_arrow"
+                android:layout_alignRight="@id/ic_arrow"
+                android:layout_alignBottom="@id/ic_arrow"
+                android:layout_margin="1dp"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="24dp"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/compass_pitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="24dp"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/Coordenadas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/compass_aquire_button"
+            android:layout_width="185dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/Coordenadas"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="Adquire" />
+
+    </LinearLayout>
+
+</RelativeLayout>

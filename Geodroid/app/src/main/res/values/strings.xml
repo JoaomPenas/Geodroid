@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">GeoDroid</string>
+    <string name="mainActivityStart_createSession">Create Session</string>
+    <string name="mainActivityStart_existingSession">Existing Session</string>
+    <string name="listViewSessionName">Sessions</string>
+    <string name="createSession_name">Name</string>
+    <string name="sessionMenu_newRegistration">New Regist</string>
+    <string name="sessionMenu_data">Data</string>
+    <string name="sessionMenu_statistics">Statistics</string>
+    <string name="sessionMenu_map">Map</string>
+    <string name="sessionMenu_send">Send to Server</string>
+    <string name="createSession_button_create">Create</string>
+    <string name="title_activity_data_map">Map</string>
+    <string name="data_table_head_id">Id</string>
+    <string name="data_table_head_dir">Dir</string>
+    <string name="data_table_head_inc">Inc</string>
+    <string name="data_table_head_pers">Pers</string>
+    <string name="data_table_head_aper">Aper</string>
+    <string name="data_table_head_roug">Roug</string>
+    <string name="data_table_head_infil">Infil</string>
+    <string name="data_table_head_weat">Weat</string>
+
+</resources>

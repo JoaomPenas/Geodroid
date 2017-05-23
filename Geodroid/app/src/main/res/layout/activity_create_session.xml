@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ps.geodroidapp.com.example.humbertosilva.geodroidapp.Activities.CreateSession">
+
+    <TextView
+        android:id="@+id/create_session_textView_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/createSession_name"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <EditText
+        android:id="@+id/create_session_editText_createSession_name"
+        android:layout_width="219dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/create_session_textView_title"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <Button
+        android:id="@+id/createsession_button_create"
+        android:layout_width="114dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="240dp"
+        android:text="@string/createSession_button_create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteX="122dp" />
+</android.support.constraint.ConstraintLayout>

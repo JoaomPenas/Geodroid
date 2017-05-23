@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ps.geodroidapp.Activities.ExtraData">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:orientation="vertical"
+        tools:context=".MainActivity"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
+
+        <TextView
+            android:id="@+id/extra_data_session"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/LocalizacaoDaDescont"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/AtitudeDaDesco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MainActivity" >
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/darker_gray"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="Classification" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow_persistence"
+                android:tag="persistence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Persistence"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_persist_1class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="&lt; 1m"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_persist_2class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="1-3m"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_persist_3class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="3-10m"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_persist_4class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="10-20m"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_persist_5class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text=">20m"
+                    android:textSize="10sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow_aperture"
+                android:tag="aperture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Aperture"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_aperture_1class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="0"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_aperture_2class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="&lt; 0,1mm"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_aperture_3class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="0,1-1,0mm"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_aperture_4class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="1-5mm"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_aperture_5class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text=">5mm"
+                    android:textSize="10sp" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow_roughness"
+                android:tag="roughness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Roughness"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_rougness_1class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Very rough"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_rougness_2class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Rough"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_rougness_3class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Slyghty \nrough"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_rougness_4class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Smooth"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_rougness_5class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Slickensided"
+                    android:textSize="10sp" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow_infiling"
+                android:tag="infiling"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Infiling"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_infilling_1class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="None"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_infilling_2class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Hard Filling \nless than 5mm"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_infilling_3class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Hard Filling \n>5mm"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_infilling_4class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Soft Filling \nless than5mm"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_infilling_5class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Soft Filling \n>5mm"
+                    android:textSize="10sp" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/tableRow_weathering"
+                android:tag="weathering"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Weathering"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_weathering_1class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Unweathered"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_weathering_2class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Slighty\nweathered"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_weathering_3class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Moderate\nweathered"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_weathering_4class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Highly\nweathered"
+                    android:textSize="10sp" />
+
+                <CheckedTextView
+                    android:id="@+id/Desc_class_tv_weathering_5class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:text="Decomposed"
+                    android:textSize="10sp" />
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/extra_data_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:text="Save"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
