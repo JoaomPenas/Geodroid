@@ -6,6 +6,7 @@ import com.example.ps.geodroidapp.Domain.DtoDiscontinuity;
 import com.example.ps.geodroidapp.R;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class SessionMenu extends AppCompatActivity {
     private Button statisticsButton;
     private Button mapButton;
     private ImageButton uploadButton;
+    private ImageButton shareButton;
     private Intent compassIntent;
     private Intent dataTableIntent;
     private Intent dataMapIntent;
@@ -52,6 +54,7 @@ public class SessionMenu extends AppCompatActivity {
         statisticsButton    = (Button)findViewById(R.id.session_menu_button_statistics);
         mapButton           = (Button)findViewById(R.id.session_menu_button_map);
         uploadButton        = (ImageButton)findViewById(R.id.imageButton_upload);
+        shareButton         = (ImageButton)findViewById(R.id.imageButton_share);
 
         dataTableIntent = new Intent(this, DataTable.class);
         compassIntent       = new Intent(SessionMenu.this,Compass.class);
@@ -96,6 +99,19 @@ public class SessionMenu extends AppCompatActivity {
             }
         });
 
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                Uri uri = Uri.parse("drawable/compass_des.png");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL,new String[]{"23984@alunos.isel.ipl.pt"});
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                emailIntent.putExtra(Intent.EXTRA_STREAM,uri);
+                emailIntent.setType("plain/text");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Text");
+                startActivity(emailIntent);
+            }
+        });
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
