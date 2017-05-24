@@ -101,7 +101,7 @@ public class SessionMenu extends AppCompatActivity {
             public void onClick(View v) {
                 BussulaApi service = BussulaApi.Factory.getInstance();
                 final View buttonUpload = v;
-                final ArrayList <Discontinuity>list =db.areUloads(session);// db.getAllDiscontinuities(session);
+                final ArrayList <Discontinuity>list =db.areUploads(session);// db.getAllDiscontinuities(session);
 
                 DtoDiscontinuity dtoDiscontinuity = new DtoDiscontinuity(list);
 
@@ -130,9 +130,9 @@ public class SessionMenu extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(db.areUloads(session).size()!=0){
+        if(db.areUploads(session).size()!=0){
             uploadButton.setVisibility(View.VISIBLE);
-
-        }
+        }else
+            uploadButton.setVisibility(View.INVISIBLE);
     }
 }

@@ -404,7 +404,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Discontinuity> areUloads(String sessionId) {
+    public ArrayList<Discontinuity> areUploads(String sessionId) {
         ArrayList<Discontinuity> list = new ArrayList<>();
         for (Discontinuity dicont: getAllDiscontinuities(sessionId)) {
             if(dicont.getSent() == 0)
@@ -422,6 +422,23 @@ public class SqlDataBase extends SQLiteOpenHelper {
                 values.put(SENT,1);
                 db.update(DISCONTINUITY_TABLE_NAME,values,DISCONTINUITY_ID+" = ?",new String[]{""+disc.getId()});
             }
+            return true;
+        } catch (Exception e) {
+        } finally {
+            db.close();
+        }
+        return false;
+    }
+
+    /**
+     * Apaga a Discontinuidade do dispositivo
+     * @param discontinuityId
+     */
+    public boolean deleteDiscontinuity(int discontinuityId) {
+        SQLiteDatabase db = null;
+        try {
+            db = this.getWritableDatabase();
+            db.delete(DISCONTINUITY_TABLE_NAME,DISCONTINUITY_ID+"= ?",new String[]{""+discontinuityId});
             return true;
         } catch (Exception e) {
         } finally {
