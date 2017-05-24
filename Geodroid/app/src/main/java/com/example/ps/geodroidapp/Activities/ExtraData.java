@@ -225,23 +225,33 @@ public class ExtraData extends AppCompatActivity {
      * Caso seja para editar os dados inicia a tabela já preenchida com os dados atuais
      */
     private void initTable(int persistence, int aperture, int roughness, int infilling, int weathering) {
-        CheckedTextView cktvPers = (CheckedTextView) tbrPercistence.getChildAt(persistence);
-        cktvPers.setChecked(true);
-        cktvPers.setTextColor(Color.GRAY);
-        CheckedTextView cktvAper = (CheckedTextView) tbrAperture.getChildAt(aperture);
-        cktvAper.setChecked(true);
-        cktvAper.setTextColor(Color.GRAY);
-        CheckedTextView cktvRoug = (CheckedTextView) tbrRoughness.getChildAt(roughness);
-        cktvRoug.setChecked(true);
-        cktvRoug.setTextColor(Color.GRAY);
-        CheckedTextView cktvInfil = (CheckedTextView) tbrInfiling.getChildAt(infilling);
-        cktvInfil.setChecked(true);
-        cktvInfil.setTextColor(Color.GRAY);
-        CheckedTextView cktvWeat = (CheckedTextView) tbrWeathering.getChildAt(weathering);
-        cktvWeat.setChecked(true);
-        cktvWeat.setTextColor(Color.GRAY);
+        if(persistence != 0) {
+            autoSelectTable(persistence,tbrPercistence);
+        }
+        if(aperture != 0) {
+            autoSelectTable(aperture,tbrAperture);
+        }
+        if(roughness != 0) {
+            autoSelectTable(roughness,tbrRoughness);
+        }
+        if(infilling != 0) {
+            autoSelectTable(infilling,tbrInfiling);
+        }
+        if(weathering != 0) {
+            autoSelectTable(weathering,tbrWeathering);
+        }
     }
 
+    /**
+     * Seleciona na posição com o valor de value da tableRow
+     * @param value
+     * @param tableRow
+     */
+    private void autoSelectTable(int value,TableRow tableRow){
+        CheckedTextView cktv = (CheckedTextView) tableRow.getChildAt(value);
+        cktv.setChecked(true);
+        cktv.setTextColor(Color.GRAY);
+    }
     /**
      * Desseleciona uma CheckedTextView previamente selecionada
      * @param tbr Table Row em questão

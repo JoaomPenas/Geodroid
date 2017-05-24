@@ -18,28 +18,24 @@
             android:id="@+id/extra_data_session"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="14dp"
             android:textAlignment="center" />
 
         <TextView
             android:id="@+id/LocalizacaoDaDescont"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center" />
-
-        <TextView
-            android:id="@+id/AtitudeDaDesco"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:textSize="14dp"
             android:textAlignment="center" />
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".MainActivity" >
+            tools:context=".MainActivity">
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
 
                 <TextView
@@ -49,17 +45,18 @@
                     android:layout_weight="1"
                     android:background="@android:color/darker_gray"
                     android:gravity="center"
-                    android:padding="6dp"
-                    android:text="Classification" />
+                    android:padding="10dp"
+                    android:text="Classification"
+                    android:textSize="14dp" />
 
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow_persistence"
-                android:tag="persistence"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:tag="persistence">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -68,7 +65,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Persistence"
-                    android:textSize="10sp" />
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_persist_1class"
@@ -77,9 +74,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="&lt; 1m"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_persist_2class"
@@ -88,9 +85,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="1-3m"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_persist_3class"
@@ -99,9 +96,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="3-10m"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_persist_4class"
@@ -110,9 +107,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="10-20m"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_persist_5class"
@@ -121,17 +118,17 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text=">20m"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow_aperture"
-                android:tag="aperture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:tag="aperture">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -140,7 +137,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Aperture"
-                    android:textSize="10sp" />
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_aperture_1class"
@@ -149,9 +146,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="0"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_aperture_2class"
@@ -160,9 +157,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="&lt; 0,1mm"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_aperture_3class"
@@ -171,9 +168,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="0,1-1,0mm"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_aperture_4class"
@@ -182,9 +179,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="1-5mm"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_aperture_5class"
@@ -193,16 +190,17 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text=">5mm"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
             </TableRow>
+
             <TableRow
                 android:id="@+id/tableRow_roughness"
-                android:tag="roughness"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:tag="roughness">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -211,7 +209,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Roughness"
-                    android:textSize="10sp" />
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_rougness_1class"
@@ -220,9 +218,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Very rough"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_rougness_2class"
@@ -231,9 +229,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Rough"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_rougness_3class"
@@ -242,9 +240,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Slyghty \nrough"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_rougness_4class"
@@ -253,9 +251,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Smooth"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_rougness_5class"
@@ -264,16 +262,17 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Slickensided"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
             </TableRow>
+
             <TableRow
                 android:id="@+id/tableRow_infiling"
-                android:tag="infiling"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:tag="infiling">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -282,7 +281,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Infiling"
-                    android:textSize="10sp" />
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_infilling_1class"
@@ -291,9 +290,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="None"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_infilling_2class"
@@ -302,9 +301,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Hard Filling \nless than 5mm"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_infilling_3class"
@@ -313,9 +312,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Hard Filling \n>5mm"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_infilling_4class"
@@ -324,9 +323,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Soft Filling \nless than5mm"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_infilling_5class"
@@ -335,16 +334,17 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Soft Filling \n>5mm"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
             </TableRow>
+
             <TableRow
                 android:id="@+id/tableRow_weathering"
-                android:tag="weathering"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:tag="weathering">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -353,7 +353,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Weathering"
-                    android:textSize="10sp" />
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_weathering_1class"
@@ -362,9 +362,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Unweathered"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_weathering_2class"
@@ -373,9 +373,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Slighty\nweathered"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_weathering_3class"
@@ -384,9 +384,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Moderate\nweathered"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_weathering_4class"
@@ -395,9 +395,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Highly\nweathered"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
 
                 <CheckedTextView
                     android:id="@+id/Desc_class_tv_weathering_5class"
@@ -406,11 +406,18 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textAlignment="center"
                     android:text="Decomposed"
-                    android:textSize="10sp" />
+                    android:textAlignment="center"
+                    android:textSize="14dp" />
             </TableRow>
         </TableLayout>
+
+        <TextView
+            android:id="@+id/AtitudeDaDesco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/extra_data_save_button"

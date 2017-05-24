@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -93,9 +97,57 @@ public class DataTable extends AppCompatActivity {
         ((TextView)row2.findViewById(R.id.tv_roug)).setText(""+discontinuity.getRoughness());
         ((TextView)row2.findViewById(R.id.tv_infil)).setText(""+discontinuity.getInfilling());
         ((TextView)row2.findViewById(R.id.tv_weath)).setText(""+discontinuity.getWeathreing());
-        tbr.setOnClickListener(listener);
+        registerForContextMenu(tbr);
+        //tbr.setOnClickListener(listener);
     }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_datatable, menu);
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.menu_editrow:
+                //editNote(info.id);
+                //editT(item.);
+                editT(info.position);
+                return true;
+            case R.id.menu_deleteRow:
+                //deleteNote(info.id);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+    private void editT(int pos){
+        View v = tl.getChildAt(pos);
+        if(v instanceof TableRow){
+            TableRow tbr = (TableRow) v;
+            if (tbr.getChildCount()>7) {
+                tbr.setBackgroundColor(Color.GRAY);
+                updateTblrow = tbr;
+                int id = Integer.parseInt(((TextView)tbr.getChildAt(0)).getText().toString());
+                int pers = Integer.parseInt(((TextView)tbr.getChildAt(3)).getText().toString());
+                int aper = Integer.parseInt(((TextView)tbr.getChildAt(4)).getText().toString());
+                int roug = Integer.parseInt(((TextView)tbr.getChildAt(5)).getText().toString());
+                int infil = Integer.parseInt(((TextView)tbr.getChildAt(6)).getText().toString());
+                int weat = Integer.parseInt(((TextView)tbr.getChildAt(7)).getText().toString());
+                extraData.putExtra("Session",session);
+                extraData.putExtra("id",id);
+                extraData.putExtra("pers",pers);
+                extraData.putExtra("aper",aper);
+                extraData.putExtra("roug",roug);
+                extraData.putExtra("infil",infil);
+                extraData.putExtra("weat",weat);
 
+                startActivity(extraData);
+                finish();
+            }
+        }
+    }
     /*
     @Override
     protected void onResume() {

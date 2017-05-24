@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="@string/data_table_head_id"/>
     <TextView
         android:id="@+id/tv_direction"
@@ -17,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="@string/data_table_head_dir"/>
 
     <TextView
@@ -25,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="@string/data_table_head_inc"/>
     <TextView
         android:id="@+id/tv_persist"
@@ -32,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="@string/data_table_head_pers"/>
     <TextView
         android:id="@+id/tv_aper"
@@ -39,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="@string/data_table_head_aper"/>
     <TextView
         android:id="@+id/tv_roug"
@@ -46,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="@string/data_table_head_roug"/>
     <TextView
         android:id="@+id/tv_infil"
@@ -53,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="@string/data_table_head_infil"/>
     <TextView
         android:id="@+id/tv_weath"
@@ -60,5 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="@string/data_table_head_weat"/>
 </TableRow>
