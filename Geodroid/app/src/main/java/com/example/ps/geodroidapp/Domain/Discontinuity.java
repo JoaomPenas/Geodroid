@@ -143,4 +143,23 @@ public class Discontinuity {
     public void setIdSession(String idSession) {
         this.idSession = idSession;
     }
+
+    @Override
+    public String toString() {
+
+        return  ""+id +
+                "," + idSession +
+                "," + idUser +
+                "," + direction +
+                "," + dip +
+                "," + latitude +
+                "," + longitude +
+                "," + persistence +
+                "," + aperture +
+                "," + roughness +
+                "," + infilling +
+                "," + weathering +
+                "," + sent +
+                "\n";
+    }
 }

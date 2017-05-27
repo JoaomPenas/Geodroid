@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -12,6 +15,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".Activities.Intro">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +28,9 @@
         <activity android:name=".Activities.DataTable" />
         <activity android:name=".Activities.ExtraData" />
         <activity android:name=".Activities.ListSession" />
-        <activity android:name=".Activities.SessionMenu" />
+        <activity android:name=".Activities.SessionMenu">
+
+        </activity>
         <activity android:name=".Activities.CreateSession" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

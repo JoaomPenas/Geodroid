@@ -3,11 +3,17 @@ import com.example.ps.geodroidapp.BussulaApi;
 import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.Domain.Discontinuity;
 import com.example.ps.geodroidapp.Domain.DtoDiscontinuity;
+import com.example.ps.geodroidapp.Domain.Session;
 import com.example.ps.geodroidapp.R;
+import com.github.mikephil.charting.utils.FileUtils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +22,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -98,18 +114,42 @@ public class SessionMenu extends AppCompatActivity {
                 startActivity(dataMapIntent);
             }
         });
-
+        final Activity act = this;
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveOnFile(SqlDataBase.getInstance(getApplicationContext()).getAllDiscontinuities(session));
+                String fileName = "Session"+".csv";
+                //File f = new File(SessionMenu.this.getFilesDir().getAbsolutePath(), fileName);
+                File f = new File(SessionMenu.this.getExternalCacheDir(), fileName);
+                //f.setReadable(true,false);
+                Intent emailIntent = ShareCompat.IntentBuilder
+                        .from(SessionMenu.this)
+                        .setType("text/plain")
+                        .setStream(Uri.fromFile(f))
+                        .setText("teste")
+                        .getIntent();
+
+                /*String fileName = "Session"+".csv";
+                saveOnFile(SqlDataBase.getInstance(getApplicationContext()).getAllDiscontinuities(session));
+                String filePath = SessionMenu.this.getFilesDir().getAbsolutePath();//returns current directory.
+               // String filePath = .this.getFilesDir().getAbsolutePath();//returns current directory.
+               // File file = new File(SessionMenu.this.getCacheDir(), fileName);
+                File file = new File(filePath, fileName);
+                file.setReadable(true,false);
+                String na = file.toString();
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                Uri uri = Uri.parse("drawable/compass_des.png");
                 emailIntent.putExtra(Intent.EXTRA_EMAIL,new String[]{"23984@alunos.isel.ipl.pt"});
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                emailIntent.putExtra(Intent.EXTRA_STREAM,uri);
+                emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                emailIntent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(file));
                 emailIntent.setType("plain/text");
-                emailIntent.putExtra(Intent.EXTRA_TEXT, "Text");
-                startActivity(emailIntent);
+                //emailIntent.putExtra(Intent.EXTRA_TEXT, "Text");
+                */
+                if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                     startActivity(emailIntent);
+                }
+
             }
         });
         uploadButton.setOnClickListener(new View.OnClickListener() {
@@ -150,5 +190,36 @@ public class SessionMenu extends AppCompatActivity {
             uploadButton.setVisibility(View.VISIBLE);
         }else
             uploadButton.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * guarda o ficheiro .csv no dispositivo
+     * @param discontinuitys
+     * @return
+     */
+    public boolean saveOnFile(ArrayList<Discontinuity> discontinuitys){
+        String filename = "Session"+".csv";
+        String saveContent = "Discontinuity,id,idSession,idUser,direction,dip,latitude,longitude,persistence,aperture,roughness,infilling,weathering\n";
+        //FileOutputStream outputStream;
+        //File file = new File(this.getCacheDir(), filename);
+        File file = new File(this.getExternalCacheDir(), filename);
+        for (Discontinuity disc: discontinuitys) {
+            saveContent+= disc.toString();
+        }
+        try {
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(saveContent);
+            bw.close();
+            /*outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(saveContent.getBytes());
+            outputStream.close();*/
+            Toast.makeText(this,"Shared",Toast.LENGTH_LONG).show();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,"Not Shared",Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 }

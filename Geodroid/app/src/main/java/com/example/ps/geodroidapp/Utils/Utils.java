@@ -5,10 +5,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.example.ps.geodroidapp.Domain.Discontinuity;
+
+import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.util.Base64.DEFAULT;
 import static android.util.Base64.NO_WRAP;
 import static android.util.Base64.encodeToString;
@@ -51,4 +54,6 @@ public class Utils {
         String attemptPass = encodeToString(md.digest(attempt.getBytes()),NO_WRAP);
         return  original.equals(attemptPass);
     }
+
+
 }
