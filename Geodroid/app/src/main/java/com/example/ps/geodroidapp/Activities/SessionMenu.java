@@ -4,10 +4,13 @@ import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.Domain.Discontinuity;
 import com.example.ps.geodroidapp.Domain.DtoDiscontinuity;
 import com.example.ps.geodroidapp.Domain.Session;
+import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.R;
+import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
 import com.github.mikephil.charting.utils.FileUtils;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -41,7 +44,7 @@ import retrofit2.Response;
 
 public class SessionMenu extends AppCompatActivity {
 
-    private String usermail="";
+    private String usermail="",token = "";
     private String session ="";
     private TextView sessionName;
     private Button newRegistButton;
@@ -82,6 +85,7 @@ public class SessionMenu extends AppCompatActivity {
         if(extras!=null){
             session = extras.getString("SessionName");
             usermail=extras.getString("usermail");
+            token = extras.getString("token");
             sessionName.setText("Session: "+ session);
 
         }
@@ -157,32 +161,58 @@ public class SessionMenu extends AppCompatActivity {
             public void onClick(View v) {
                 BussulaApi service = BussulaApi.Factory.getInstance();
                 final View buttonUpload = v;
-                final ArrayList <Discontinuity>list =db.areUploads(session);// db.getAllDiscontinuities(session);
-
+                final ArrayList <Discontinuity>list = db.areUploads(session);// db.getAllDiscontinuities(session);
                 DtoDiscontinuity dtoDiscontinuity = new DtoDiscontinuity(list);
+                //requestApiToken(db.getUser(usermail));
+                postDiscont(service,dtoDiscontinuity,list,buttonUpload);
 
-                Call <ResponseBody> postDisc = service.postDiscontinuities(dtoDiscontinuity);
-
-                postDisc.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Toast.makeText(SessionMenu.this,response.message()+", dados enviados para o Servidor!", Toast.LENGTH_LONG).show();
-                        db.putSent(list);
-                        buttonUpload.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(SessionMenu.this,t.getMessage()+", dados NAO enviados para o Servidor!", Toast.LENGTH_LONG).show();
-                        Log.d("JJJJJ",""+t);
-                    }
-                });
 
             }
         });
 
     }
+    public void requestApiToken(User user){
+        BussulaApi servicee = BussulaApi.Factory.getInstance();
+        Call<AuthenticateResponse> requestCatalog = servicee.postAuthenticate(user);
+        requestCatalog.enqueue(new Callback<AuthenticateResponse>() {
+            @Override
+            public void onResponse(Call<AuthenticateResponse> call, Response<AuthenticateResponse> response) {
+                AuthenticateResponse authenticateResponse = response.body();
+                if(authenticateResponse.isSuccess()){
+                    token = authenticateResponse.getToken();
+                }
+                else{
+                    Toast.makeText(SessionMenu.this,"Sorry try again...", Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<AuthenticateResponse> call, Throwable t) {
+                Log.d("JJ",t.getMessage());
+                Toast.makeText(SessionMenu.this,"Cannot update users from Database...(requestApiToken)", Toast.LENGTH_LONG).show();
+            }
+        });
+        //return reqTokenRes;
+    }
+    private void postDiscont(BussulaApi service, DtoDiscontinuity dtoDiscontinuity,final ArrayList <Discontinuity>list,final View buttonUpload){
+        Call <AuthenticateResponse> postDisc = service.postDiscontinuities(token,dtoDiscontinuity);
+        postDisc.enqueue(new Callback<AuthenticateResponse>() {
+            @Override
+            public void onResponse(Call<AuthenticateResponse> call, Response<AuthenticateResponse> response) {
+                AuthenticateResponse authenticateResponse = response.body();
+                if(authenticateResponse.isSuccess()) {
+                    Toast.makeText(SessionMenu.this, response.message() + ", dados enviados para o Servidor!", Toast.LENGTH_LONG).show();
+                    db.putSent(list);
+                    buttonUpload.setVisibility(View.INVISIBLE);
+                }
 
+            }
+            @Override
+            public void onFailure(Call<AuthenticateResponse> call, Throwable t) {
+                Toast.makeText(SessionMenu.this,t.getMessage()+", dados NAO enviados para o Servidor!", Toast.LENGTH_LONG).show();
+                Log.d("JJJJJ",""+t);
+            }
+        });
+    }
     @Override
     protected void onResume() {
         super.onResume();

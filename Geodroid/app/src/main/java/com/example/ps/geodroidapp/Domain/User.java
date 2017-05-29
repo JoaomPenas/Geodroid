@@ -6,6 +6,12 @@ public class User {
     private String pass;
     private long salt;
 
+    public User(){}
+    public User(String email, String pass) {
+        this.email = email;
+        this.pass = pass;
+    }
+
     public void setEmail(String name) {
         this.email = name;
     }

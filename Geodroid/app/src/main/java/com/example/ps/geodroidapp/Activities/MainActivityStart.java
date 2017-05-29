@@ -13,7 +13,7 @@ import com.example.ps.geodroidapp.R;
 
 public class MainActivityStart extends AppCompatActivity {
 
-    private String usermail ="";
+    private String usermail ="",token="";
 
     Button existSessionbutton, createSessionbutton;
     Intent listSession, createSession;
@@ -29,6 +29,7 @@ public class MainActivityStart extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
             usermail = extras.getString("usermail");
+            token = extras.getString("token");
             Toast.makeText(MainActivityStart.this,"Wellcome "+ usermail,Toast.LENGTH_LONG).show();
         }
 
@@ -44,6 +45,7 @@ public class MainActivityStart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 listSession.putExtra("usermail", usermail);
+                createSession.putExtra("token", token);
                 startActivity(listSession);
                 //MainActivityStart.this.startActionMode(mActionModeCallback);
                 //registerForContextMenu(v);
@@ -54,6 +56,7 @@ public class MainActivityStart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createSession.putExtra("usermail", usermail);
+                createSession.putExtra("token", token);
                 startActivity(createSession);
             }
         });

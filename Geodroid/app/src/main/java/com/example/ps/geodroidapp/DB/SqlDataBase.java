@@ -446,4 +446,15 @@ public class SqlDataBase extends SQLiteOpenHelper {
         }
         return false;
     }
+
+    public User getUser(String usermail) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from user where "+USER_ID_EMAIL+" =\"" + usermail+"\"", null);
+        cursor.moveToFirst();
+        if (cursor.isFirst()) {
+            return new User((cursor.getString(cursor.getColumnIndex(USER_ID_EMAIL))),(cursor.getString(cursor.getColumnIndex(USER_PASS))));
+        }
+        else
+            return null;
+    }
 }

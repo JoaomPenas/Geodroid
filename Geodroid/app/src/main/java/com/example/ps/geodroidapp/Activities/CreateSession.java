@@ -14,7 +14,7 @@ public class CreateSession extends AppCompatActivity {
 
     Button b;
     EditText et;
-    String usermail;
+    String usermail, token="";
     String session;
     Intent sessionMenuIntent;
     SqlDataBase dataBase;
@@ -34,6 +34,7 @@ public class CreateSession extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
             usermail = extras.getString("usermail");
+            token = extras.getString("token");
             Toast.makeText(CreateSession.this,"Create sesseion "+ usermail,Toast.LENGTH_LONG).show();
         }
 
@@ -43,6 +44,7 @@ public class CreateSession extends AppCompatActivity {
                 session=et.getText().toString();
                 sessionMenuIntent.putExtra("SessionName", session);
                 sessionMenuIntent.putExtra("usermail",usermail);
+                sessionMenuIntent.putExtra("token",token);
                 dataBase.insertSession(session);
                 startActivity(sessionMenuIntent);
                 finish();

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ListSession extends AppCompatActivity {
 
-    String usermail;
+    String usermail,token="";
     private TextView userTv;
     private ListView list;
     private ArrayAdapter<String> adapter;
@@ -41,6 +41,7 @@ public class ListSession extends AppCompatActivity {
         Bundle extras = aux.getExtras();
         if(extras!=null) {
             usermail = extras.getString("usermail");
+            token = extras.getString("token");
             userTv.setText(usermail);
         }
 
@@ -63,6 +64,7 @@ public class ListSession extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),""+position,Toast.LENGTH_SHORT).show();
                 sessionAct.putExtra("SessionName",((TextView)view.findViewById(R.id.textView_item)).getText().toString());
                 sessionAct.putExtra(("usermail"), usermail);
+                sessionAct.putExtra(("token"), token);
                 startActivity(sessionAct);
             }
         });
