@@ -1,0 +1,64 @@
+<section>
+    <div class="container-fluid">
+      <div class="row">
+    
+   
+        <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
+          <h4 class="float-right">
+            <a href="\logout">Logout</a>
+          </h4>
+          <h1>Administration area</h1>
+          <h2>Delete Users<h2>
+          <h3 align="center"><b style="color:red">Warning!</b> This will delete all discontinuities of the user!</h3>
+          <h3 align="center">Available users </h3>
+
+          <div id="loginModal" class="modal">
+                  <div class="modal-dialog">
+
+                      <div class="text-center">
+                              <div id="insucess" name="insucess" style="display:none;" class="alert alert-danger"><b>Error!</b> Please try again...</div>
+                              <div id="sucess" name="sucess" style="display:none;" class="alert alert-success" align="center"><b>Deleted!</b></div>
+                      </div>
+                      
+                  </div>
+          </div>
+ 
+          <div class="table-responsive">
+            <table class="table table-striped">    
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Num. of Sessions</th>
+                  <th>Num. of Discontinuities</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {{#each users}}
+                 
+                  <tr>
+                    <td>{{user}}</td>
+                    <td>{{sessoes}}</td>
+                    <td>{{discont}}</td>
+                    <td>
+                  <!--      <form action ="/admin/delete/user/{{user}}" method="POST" enctype ="application/x-www-form-urlencoded">    -->
+                    <!-- Trigger the modal with a button -->
+                    <button class="btn btn-danger" onclick ='deleteUser("{{user}}")' data-toggle="modal" data-target="#loginModal">Delete</button>
+                      
+                    </td>
+                  </tr>
+                 
+                {{/each}}
+              </tbody>
+            </table>
+            
+          </div>
+           
+        </main>
+      </div>
+    </div>
+
+</section>
+
+<script src="../../javascripts/deleteUser.js"></script>
