@@ -1,0 +1,94 @@
+<body>
+
+<!--   API    -->
+      <div class="container">
+         <h1>API</h1>
+          <p>
+            We provide fast and clean API that's easy to manipulate that use JSON types, were you can access all information since you are logged in.
+            The available endpoints are documented below.
+          </p>
+         
+          <p>
+            <b style="color:red">Atention!</b> This Api is protected! You have to be an authorized user! If you are not, please contact the administrator of the system. If you are an authenticate user you have to take your JsonWebToken before use this api on the route POST for (...)/api/authenticate.
+          </p>
+             
+            <h2>Endpoints</h2>
+      </div>   
+      <div class="container">
+          <h3>Authentication</h3>
+          <div class="container">
+                <h4> POST for (...)/api/authenticate</h4>
+                <p>Retrieve JsonWebToken to use api. Save the token in your aplication and send it together with york request's. The token expires in 24H.</p>
+                  <ul>
+                      <li>URL: <b>/api/authenticate</b></li>
+                      <li>Example: <b>POST</b> for (...)/api/authenticate sending us your credentials. Example: 
+                      <b>Content-Type: application/x-www-form-urlencoded</b> with the follow information: <b>email=yourEmailHere&pass=yourPasswordHere</b> or
+                      <b>Content-Type: {"Content-Type":"application/json"}</b> with the follow information: <b>{"email": "yourEmailHere",	"pass": "yourPasswordHere"}</b>
+                      If you have sucess, you will receive an similar json response:
+                        {
+                          "success": true,
+                          "message": "Enjoy your token!",
+                          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InhwdG9AeHB0by5wdCIsImlhdCI6MTQ5NTgwNzMzOCwiZXhwIjoxNDk1ODkzNzM4fQ.m_1o-C8Qikhj9pDmTsnT2auT0BJtxNhpgKnCExGuOkU"
+                        }
+                        <p>After you get your token, you should save it and use with each request. You can do your requests in two way: </p>
+                        <p>	- Passing the token using an x-access-token header type</p>
+                        <p>	- Passing the token as a URL parameter. E.G. for an GET: localhost:3010/api/discontinuities?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InhwdG9AeHB0by5wdCIsImlhdCI6MTQ5NTgwNzMzOCwiZXhwIjoxNDk1ODkzNzM4fQ.m_1o-C8Qikhj9pDmTsnT2auT0BJtxNhpgKnCExGuOkU</p>
+
+                      </li>  
+                  </ul>
+          </div>
+
+          <h3>Users</h3>
+          <div class="container">
+          <h4> GET for (...)/api/users</h4>
+          <p>Retrieve information for all users in our database.</p>
+            <ul>
+                <li>URL: <b>/api/users</b></li>
+                <li>Example: <a href="/api/users">(...)/api/users</a></li>  
+            </ul>
+         <h4> POST for (...)/api/users</h4>
+          <p>Post's a new user in database. Note that is only possible for administrator users</p>
+          <ul>
+                <li>URL: <b>(...)/api/users</b></li>
+                <li>Example: POST for url: (...)/api/users</li>  
+          </ul>
+          </div>
+          <h3>Sessions</h3>
+          <div class="container">
+          <h4> GET for (...)/api/sessions</h4>
+          <p>Retrieve information for all sessions in our database.</p>
+            <ul>
+                <li>URL: <b>/api/sessions</b></li>
+                <li>Example: <a href="/api/sessions">(...)/api/sessions</a></li>  
+            </ul>
+          </div>
+          <h3>Discontinuities</h3>
+        <div class="container">
+          <h4>GET for (...)api/discontinuities</h4>
+          <p>Retrieve the follow information for all discontinuities: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering. </p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities</b></li>
+                <li>Example: <a href="/api/discontinuities">GET for url: (...)/api/discontinuities</a></li>  
+          </ul>
+
+          <h4>POST for (...)api/discontinuities</h4>
+          <p>Inserts in database an array of discontinuities in the follow format: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering.</p>
+          <p>Note that the (discontinuity id, user id, session id) must be unique. If this information is repeted in database will be ignored.</p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities</b></li>
+                <li>Example: POST for url: (...)/api/discontinuities</li>
+          </ul>
+
+          <h4>GET for (...)api/discontinuities/:SessionId</h4>
+          <p>Retrieve the follow information for one session discontinuities: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering. </p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities/:SessionId</b></li>
+                <li>Example: <a href="/api/discontinuities/Arrabida">GET for url: (...)/api/discontinuities/Arrabida</a></li> 
+          </ul>
+        </div>
+
+      </div>
+      
+
+
+      </body>

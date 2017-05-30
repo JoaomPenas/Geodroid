@@ -1,0 +1,93 @@
+
+
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Geodroid - Geologic Information</h1>
+      <h4 class="jumbotron-heading">Support System For Geologic Field Work</h4>
+      <div>
+        <!-- CÓDIGO NÃO USANDO MODAL
+          <a href="/login" class="btn btn-info">Web App</a> 
+        -->
+       
+        <!-- Trigger the modal with a button -->
+        <button type="button" id="login" class="btn btn-info" data-toggle="modal" data-target="#loginModal">Web App</button>
+         <a href="/api" class="btn btn-secondary">Web API</a>  
+      </div>
+
+      <!-- Modal -->
+      <div id="loginModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Geodroid Web App</h4>
+            </div>
+ 
+            <div class="modal-body">
+              <!-- Para alterar o sign in para xhtmlreques trocar os comentários e o método post no controlador-->
+       <!--     <form action = "/login" enctype ="application/x-www-form-urlencoded" method= "POST" class="form-signin">     -->
+        <form class="form-login">         
+
+                  <h2 class="form-signin-heading">Please sign in</h2>
+                  <input class="form-control" name="username" id="username" placeholder="Email" autofocus="" type="text">
+                  <input class="form-control" name="password" id="password" placeholder="Password" type="password">
+                  
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" value="remember-me"> Remember me
+                    </label>
+                    <div class="text-center">
+                        <div id="insucess" name="insucess" style="display:none;" class="alert alert-danger"><b>Error!</b> Please verify your credentials...</div>
+                        <div id="sucess" name="sucess" style="display:none;" class="alert alert-success" align="center"><b>Login correct!</b></div>
+                    </div> 
+                    
+                  </div>
+                          
+          <!--     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>    -->
+                  <button id ="xpto" class="btn btn-lg btn-primary btn-block" onclick="login()" type="button">Sign in</button>  
+              </form>
+              
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- CODIGO PARA O CASO DE SE DECIDIR COLOCAR CARD'S
+    <div class="album text-muted">
+      <div class="container">
+
+        <div class="row">
+          <div class="card">
+            <img src="images\xpto.JPG" alt="New User">
+            <p class="card-text">Visualize as descontinuidades por sessão.</p>
+          </div>
+          <div class="card">
+            <img src="images\geo.png" alt="New User">
+            <p class="card-text">Obtenha as atitudes e descrição das descontinuidades no campo com o dispositivo móvel.</p>
+          </div>
+          <div class="card">
+            <img src="images\IMG_5564.jpg" alt="New User">
+            <p class="card-text">Veja no mapa onde foi obtida a informação</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    -->
+<script src="../../javascripts/loginAux.js"></script>
+
+<script >
+    document.getElementById("password").onkeypress=function(e){
+        if(e.keyCode==13){
+            document.getElementById("xpto").click();
+        }
+    }
+</script>

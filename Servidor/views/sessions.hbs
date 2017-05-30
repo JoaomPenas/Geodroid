@@ -1,0 +1,41 @@
+<section>
+    <div class="container-fluid">
+      <div class="row">
+
+ 
+        <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
+          <h4 class="float-right">
+            <a> | </a><a href="\logout">Logout</a>
+          </h4>
+          {{#if userIsAdmin}}
+              <h4 class="float-right"><a href="\admin">Admin area </a></h4>
+          {{/if}}
+          <h1>Sessions</h1>
+
+          <h2>Available sessions</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Session</th>
+                  <th>Num. of Users</th>
+                  <th>Num. of Discontinuities</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {{#each sessions}}
+                <tr>
+                  <td><a href="/sessions/{{sessao}}">{{sessao}}</a></td>
+                  <td>{{numUsers}}</td>
+                  <td>{{numDiscont}}</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+
+</section>

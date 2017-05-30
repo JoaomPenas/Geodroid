@@ -1,0 +1,91 @@
+<body>
+    <div class="container-fluid">
+      <div class="row">
+
+ 
+        <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
+          <h4 class="float-right">
+            <a> | </a><a href="\logout">Logout</a>
+          </h4>
+          {{#if userIsAdmin}}
+              <h4 class="float-right"><a href="\admin">Admin area</a></h4>
+          {{/if}}
+          <h1>Dashboard</h1>
+          
+          <section class="row text-center placeholders">
+            <div class="col-3 col-sm-3 placeholder">
+              <a href="/users">
+                <img  src="images/Users.JPG" width="250" height="250" class="img-fluid rounded-circle" alt="user thumbnail">
+              </a>
+              <h4 >Users</h4>
+            </div>
+            <div class="col-3 col-sm-3 placeholder">
+              <a href="/sessions">
+              <img src="images/Session.JPG" width="250" height="250" class="img-fluid rounded-circle" alt="session thumbnail">
+              </a>
+              <h4>Sessions</h4>
+            </div>
+            <div class="col-3 col-sm-3 placeholder">
+              <a href="/discontinuities">
+              <img src="images/discontinuities.jpg" width="250" height="250" class="img-fluid rounded-circle" alt="Discontinuities thumbnail">
+              </a>
+              <h4>Discontinuities</h4>
+            </div>
+            <div class="col-3 col-sm-3 placeholder">
+              <a href="/gmaps">
+              <img src="images/gmaps.png" width="250" height="250" class="img-fluid rounded-circle" alt="Discontinuities thumbnail">
+              </a>
+              <h4>Map</h4>
+            </div>
+          </section>
+
+          <h2>Data resume</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Contributers</th>
+                  <th>Sessions</th>
+                  <th>Measures</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {{#each summary}}
+                <tr>
+                  <td><a href="/contributers">{{NumUsers}}</a></td>
+                  <td><a href="/sessions">{{NumSessions}}</a></td>
+                  <td><a href="/discontinuities">{{NumDiscontinuities}}</a></td>
+                </tr>
+                {{/each}}
+
+
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+    <!--
+    <div class="album text-muted">
+      <div class="container">
+
+        <div class="row">
+          <div class="card">
+            <img src="images\Gmaps.png">
+            <a href ="/gmaps"><p class="card-text">Visualize no mapa a localização das descontinuidades</p> </a>
+          </div>
+          <div class="card">
+            <img src="images\geo.png">
+            <p class="card-text">Obtenha as atitudes e descrição das descontinuidades no campo com o dispositivo móvel.</p>
+          </div>
+          <div class="card">
+            <img src="images\IMG_5564.jpg">
+            <p class="card-text">Veja no mapa onde foi obtida a informação</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    -->
+</body>

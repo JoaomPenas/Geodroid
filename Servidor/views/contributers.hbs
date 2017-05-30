@@ -1,0 +1,44 @@
+<body>
+    <div class="container-fluid">
+      <div class="row">
+
+ 
+        <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
+          <h4 class="float-right">
+            <a> | </a><a href="\logout">Logout</a>
+          </h4>
+          {{#if userIsAdmin}}
+              <h4 class="float-right"><a href="\admin">Admin area </a></h4>
+          {{/if}}
+          <h1>Contributors</h1>
+          
+          
+          <h2>Users with discountinuities</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Num. of Sessions</th>
+                  <th>Num. of Discontinuities</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {{#each users}}
+                <tr>
+                  <td><a href="/users/{{user}}">{{user}}</a></td>
+                  <td>{{sessoes}}</td>
+                  <td>{{discont}}</td>
+                </tr>
+                <tr>
+                  {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+
+</body>

@@ -1,0 +1,63 @@
+<section>
+
+<div class="container-fluid">
+      <div class="row">
+ 
+        <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
+          <h4 class="float-right">
+            <a href="\logout">Logout</a>
+          </h4>
+          <h1>Administration area</h1>
+          <h2>Manage users</h2>
+          <section class="jumbotron text-center" style="background-image:none;background:whitesmoke;" >
+            <div class="container">
+              
+              <h3 style="color:black">Add a new user or delete existing users</h3>
+              <div>
+                <!-- Trigger the modal with a button -->
+                <button type="button" id="login" class="btn btn-info btn-lg" data-toggle="modal" data-target="#loginModal">Add New User</button>
+                <a href="/admin/deleteuser" class="btn btn-secondary btn-lg">Delete Existing User</a>  
+              </div>
+
+              <!-- MODAL PARA INSERIR UM UTILIZADOR!!!! -->
+              <div id="loginModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Geodroid App Web Admin</h4>
+                        </div>
+                        <div class="modal-body">
+                          <!-- <form action = "/admin/adduser" enctype ="application/x-www-form-urlencoded" method= "POST" class="form-signin">  -->
+                          <form class="form-login"> 
+                            <h2 class="form-signin-heading">Create a New user</h2>
+
+                            <div class="text-center">
+                                <div id="wrongCred" name="wrongCred" style="display:none;" class="alert alert-danger"><b>Wrong credentials!</b> Please try again...</div>
+                                <div id="insucess" name="insucess" style="display:none;" class="alert alert-danger"><b>Error!</b> Please try again...</div>
+                                <div id="sucess" name="sucess" style="display:none;" class="alert alert-success" align="center"><b>Inserted!</b></div>
+                            </div>
+                          
+                            <input class="form-control" name="username" id="username" placeholder="User mail" autofocus="" type="text">
+                            <input class="form-control" name="password" id="password" placeholder="Password" type="password">
+                            
+                            <!-- <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>       -->
+                            <!-- <button class="btn btn-lg btn-primary btn-block" onclick='addUser()'>Create</button> -->
+                            <a class="btn btn-lg btn-primary btn-block" onclick='addUser()' style="color:white">Create</a>
+                          </form>
+                        </div>
+
+                      </div>
+
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+</section>
+
+<script src="../../javascripts/addUser.js"></script>

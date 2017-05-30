@@ -1,0 +1,61 @@
+<body>
+    <div class="container-fluid">
+      <div class="row">
+ 
+
+        <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
+          <h4 class="float-right">
+            <a> | </a><a href="\logout">Logout</a>
+          </h4>
+          {{#if userIsAdmin}}
+              <h4 class="float-right"><a href="\admin">Admin area </a></h4>
+          {{/if}}
+          <h1>Discontinuities</h1>
+          
+          
+          <h2>All discontinuities</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>user</th>
+                  <th>session</th>
+                  <th>id</th>
+                  <th>Dir.</th>
+                  <th>Dip</th>
+                  <th>Lat.</th>
+                  <th>Long.</th>
+                  <th>Persist.</th>
+                  <th>Apert.</th>
+                  <th>Roughn.</th>
+                  <th>Infill.</th>
+                  <th>Weather.</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {{#each discontinuities}}
+                <tr>
+                  <td><a href="/users/{{idUser}}">{{idUser}}</a></td>
+                  <td><a href="/sessions/{{idSession}}">{{idSession}}</a></td>
+                  <td>{{id}}</td>
+                  <td>{{direction}}</td>
+                  <td>{{dip}}</td>
+                  <td>{{latitude}}</td>
+                  <td>{{longitude}}</td>
+                  <td>{{persistence}}</td>
+                  <td>{{aperture}}</td>
+                  <td>{{roughness}}</td>
+                  <td>{{infilling}}</td>
+                  <td>{{weathering}}</td>
+                </tr>
+                {{/each}}
+
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+
+</body>

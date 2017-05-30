@@ -1,0 +1,93 @@
+
+  <section class="container-fluid">
+    <div class="row">
+      <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3"  >
+            <h4 class="float-right">
+            <a> | </a><a href="\logout">Logout</a>
+          </h4>
+
+          {{#if userIsAdmin}}
+              <h4 class="float-right"><a href="\admin">Admin area </a></h4>
+          {{/if}}
+
+          {{#each locat}}
+            <p>x</p>
+          {{/each}}
+
+          <h1>Maps</h1>
+        <h1 id="map" style="width: 100%; height:600px; position:relative; overflow:hidden;"> </h1>
+     
+      </main>
+    </div>
+  </section>
+
+    <script>
+      function initMap() {
+
+        var locations = JSON.parse('{{#foo discontinuities}} {{/foo}}'); 
+/*
+        var locations =  [
+							{
+							id: 1,
+							idUser: "w@mail.com",
+							idSession: "Arrabida",
+							direction: 59,
+							dip: 44,
+							latitude: 38.32323,
+							longitude: -8.144234,
+							persistence: 2,
+							aperture: 4,
+							roughness: 1,
+							infilling: 2,
+							weathering: 2
+							},
+							{	a mesma coisa...	}];
+*/
+        // critério para centrar: o primeiro que encontrar, se nao houver nenhum ponto, um ponto predefinido
+        var centerLat=0;
+        var centerLong=0;
+        if (locations.length >0){ 
+            centerLat=locations[0].latitude;
+            centerLong=locations[0].longitude;
+        } else {
+            var centerLat=38.7;
+            var centerLong=-8.5;
+        }
+        
+        var myCenterLatLng = {lat: centerLat, lng: centerLong};
+        //var myLatLng = {lat: 38.7, lng: -8.5};
+
+        var map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId.TERRAIN,
+          center: myCenterLatLng
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({position: new google.maps.LatLng(locations[i].latitude, locations[i].longitude),map: map});
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i].id);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+
+        /*
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: 'Hello World!'
+        });
+        */
+      }
+    }
+    </script>
+
+  <script async defer 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyIF367ic0DaeeDtJ5FKgfhSbz5mif7QM&callback=initMap"> </script>
+  
