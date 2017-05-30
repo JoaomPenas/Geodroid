@@ -4,12 +4,17 @@ package com.example.ps.geodroidapp.Utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import com.example.ps.geodroidapp.Domain.Discontinuity;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.util.Base64.DEFAULT;
@@ -55,5 +60,34 @@ public class Utils {
         return  original.equals(attemptPass);
     }
 
-
+    /**
+     * Guarda o ficheiro .csv no dispositivo
+     * @param discontinuitys
+     * @return
+     */
+    public static boolean saveOnFile(ArrayList<Discontinuity> discontinuitys,Context ctx){
+        String filename = "Session"+".csv";
+        String saveContent = "Discontinuity,id,idSession,idUser,direction,dip,latitude,longitude,persistence,aperture,roughness,infilling,weathering\n";
+        //FileOutputStream outputStream;
+        //File file = new File(this.getCacheDir(), filename);
+        File file = new File(ctx.getExternalCacheDir(), filename);
+        for (Discontinuity disc: discontinuitys) {
+            saveContent+= disc.toString();
+        }
+        try {
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(saveContent);
+            bw.close();
+            /*outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(saveContent.getBytes());
+            outputStream.close();*/
+            Toast.makeText(ctx,"Shared",Toast.LENGTH_LONG).show();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(ctx,"Not Shared",Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
 }

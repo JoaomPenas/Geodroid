@@ -7,6 +7,7 @@ import com.example.ps.geodroidapp.Domain.Session;
 import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
+import com.example.ps.geodroidapp.Utils.Utils;
 import com.github.mikephil.charting.utils.FileUtils;
 
 import android.app.Activity;
@@ -118,15 +119,14 @@ public class SessionMenu extends AppCompatActivity {
                 startActivity(dataMapIntent);
             }
         });
-        final Activity act = this;
+
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveOnFile(SqlDataBase.getInstance(getApplicationContext()).getAllDiscontinuities(session));
+                Utils.saveOnFile(SqlDataBase.getInstance(getApplicationContext()).getAllDiscontinuities(session),SessionMenu.this);
                 String fileName = "Session"+".csv";
                 //File f = new File(SessionMenu.this.getFilesDir().getAbsolutePath(), fileName);
                 File f = new File(SessionMenu.this.getExternalCacheDir(), fileName);
-                //f.setReadable(true,false);
                 Intent emailIntent = ShareCompat.IntentBuilder
                         .from(SessionMenu.this)
                         .setType("text/plain")
@@ -134,22 +134,6 @@ public class SessionMenu extends AppCompatActivity {
                         .setText("teste")
                         .getIntent();
 
-                /*String fileName = "Session"+".csv";
-                saveOnFile(SqlDataBase.getInstance(getApplicationContext()).getAllDiscontinuities(session));
-                String filePath = SessionMenu.this.getFilesDir().getAbsolutePath();//returns current directory.
-               // String filePath = .this.getFilesDir().getAbsolutePath();//returns current directory.
-               // File file = new File(SessionMenu.this.getCacheDir(), fileName);
-                File file = new File(filePath, fileName);
-                file.setReadable(true,false);
-                String na = file.toString();
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                emailIntent.putExtra(Intent.EXTRA_EMAIL,new String[]{"23984@alunos.isel.ipl.pt"});
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                emailIntent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(file));
-                emailIntent.setType("plain/text");
-                //emailIntent.putExtra(Intent.EXTRA_TEXT, "Text");
-                */
                 if (emailIntent.resolveActivity(getPackageManager()) != null) {
                      startActivity(emailIntent);
                 }
@@ -222,34 +206,5 @@ public class SessionMenu extends AppCompatActivity {
             uploadButton.setVisibility(View.INVISIBLE);
     }
 
-    /**
-     * guarda o ficheiro .csv no dispositivo
-     * @param discontinuitys
-     * @return
-     */
-    public boolean saveOnFile(ArrayList<Discontinuity> discontinuitys){
-        String filename = "Session"+".csv";
-        String saveContent = "Discontinuity,id,idSession,idUser,direction,dip,latitude,longitude,persistence,aperture,roughness,infilling,weathering\n";
-        //FileOutputStream outputStream;
-        //File file = new File(this.getCacheDir(), filename);
-        File file = new File(this.getExternalCacheDir(), filename);
-        for (Discontinuity disc: discontinuitys) {
-            saveContent+= disc.toString();
-        }
-        try {
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(saveContent);
-            bw.close();
-            /*outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            outputStream.write(saveContent.getBytes());
-            outputStream.close();*/
-            Toast.makeText(this,"Shared",Toast.LENGTH_LONG).show();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this,"Not Shared",Toast.LENGTH_LONG).show();
-            return false;
-        }
-    }
+
 }

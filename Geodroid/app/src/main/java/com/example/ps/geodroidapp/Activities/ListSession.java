@@ -4,9 +4,14 @@ import com.example.ps.geodroidapp.Domain.Session;
 import com.example.ps.geodroidapp.R;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -58,6 +63,14 @@ public class ListSession extends AppCompatActivity {
 
         adapter = new ArrayAdapter<String>(this,R.layout.list_item,R.id.textView_item,new ArrayList<>(listSessions));//
         list.setAdapter(adapter);
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                registerForContextMenu(view);
+                return true;
+            }
+        });
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -65,8 +78,38 @@ public class ListSession extends AppCompatActivity {
                 sessionAct.putExtra("SessionName",((TextView)view.findViewById(R.id.textView_item)).getText().toString());
                 sessionAct.putExtra(("usermail"), usermail);
                 sessionAct.putExtra(("token"), token);
+               /* view.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        registerForContextMenu(v);
+                        return false;
+                    }
+                });*/
                 startActivity(sessionAct);
             }
+
         });
+
+    }
+    View textSelect;
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_session, menu);
+        // idTbr = (int) v.getTag();
+        textSelect = v;
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.menu_deleteSessionRow:
+                list.removeView(textSelect);
+                list.invalidate();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 }

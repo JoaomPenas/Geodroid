@@ -28,7 +28,6 @@ public class DataTable extends AppCompatActivity {
     private TableLayout tl;
     private TableRow row2;
     SqlDataBase mydb2;
-    private   View.OnClickListener listener;
     private Intent extraData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

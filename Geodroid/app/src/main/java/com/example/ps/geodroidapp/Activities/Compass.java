@@ -38,14 +38,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
     private Sensor mAccelerometer;
     private Sensor mMagnetometer;
 
-    private final float[] mAccelerometerReading = new float[3];
-    private final float[] mMagnetometerReading = new float[3];
-
-    private final float[] mRotationMatrix = new float[9];
-    private final float[] mOrientationAngles = new float[3];
-
-    private boolean mLastAccelerometerSet = false;
-    private boolean mLastMagnetometerSet = false;
     //-----------------------------------------------------------
     private String usermail;
     private String session;
@@ -114,7 +106,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // chamado ssempre que a localização é alterada
                 _lat = location.getLatitude();
                 _long = location.getLongitude();
                 Log.d("HS","Here!");
@@ -151,7 +142,7 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
             // for ActivityCompat#requestPermissions for more details.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
+                        Manifest.permission.ACCESS_FINE_LOCATION
                 },1);
             }
         } else {
@@ -314,5 +305,12 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // Do something here if sensor accuracy changes.
         // You must implement this callback in your code.
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationManager.removeUpdates(locationListener);
+        Log.d("CompassAct","callDestroy");
     }
 }

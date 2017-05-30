@@ -221,7 +221,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
         }
         return false;
     }
-    int num =0;
+
     public boolean updateDiscontinuity(int id,int persistence, int aperture, int roughness,
                                        int infilling, int weathering, int changed) {
         SQLiteDatabase db = null;
@@ -230,19 +230,12 @@ public class SqlDataBase extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             Discontinuity discontinuity = getDiscontinuity(id);
             db = this.getWritableDatabase();
-            //values.put(FK_DISCONTINUITY_ID_SESSION,discontinuity.getIdSession());
-            //values.put(FK_ID_USER,discontinuity.getIdUser());
-            //values.put(DIRECTION, discontinuity.getDirection());
-            //values.put(DIP, discontinuity.getDip());
-            //values.put(LATITUDE, discontinuity.getLatitude());
-            //values.put(LONGITUDE,discontinuity.getLongitude());
             values.put(PERSISTENCE,persistence);
             values.put(APERTURE,aperture);
             values.put(ROUGHNESS, roughness);
             values.put(INFLILLING,infilling);
             values.put(WEATHERING,weathering);
             values.put(SENT,changed);
-            //db.execSQL("UPDATE "+DISCONTINUITY_TABLE_NAME+" set "+PERSISTENCE+" = 0 where id = 1");
 
             db.update(DISCONTINUITY_TABLE_NAME,values,DISCONTINUITY_ID+" = ?",new String[]{""+id});
             return true;
@@ -404,6 +397,11 @@ public class SqlDataBase extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * retorna um ArrayList<Discontinuity> com as descontinuidades que não estão no servidor
+     * @param sessionId
+     * @return
+     */
     public ArrayList<Discontinuity> areUploads(String sessionId) {
         ArrayList<Discontinuity> list = new ArrayList<>();
         for (Discontinuity dicont: getAllDiscontinuities(sessionId)) {
@@ -413,6 +411,11 @@ public class SqlDataBase extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Altera a flag Sent para 1 que indica que a discontinuidade já foi enviada
+     * @param list
+     * @return
+     */
     public boolean putSent(ArrayList<Discontinuity> list) {
         SQLiteDatabase db = null;
         try {
@@ -439,6 +442,23 @@ public class SqlDataBase extends SQLiteOpenHelper {
         try {
             db = this.getWritableDatabase();
             db.delete(DISCONTINUITY_TABLE_NAME,DISCONTINUITY_ID+"= ?",new String[]{""+discontinuityId});
+            return true;
+        } catch (Exception e) {
+        } finally {
+            db.close();
+        }
+        return false;
+    }
+
+    /**
+     * Apaga as Discontinuidades de uma determinada sessão no dispositivo
+     * @param sessionName
+     */
+    public boolean deleteSessionDiscontinuity(String sessionName) {
+        SQLiteDatabase db = null;
+        try {
+            db = this.getWritableDatabase();
+            db.delete(DISCONTINUITY_TABLE_NAME,FK_DISCONTINUITY_ID_SESSION+"= ?",new String[]{""+sessionName});
             return true;
         } catch (Exception e) {
         } finally {
