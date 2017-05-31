@@ -1,5 +1,7 @@
 package com.example.ps.geodroidapp.Activities;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,18 +47,8 @@ public class Intro extends AppCompatActivity {
         // POPULATE DATABASE
         db.insertSession("Arrabida");
         db.insertSession("Foz Coa");
-        //db.insertSession("Barragem de Parada");
-        //db.insertSession("TGV PK 23500");
-        //db.insertSession("TGV PK 25000");
-
         db.insertDiscontinuity(new Discontinuity(10,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.52,-8.99, 2,4, 1, 2, 2,0,"w@mail.com", "Arrabida"));
-      /*  db.insertDiscontinuity(new Discontinuity(20,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.51,-8.98, 2,4, 2, 3, 4,0,"w@mail.com", "Arrabida"));
-        db.insertDiscontinuity(new Discontinuity(30,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.55,-8.97, 5,4, 2, 2, 5,0,"w@mail.com", "Arrabida"));
 
-        db.insertDiscontinuity(new Discontinuity(30,(int)(Math.random()*(360)),(int)(Math.random()*(90)),41.070,-7.139, 5,4, 2, 2, 5,0,"w@mail.com", "Foz Coa"));
-        db.insertDiscontinuity(new Discontinuity(130,(int)(Math.random()*(360)),(int)(Math.random()*(90)),41.069,-7.135, 1,2, 2, 2, 5,0,"w@mail.com", "Foz Coa"));
-        db.insertDiscontinuity(new Discontinuity(50,(int)(Math.random()*(360)),(int)(Math.random()*(90)),41.075,-7.131, 5,5, 5, 2, 5,0,"w@mail.com", "Foz Coa"));
-*/
         Toast.makeText(Intro.this,"Inserted 6 discontinuities in SqliteDB \n(3 in Arrabida and 3 in Foz Coa)" , Toast.LENGTH_SHORT).show();
 
         mainActivityStartIntent = new Intent(this, MainActivityStart.class);
@@ -68,16 +60,28 @@ public class Intro extends AppCompatActivity {
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final ProgressDialog progressDialog = new ProgressDialog(Intro.this,
+                        DialogInterface.BUTTON_NEUTRAL);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Authenticating...");
+                progressDialog.show();
 
-                if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString())){
-                    mainActivityStartIntent.putExtra("usermail",email.getText().toString());
-                    Toast.makeText(Intro.this,"Wellcome!" + email.getText().toString(), Toast.LENGTH_LONG).show();
-                    startActivity(mainActivityStartIntent);
-                }
-                else{
-                    requestApiToken(new User(email.getText().toString(), pass.getText().toString()));
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                // On complete call either onLoginSuccess or onLoginFailed
+                                if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString())){
+                                    mainActivityStartIntent.putExtra("usermail",email.getText().toString());
+                                    Toast.makeText(Intro.this,"Wellcome!" + email.getText().toString(), Toast.LENGTH_LONG).show();
+                                    startActivity(mainActivityStartIntent);
+                                }
+                                else{
+                                    requestApiToken(new User(email.getText().toString(), pass.getText().toString()));
+                                }
+                                progressDialog.dismiss();
+                            }
+                        }, 3000);
 
-                }
             }
         });
 
@@ -110,8 +114,6 @@ public class Intro extends AppCompatActivity {
         });
     }
 
-    private boolean reqTokenRes;
-
     public void requestApiToken(User user){
         BussulaApi servicee = BussulaApi.Factory.getInstance();
         Call<AuthenticateResponse> requestCatalog = servicee.postAuthenticate(user);
@@ -121,19 +123,16 @@ public class Intro extends AppCompatActivity {
                 authenticateResponse = response.body();
                 if(authenticateResponse.isSuccess()){
                     requestGetAllUsers(authenticateResponse.getToken());
-                    reqTokenRes = true;
                 }
                 else{
-                    reqTokenRes = false;
                     Toast.makeText(Intro.this,"Sorry try again...", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Call<AuthenticateResponse> call, Throwable t) {
                 authenticateResponse = null;
-                reqTokenRes = false;
                 Log.d("JJ",t.getMessage());
-                Toast.makeText(Intro.this,"Cannot update users from Database...(requestApiToken)", Toast.LENGTH_LONG).show();
+                Toast.makeText(Intro.this,"Authenticate Fail...(requestApiToken)", Toast.LENGTH_LONG).show();
             }
         });
         //return reqTokenRes;

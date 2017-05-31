@@ -23,8 +23,8 @@ public interface BussulaApi {
 
     //String BASE_URL ="https://sgeotest.herokuapp.com/";
     //String BASE_URL ="http://10.0.2.2:3010";
-    String BASE_URL ="http://10.10.31.140:3010";
-
+    //String BASE_URL ="http://10.10.31.140:3010";
+    String BASE_URL ="http://192.168.1.3:3010";
     @GET("api/users")
         //Call<DtoCatalog> getUser();
     Call<DtoCatalog> getUser(@Header("x-access-token") String token);

@@ -30,14 +30,14 @@ public class ListSession extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private Toast t;
     private Intent sessionAct;
-
+    private SqlDataBase db;
     SqlDataBase dataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_session);
-
+        db = SqlDataBase.getInstance(this);
         Log.d("HPS", "3rd level - ListSession Activity oncreate");
 
         userTv = (TextView) findViewById(R.id.list_session_userName);
@@ -64,49 +64,37 @@ public class ListSession extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this,R.layout.list_item,R.id.textView_item,new ArrayList<>(listSessions));//
         list.setAdapter(adapter);
 
-        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                registerForContextMenu(view);
-                return true;
-            }
-        });
+        registerForContextMenu(list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getApplicationContext(),""+position,Toast.LENGTH_SHORT).show();
                 sessionAct.putExtra("SessionName",((TextView)view.findViewById(R.id.textView_item)).getText().toString());
                 sessionAct.putExtra(("usermail"), usermail);
                 sessionAct.putExtra(("token"), token);
-               /* view.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        registerForContextMenu(v);
-                        return false;
-                    }
-                });*/
                 startActivity(sessionAct);
             }
 
         });
 
     }
-    View textSelect;
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_session, menu);
-        // idTbr = (int) v.getTag();
-        textSelect = v;
     }
+    String sessionName;
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.menu_deleteSessionRow:
-                list.removeView(textSelect);
-                list.invalidate();
+                adapter.remove(adapter.getItem(info.position));
+                sessionName = ((TextView)info.targetView.findViewById(R.id.textView_item)).getText().toString();
+                //db.areUploads(sessionName);
+
+               // db.deleteSessionDiscontinuity(sessionName,usermail);
+
                 return true;
             default:
                 return super.onContextItemSelected(item);
