@@ -44,7 +44,7 @@
                             
                             <!-- <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>       -->
                             <!-- <button class="btn btn-lg btn-primary btn-block" onclick='addUser()'>Create</button> -->
-                            <a class="btn btn-lg btn-primary btn-block" onclick='addUser()' style="color:white">Create</a>
+                            <a id ="xpto" class="btn btn-lg btn-primary btn-block" onclick='addUser()' style="color:white">Create</a>
                           </form>
                         </div>
 
@@ -61,3 +61,10 @@
 </section>
 
 <script src="../../javascripts/addUser.js"></script>
+<script >
+    document.getElementById("password").onkeypress=function(e){
+        if(e.keyCode==13){
+            document.getElementById("xpto").click();
+        }
+    }
+</script>
