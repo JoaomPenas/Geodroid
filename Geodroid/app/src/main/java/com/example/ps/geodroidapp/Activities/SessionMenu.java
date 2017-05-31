@@ -148,13 +148,30 @@ public class SessionMenu extends AppCompatActivity {
                 final ArrayList <Discontinuity>list = db.areUploads(session);// db.getAllDiscontinuities(session);
                 DtoDiscontinuity dtoDiscontinuity = new DtoDiscontinuity(list);
                 //requestApiToken(db.getUser(usermail));
-                postDiscont(service,dtoDiscontinuity,list,buttonUpload);
+                //postDiscont(service,dtoDiscontinuity,list,buttonUpload);
+                Call <ResponseBody> postDisc = service.postDiscontinuities(dtoDiscontinuity);
+
+                postDisc.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Toast.makeText(SessionMenu.this,response.message()+", dados enviados para o Servidor!", Toast.LENGTH_LONG).show();
+                        db.putSent(list);
+                        buttonUpload.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(SessionMenu.this,t.getMessage()+", dados NAO enviados para o Servidor!", Toast.LENGTH_LONG).show();
+                        Log.d("JJJJJ",""+t);
+                    }
+                });
 
 
             }
         });
 
     }
+    /*
     public void requestApiToken(User user){
         BussulaApi servicee = BussulaApi.Factory.getInstance();
         Call<AuthenticateResponse> requestCatalog = servicee.postAuthenticate(user);
@@ -176,7 +193,8 @@ public class SessionMenu extends AppCompatActivity {
             }
         });
         //return reqTokenRes;
-    }
+    }*/
+    /*
     private void postDiscont(BussulaApi service, DtoDiscontinuity dtoDiscontinuity,final ArrayList <Discontinuity>list,final View buttonUpload){
         Call <AuthenticateResponse> postDisc = service.postDiscontinuities(token,dtoDiscontinuity);
         postDisc.enqueue(new Callback<AuthenticateResponse>() {
@@ -196,7 +214,7 @@ public class SessionMenu extends AppCompatActivity {
                 Log.d("JJJJJ",""+t);
             }
         });
-    }
+    }*/
     @Override
     protected void onResume() {
         super.onResume();

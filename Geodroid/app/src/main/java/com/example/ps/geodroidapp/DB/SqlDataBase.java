@@ -59,6 +59,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
     private static final String USER_ID_EMAIL               = "email";
     private static final String USER_PASS                   = "pass";
     private static final String USER_SALT                   = "salt";
+    private static final String USER_TOKEN_API              = "apitoken";
 
     //SESSION TABLE
     private static final String SESSION_TABLE_NAME          = "session";
@@ -141,7 +142,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
     //
     // ------------------------------------------ Insert's ----------------------------------
     //
-    public boolean insertUser(String userEmail, String pass,long salt) {
+    public boolean insertUser(String userEmail, String pass,long salt,String token) {
         SQLiteDatabase db = null;
         try {
             db = this.getWritableDatabase();
@@ -149,6 +150,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
             values.put(USER_ID_EMAIL, userEmail);
             values.put(USER_PASS, pass);
             values.put(USER_SALT,salt);
+            values.put(USER_TOKEN_API,token);
             db.insert(USER_TABLE_NAME, null, values);
             return true;
         } catch (Exception e) {
@@ -367,7 +369,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
 
     public void insertUsers(List<User> list) {
         for (User u:list) {
-           insertUser(u.getEmail(),u.getPass(),u.getSalt());
+           insertUser(u.getEmail(),u.getPass(),u.getSalt(),null);
         }
     }
     //--------------------------------------Session's-------------------------------------------

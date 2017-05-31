@@ -6,6 +6,8 @@ import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -21,13 +23,13 @@ import retrofit2.http.POST;
 
 public interface BussulaApi {
 
-    //String BASE_URL ="https://sgeotest.herokuapp.com/";
+    String BASE_URL ="https://sgeotest.herokuapp.com/";
     //String BASE_URL ="http://10.0.2.2:3010";
     //String BASE_URL ="http://10.10.31.140:3010";
-    String BASE_URL ="http://192.168.1.3:3010";
+    //String BASE_URL ="http://192.168.1.3:3010";
     @GET("api/users")
         //Call<DtoCatalog> getUser();
-    Call<DtoCatalog> getUser(@Header("x-access-token") String token);
+    Call<ResponseBody> getUser(@Header("x-access-token") String token);
 
 
     @POST("api/authenticate")
@@ -37,8 +39,8 @@ public interface BussulaApi {
 
 
     @POST("api/discontinuities")
-    Call <AuthenticateResponse>postDiscontinuities(@Header("x-access-token") String token,@Body DtoDiscontinuity dtoDiscontinuity);
-    //Call <ResponseBody>postDiscontinuities(@Body DtoDiscontinuity dtoDiscontinuity);
+    //Call <AuthenticateResponse>postDiscontinuities(@Header("x-access-token") String token,@Body DtoDiscontinuity dtoDiscontinuity);
+    Call <ResponseBody>postDiscontinuities(@Body DtoDiscontinuity dtoDiscontinuity);
     //Call <DtoDiscontinuity>postDiscontinuities(@Body DtoDiscontinuity dtoDiscontinuity);
 
     class Factory{

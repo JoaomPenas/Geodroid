@@ -1,7 +1,5 @@
 package com.example.ps.geodroidapp.Activities;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,10 +16,15 @@ import com.example.ps.geodroidapp.Domain.DtoCatalog;
 import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,7 +63,7 @@ public class Intro extends AppCompatActivity {
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog progressDialog = new ProgressDialog(Intro.this,
+               /* final ProgressDialog progressDialog = new ProgressDialog(Intro.this,
                         DialogInterface.BUTTON_NEUTRAL);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Authenticating...");
@@ -80,36 +83,59 @@ public class Intro extends AppCompatActivity {
                                 }
                                 progressDialog.dismiss();
                             }
-                        }, 3000);
+                        }, 3000);*/
+                if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString())){
+                    mainActivityStartIntent.putExtra("usermail",email.getText().toString());
+                    Toast.makeText(Intro.this,"Wellcome!" + email.getText().toString(), Toast.LENGTH_LONG).show();
+                    startActivity(mainActivityStartIntent);
+                }
+                else{
+                    //requestApiToken(new User(email.getText().toString(), pass.getText().toString()));
+                    requestGetAllUsers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndAbWFpbC5jb20iLCJpYXQiOjE0OTYyMzkyMzYsImV4cCI6MTQ5NjMyNTYzNn0.w3vaAhH-0SDfagFOCZGfQAtRpsb96Y28P0bzGI0Ns8Y");
+                }
 
             }
         });
 
     }
-    private void requestGetAllUsers(String token){
-        Call<DtoCatalog> requestCatalogg = service.getUser(token);
-        requestCatalogg.enqueue(new Callback<DtoCatalog>() {
+    private void requestGetAllUsers(final String token){
+        Log.d("TTTT",token);
+        Call<ResponseBody> requestCatalogg = service.getUser(token);
+        requestCatalogg.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<DtoCatalog> call, Response<DtoCatalog> response) {
-                DtoCatalog xpto = response.body();
-                List<User> list = xpto.getUser();
-                db.insertUsers(list);
-                /*ArrayList<User> list2 = db.getAllUsers();
-                String u="";
-                for (User us: list2) {
-                    u=u+us.getEmail()+"/"+us.getPass()+"/"+us.getSalt()+"\n";
-                }*/
-                Toast.makeText(Intro.this,"Updated internal DB from Remote DB!\nAvailable users: \n" , Toast.LENGTH_SHORT).show();
-                mainActivityStartIntent.putExtra("usermail",email.getText().toString());
-                mainActivityStartIntent.putExtra("token",authenticateResponse.getToken());
-                startActivity(mainActivityStartIntent);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Gson gson = new Gson();
+                String body = null;
+                if (response.isSuccessful()) {
+                    try {
+                        DtoCatalog xpto = gson.fromJson(response.body().string(), DtoCatalog.class);
+                        List<User> list = xpto.getUser();
+                        db.insertUsers(list);
+                        Log.d("JY", response.message());
+                        Toast.makeText(Intro.this, "Updated internal DB from Remote DB!\nAvailable users: \n", Toast.LENGTH_SHORT).show();
+                        mainActivityStartIntent.putExtra("usermail", email.getText().toString());
+                        mainActivityStartIntent.putExtra("token", token);//authenticateResponse.getToken());
+                        startActivity(mainActivityStartIntent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(Intro.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    try {
+                        AuthenticateResponse authenticate = gson.fromJson(response.errorBody().string(),AuthenticateResponse.class);
+                        Toast.makeText(Intro.this,response.message()+authenticate.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(Intro.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
 
+                }
             }
-
             @Override
-            public void onFailure(Call<DtoCatalog> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d("JX",t.getMessage());
-                Toast.makeText(Intro.this,"Cannot update users from Database...(requestGetAllUsers)", Toast.LENGTH_LONG).show();
+                Toast.makeText(Intro.this,"Cannot update users from Database...(requestGetAllUsers)"+t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -120,6 +146,7 @@ public class Intro extends AppCompatActivity {
         requestCatalog.enqueue(new Callback<AuthenticateResponse>() {
             @Override
             public void onResponse(Call<AuthenticateResponse> call, Response<AuthenticateResponse> response) {
+                Log.d("JJJ",response.message());
                 authenticateResponse = response.body();
                 if(authenticateResponse.isSuccess()){
                     requestGetAllUsers(authenticateResponse.getToken());
