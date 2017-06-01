@@ -142,6 +142,7 @@ module.exports = function(app,passport,model) {
 		model.getAllDiscontinuities(null,function (err,res){
 			if (!err){
 				res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;};
+				res.numDiscont=res.discontinuities.length;
 				rsp.status(200);
 				rsp.render ('maps', res);
 			}
@@ -204,14 +205,14 @@ module.exports = function(app,passport,model) {
 	 });
 
 	 /**
-	  * Contributers information
+	  * Contributors information
 	  */
-	 router.get('/contributers', isLoggedIn, function (req,rsp,next){
+	 router.get('/contributors', isLoggedIn, function (req,rsp,next){
 		model.getAllUsersResumedInformation(null,function(err,res){
 			if(!err){
 				res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
 				rsp.status(200);
-				rsp.render ('contributers',res);
+				rsp.render ('contributors',res);
 			}else{
 				rsp.status(500);
 				rsp.render ('error',{message:err})
@@ -257,18 +258,33 @@ module.exports = function(app,passport,model) {
 	  * All discontinuities of the system
 	  */
 	router.get('/discontinuities', isLoggedIn, function (req,rsp,next){
-    	model.getAllDiscontinuities(null,function (err,res){
-			if (!err){
-				res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
-				rsp.status(200);
-				rsp.render ('discontinuities', res);
-			}
-			else{
-				rsp.status(500);
-				rsp.render ('error',{message:err});
-			}
-		});
-	 });
+		var userPage= req.query.page===undefined? 0: req.query.page;
+		var numPerPage=15;
+		model.getNumberOfApiPages (null, function (err,numPages){
+				if (err){rsp.status(500).render(error, {message:"Server error..."});}
+				else {
+					if (userPage >=numPages) {
+						console.log ("userPageGreather than available pages!");
+						rsp.status(403).render('error', {message:"No more pages!"});
+					}
+					else{
+						model.getPagedDiscontinuities(null,function (err,res){
+							if (!err){
+								res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
+								res.page=userPage;
+								rsp.status(200);
+								rsp.render ('discontinuities', res);
+							}
+							else{
+								rsp.status(500);
+								rsp.render ('error',{message:err});
+							}
+						},userPage,numPerPage);
+					}
+				}
+	 	},numPerPage);
+	});
+	
 
 	/**
 	 * Logout route

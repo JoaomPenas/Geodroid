@@ -6,7 +6,7 @@ var expressHbs 		= require('express-handlebars');
 var bodyParser 		= require('body-parser');
 var path			= require('path');
 var session      	= require('express-session');
-var config          = require('./setup');           // get our config file
+var config          = require('./setup');           // get config file
 
 const usersDal      = require('./data-access/dal')(config.host, config.user, config.password, config.database);
 const model			= require ('./model/model')(usersDal);
@@ -15,6 +15,7 @@ require('./config/passport')(passport, model);      // pass passport and model f
 
 app.use(bodyParser.text());
 app.use(bodyParser.json());
+
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -33,6 +34,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.engine('hbs', expressHbs({extname:'hbs', defaultLayout:'base', helpers: {
         foo: function (xpto) { return JSON.stringify(xpto); },
+        prevPage: function (actualPage){if (actualPage==0) return 0; else return parseInt(actualPage)-1;},
+        nextPage: function (actualPage){return parseInt(actualPage)+1;},
         bar: function () { return 'BAR'; }
     }}));
 app.set('view engine', 'hbs');

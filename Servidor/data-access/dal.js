@@ -32,9 +32,11 @@ module.exports = function(hostP, userP, passwordP, databaseP){
     	connection.connect();
 		if (user!='admin'){
 			var str='START TRANSACTION;'+
-					'delete from Discontinuity where idUser="'+user+'";'+
-					'delete from User where email="'+user+'";'+
+					'delete from Discontinuity where idUser=?;'+
+					'delete from User where email=?;'+
 					'COMMIT;'
+			var inserts =[user,user];
+			str=mysql.format(str,inserts);
 			connection.query(str, function(err, rows, fields) {
 					if (!err) {
 							cb (null, "utilizador "+user+" removido com sucesso!" );
@@ -50,15 +52,17 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 
 	/**
 	 * Remove uma sessão da base de dados (incluido as respectivas descontinuidades)
-	 * @param {string} session - designação da sessao
+	 * @param {string} session - designação da sessão
 	 */
 	function DeleteSession(session, cb){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
 		var str='START TRANSACTION;'+
-				'delete from Discontinuity where idSession="'+session+'";'+
-				'delete from Session where name="'+session+'";'+
+				'delete from Discontinuity where idSession=?;'+
+				'delete from Session where name=?;'+
 				'COMMIT;'
+		var inserts =[session,session];
+			str=mysql.format(str,inserts);
 		connection.query(str, function(err, rows, fields) {
 				if (!err) {
 						cb (null, "session "+session+" removida com sucesso!" );
@@ -71,7 +75,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	}
 
 	/**
-	 * Vai buscar à base de dados um utilizador a partir da sua designação
+	 * Permite ir buscar à base de dados um utilizador a partir da sua designação
 	 * Se existir passa à função de callback um utilizador semelhante ao seguinte exemplo:
 	 * {  username: 'x@mail.com',	
 	 *    password: 'F1mZmpiuwK6b83ODjaS9r/1x7uWC+oSfrwd/eg4qxW0=',
@@ -82,7 +86,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	function GetUser(email, cb){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
-		connection.query('SELECT * from User where email="'+email+'"', function(err, rows, fields) {
+		connection.query('SELECT * from User where email='+connection.escape(email), function(err, rows, fields) {
 			let user;
 			if(err){ cb(err);}
 			else{
@@ -98,11 +102,16 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		connection.end();
 	}
 
-
+	/**
+	 * Permite ir buscar à base de dados as descontinuidades de determinado utilizador
+	 * @param {string} user - designação do utilizador
+	 * @param {function} cb - função de callback
+	 */
 	function GetDiscontinuitiesOfOneUser (user, cb){
+		//console.log("@GetDiscontinuitiesOfOneUser");
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
-		connection.query('SELECT * from Discontinuity where idUser="'+user+'"'+" order by idSession", function(err, rows, fields) {
+		connection.query('SELECT * from Discontinuity where idUser=? order by idSession',[user], function(err, rows, fields) {
   			if (!err){ cb(null,rows);}	
   			else { cb(err);	}
     	}); 
@@ -111,12 +120,13 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 
 	/**
 	 * Devolve uma linha da tabela Discontinuity para determinada sessão
-	 * @param {string} session - nome da sessão
+	 * @param {string} session - designação da sessão
 	 */
 	function ReadDiscontinuitiesFromOneSession (session, cb){
+		console.log("@ReadDiscontinuitiesFromOneSession");
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
-		connection.query('SELECT * from Discontinuity where idSession="'+session+'"', function(err, rows, fields) {
+		connection.query('SELECT * from Discontinuity where idSession=?',[session], function(err, rows, fields) {
   			if (!err){ cb(null,rows);}	
   			else { cb(err);	}
     				
@@ -125,18 +135,31 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	}
 
 	/**
-	 * Lê a informação de determinada tabela (User, Session ou Discontinuities) consoante str passada
-	 * @param {string} str - valores  possiveis para str: 'users', 'sessions' or 'discontinuities'
+	 * Função privada. 
+	 * Lê a informação de determinada tabela consoante str passada: (User, Session ou Discontinuities) 
+	 * Permite paginação (opcional)
+	 * @param {string} str - valores  possíveis para str: 'users', 'sessions' or 'discontinuities'
+	 * @param {boolean} paged - se pretende leitura paginada
+	 * @param {int} page - número da página a pedir
+	 * @param {inr} numPerPage - número de leituras por página
 	 */
-	function ReadAll(str,cb){
+	function ReadAll(str,cb, paged, page, numPerPage){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
 		var table;
-		
+		console.log("@ReadAll!!!")
 		if (str=="users") 			table = "User";
 		if (str=="sessions") 		table = "Session";
 		if (str=="discontinuities") table = "Discontinuity";
-		connection.query('SELECT * from '+table, function(err, rows, fields) {
+		var str;
+		if (paged){
+			str ='SELECT * from '+table+" limit " +page*numPerPage+","+numPerPage;
+		}
+		else{
+			str='SELECT * from '+table;
+		}
+		console.log(str)
+		connection.query(str, function(err, rows, fields) {
 			if (!err){ cb(null,rows)}		
 			else {cb(err);}	
 		});
@@ -162,13 +185,13 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	 * Devolve a informação sumaria de cada utilizador.
 	 * É passado um array semelhante ao exemplo:
 	 * [ RowDataPacket { user: 'admin', sessoes: 0, discont: 0 }, RowDataPacket { user: 'humberto', sessoes: 0, discont: 0 }]
-	 * @param {boolean} onlyContributers - para determinar se é para retornar os utilizadores que apenas tem descontinuidades ou todos
+	 * @param {boolean} onlyContributors - para determinar se é para retornar os utilizadores que apenas tem descontinuidades ou todos
 	 */
-	function GetUserSummary(cb, onlyContributers){
+	function GetUserSummary(cb, onlyContributors){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
 		let typeJoin;
-		if (!onlyContributers){
+		if (!onlyContributors){
 			typeJoin ="LEFT JOIN";
 		}else { 
 			 typeJoin="RIGHT JOIN";
@@ -204,11 +227,13 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	 *   insert into Discontinuity (id, idUser, idSession, direction, dip, latitude, longitude, persistence, aperture, roughness, infilling, weathering) 
 	 *   values (100,"w@mail.com","Oeiras",50,66,38,9,5,5,5,5,5) 
 	 *   on duplicate key update persistence=5, aperture=5, roughness=5, infilling=5, weathering=5; 
-     * @param {object} disc - objecto equivalente ao seguinte:
+     * @param {object} disc - objecto com array de descontinuidades, equivalente ao seguinte:
      * { "discontinuities": [{aperture:5,dip:66,direction:50,id:100,infilling:5,latitude:38,longitude:9,persistence:5,roughness:5,idSession:"Oeiras",idUser: "w@mail.com",weathering: 5 },
      *                       {aperture:2,dip:66,direction:50,id:101,infilling:4,latitude:38,longitude:9,persistence:1,roughness:3,idSession:"Oeiras",idUser: "w@mail.com",weathering: 5 } ]}
      */
 	function PostDiscontinuities(disc, cb){
+		//console.log("@PostDiscontinuities");
+		//console.log(disc)
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
 
@@ -217,7 +242,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
     	let tempStr="";
 
 		disc.discontinuities.forEach(d=>{
-			tempStr = `${tempStr} ${insertBaseStr}(${d.id}\,"${d.idUser}","${d.idSession}",${d.direction},${d.dip},${d.latitude},${d.longitude},${d.persistence},${d.aperture},${d.roughness},${d.infilling},${d.weathering}) on duplicate key update persistence=${d.persistence}, aperture=${d.aperture}, roughness=${d.roughness}, infilling=${d.infilling}, weathering=${d.weathering};`
+			tempStr = `${tempStr} ${insertBaseStr}(${connection.escape(d.id)}\,${connection.escape(d.idUser)},${connection.escape(d.idSession)},${connection.escape(d.direction)},${connection.escape(d.dip)},${connection.escape(d.latitude)},${connection.escape(d.longitude)},${connection.escape(d.persistence)},${connection.escape(d.aperture)},${connection.escape(d.roughness)},${connection.escape(d.infilling)},${connection.escape(d.weathering)}) on duplicate key update persistence=${connection.escape(d.persistence)}, aperture=${connection.escape(d.aperture)}, roughness=${connection.escape(d.roughness)}, infilling=${connection.escape(d.infilling)}, weathering=${connection.escape(d.weathering)};`
 		})
 		//console.log(tempStr);
 		
@@ -243,8 +268,8 @@ module.exports = function(hostP, userP, passwordP, databaseP){
     	*/
 
     	// Construção da string (comando MySql) "insert into Session..."
-    	var insertStrp="insert ignore into Session (name) values ( \""+disc.discontinuities[0].idSession+"\"); ";
-
+    	var insertStrp="insert ignore into Session (name) values ("+connection.escape(disc.discontinuities[0].idSession)+"); ";
+		console.log(insertStrp+tempStr);
 		connection.query(insertStrp+tempStr, function(err, rows, fields) {
   			if (!err){ cb (null, "ok");	}
   			else { cb('Error...');}	
@@ -254,7 +279,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	}
 
 	/**
-	 * Funçã para inserir um novo utilizador
+	 * Função para inserir na base de dados um novo utilizador
 	 * @param {Object} user - The user to post e.g. {email: 'admin', password: '567'}
 	 */
 	function PostUser(user, cb){
@@ -271,10 +296,9 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 				let hash = hashC.digest('base64');
 
 				// construct the "insert into User" table string
-				let insertStr = "insert ignore into User (email, pass, salt) values (\""
-									+user.email+"\",\""+hash+"\",\""+salt+"\")";
+				let insertStr = "insert ignore into User (email, pass, salt) values (?,\""+hash+"\",\""+salt+"\")";
 				
-				connection.query(insertStr, function(err, rows, fields) {
+				connection.query(insertStr, [user.email],function(err, rows, fields) {
 					if (!err){ cb (null,"ok");}
 					else 	 { cb('Error...');}	
 				}); 

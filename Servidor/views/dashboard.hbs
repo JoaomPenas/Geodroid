@@ -1,8 +1,6 @@
 <body>
     <div class="container-fluid">
       <div class="row">
-
- 
         <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
           <h4 class="float-right">
             <a> | </a><a href="\logout">Logout</a>
@@ -44,7 +42,7 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Contributers</th>
+                  <th>Contributors</th>
                   <th>Sessions</th>
                   <th>Measures</th>
                 </tr>
@@ -53,12 +51,11 @@
               <tbody>
                 {{#each summary}}
                 <tr>
-                  <td><a href="/contributers">{{NumUsers}}</a></td>
+                  <td><a href="/contributors">{{NumUsers}}</a></td>
                   <td><a href="/sessions">{{NumSessions}}</a></td>
                   <td><a href="/discontinuities">{{NumDiscontinuities}}</a></td>
                 </tr>
                 {{/each}}
-
 
               </tbody>
             </table>
@@ -66,26 +63,4 @@
         </main>
       </div>
     </div>
-    <!--
-    <div class="album text-muted">
-      <div class="container">
-
-        <div class="row">
-          <div class="card">
-            <img src="images\Gmaps.png">
-            <a href ="/gmaps"><p class="card-text">Visualize no mapa a localização das descontinuidades</p> </a>
-          </div>
-          <div class="card">
-            <img src="images\geo.png">
-            <p class="card-text">Obtenha as atitudes e descrição das descontinuidades no campo com o dispositivo móvel.</p>
-          </div>
-          <div class="card">
-            <img src="images\IMG_5564.jpg">
-            <p class="card-text">Veja no mapa onde foi obtida a informação</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-    -->
 </body>
