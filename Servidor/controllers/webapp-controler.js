@@ -259,19 +259,20 @@ module.exports = function(app,passport,model) {
 	  */
 	router.get('/discontinuities', isLoggedIn, function (req,rsp,next){
 		var userPage= req.query.page===undefined? 0: req.query.page;
-		var numPerPage=15;
+		var numPerPage=5;
 		model.getNumberOfApiPages (null, function (err,numPages){
 				if (err){rsp.status(500).render(error, {message:"Server error..."});}
 				else {
 					if (userPage >=numPages) {
 						console.log ("userPageGreather than available pages!");
-						rsp.status(403).render('error', {message:"No more pages!"});
+						rsp.status(403).render('error', {message:"Page not available!"});
 					}
 					else{
 						model.getPagedDiscontinuities(null,function (err,res){
 							if (!err){
 								res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
 								res.page=userPage;
+								res.maxPages=numPages-1;
 								rsp.status(200);
 								rsp.render ('discontinuities', res);
 							}

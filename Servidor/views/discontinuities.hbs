@@ -2,7 +2,6 @@
     <div class="container-fluid">
       <div class="row">
  
-
         <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
           <h4 class="float-right">
             <a> | </a><a href="\logout">Logout</a>
@@ -123,8 +122,10 @@
 
           <div class="pagination">
             <p>Page {{page}}</p>
-            <a href="/discontinuities?page={{#prevPage page}}{{/prevPage}}">❮</a>
-            <a href="/discontinuities?page={{#nextPage page}}{{/nextPage}}">❯</a>
+            <a href="/discontinuities?page=0">❮❮</a>
+            <a href="/discontinuities?page={{#getPrevPage page}}{{/getPrevPage}}">❮</a>
+            <a href="/discontinuities?page={{#getNextPage page maxPages}}{{/getNextPage}}">❯</a>
+            <a href="/discontinuities?page={{maxPages}}">❯❯</a>
           </div>
         </main>
       </div>

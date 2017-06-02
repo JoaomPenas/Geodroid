@@ -34,8 +34,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.engine('hbs', expressHbs({extname:'hbs', defaultLayout:'base', helpers: {
         foo: function (xpto) { return JSON.stringify(xpto); },
-        prevPage: function (actualPage){if (actualPage==0) return 0; else return parseInt(actualPage)-1;},
-        nextPage: function (actualPage){return parseInt(actualPage)+1;},
+        getNextPage:function (page, maxpages){if (parseInt(page)<parseInt(maxpages))return parseInt(page)+1; else return page;},
+        getPrevPage:function (page){if (parseInt(page)>0)return parseInt(page)-1; else return 0;},
         bar: function () { return 'BAR'; }
     }}));
 app.set('view engine', 'hbs');
