@@ -38,7 +38,7 @@
                   </ul>
           </div>
 
-          <h3>Users</h3>
+          <br><h3>Users</h3>
           <div class="container">
           <h4> GET for (...)/api/users</h4>
           <p>Retrieve information for all users in our database.</p>
@@ -47,6 +47,7 @@
                 <li>Example of the response: <p>{ "users": [{"email": "yx@mail.com","pass": "pqqSMMLNLhjR52iIMTkh9YfwOTgc1hf7mjiMmExWWM0=","salt": 556795943876104232 },
                                             {"email": "x@mail.com","pass": "7zENUJrsmz/ISJrf6SLdZem/ws7B71yLf/vUPAKvYsM=", "salt": 316795907876104200}</p></li>  
             </ul>
+
          <h4> POST for (...)/api/users</h4>
           <p>Post's a new user in database. Note that is only possible for administrator users</p>
           <ul>
@@ -54,7 +55,15 @@
                 <li>Example: POST for url: (...)/api/users</li>  
           </ul>
           </div>
-          <h3>Sessions</h3>
+          <h4>DELETE for (...)api/discontinuities/deleteuser/:UserId</h4>
+          <p>Removes one user and the respectives discontinuities</p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities/deleteuser/:UserId</b></li>
+                
+          </ul>
+
+
+          <br><h3>Sessions</h3>
           <div class="container">
           <h4> GET for (...)/api/sessions</h4>
           <p>Retrieve information for all sessions in our database.</p>
@@ -62,8 +71,49 @@
                 <li>URL: <b>/api/sessions</b></li>
                 <li>Example of the response: <p>{"sessions": [{"name": "Arrabida"},{"name": "isel"}]}</p></li>  
             </ul>
+          <h4>GET for (...)api/discontinuities/:SessionId</h4>
+          <p>Retrieve the follow information for one session discontinuities: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering. </p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities/:SessionId</b></li>
+                <li>Example of the response: <p>{
+                                                    "discontinuities": [
+                                                      {
+                                                        "id": 1,
+                                                        "idUser": "w@mail.com",
+                                                        "idSession": "Arrabida",
+                                                        "direction": 59,
+                                                        "dip": 44,
+                                                        "latitude": 38.52,
+                                                        "longitude": -8.99,
+                                                        "persistence": 2,
+                                                        "aperture": 4,
+                                                        "roughness": 1,
+                                                        "infilling": 2,
+                                                        "weathering": 2
+                                                      },
+                                                      {
+                                                        "id": 2,
+                                                        "idUser": "w@mail.com",
+                                                        "idSession": "Arrabida",
+                                                        "direction": 223,
+                                                        "dip": -12,
+                                                        "latitude": 38.7556,
+                                                        "longitude": -9.11446,
+                                                        "persistence": 2,
+                                                        "aperture": 4,
+                                                        "roughness": 1,
+                                                        "infilling": 2,
+                                                        "weathering": 2
+                                                      }]}</p></li> 
+          </ul>
           </div>
-          <h3>Discontinuities</h3>
+          <h4>DELETE for (...)api/discontinuities/deletesession/:SessionId</h4>
+          <p>Removes one session and the respective Discontinuities</p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities/deletesession/:SessionId</b></li>
+                
+          </ul>
+          <br><h3>Discontinuities</h3>
         <div class="container">
           <h4>GET for (...)api/discontinuities?page:num</h4>
           <p>This endpoint is <b>paginated</b>, with a maximum of 50 results per page. </p>
@@ -107,42 +157,6 @@
           <ul>
                 <li>URL: <b>(...)api/discontinuities</b></li>
                 <li>Example: POST for url: (...)/api/discontinuities</li>
-          </ul>
-
-          <h4>GET for (...)api/discontinuities/:SessionId</h4>
-          <p>Retrieve the follow information for one session discontinuities: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering. </p>
-          <ul>
-                <li>URL: <b>(...)api/discontinuities/:SessionId</b></li>
-                <li>Example of the response: <p>{
-                                                    "discontinuities": [
-                                                      {
-                                                        "id": 1,
-                                                        "idUser": "w@mail.com",
-                                                        "idSession": "Arrabida",
-                                                        "direction": 59,
-                                                        "dip": 44,
-                                                        "latitude": 38.52,
-                                                        "longitude": -8.99,
-                                                        "persistence": 2,
-                                                        "aperture": 4,
-                                                        "roughness": 1,
-                                                        "infilling": 2,
-                                                        "weathering": 2
-                                                      },
-                                                      {
-                                                        "id": 2,
-                                                        "idUser": "w@mail.com",
-                                                        "idSession": "Arrabida",
-                                                        "direction": 223,
-                                                        "dip": -12,
-                                                        "latitude": 38.7556,
-                                                        "longitude": -9.11446,
-                                                        "persistence": 2,
-                                                        "aperture": 4,
-                                                        "roughness": 1,
-                                                        "infilling": 2,
-                                                        "weathering": 2
-                                                      }]}</p></li> 
           </ul>
         </div>
 

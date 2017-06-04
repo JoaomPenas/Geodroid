@@ -1,5 +1,11 @@
 'use strict'
-
+const numPerPage=10;
+function showObject(obj) {
+    for (var k in obj) {
+        console.log("o[\'" + k          // k       -> contem a string da chave
+                + "\']= " + obj[k])     // obj[k]   -> retorna o valor da propriedade
+    }
+}
 module.exports = function(app,passport,model) {          
     const router = require('express').Router()
   
@@ -172,7 +178,7 @@ module.exports = function(app,passport,model) {
 	 });
 
 	 /**
-	  * Users information
+	  * Users information (for each user number of sessions and discontinuities)
 	  */
 	 router.get('/users', isLoggedIn, function (req,rsp,next){	
 		model.getAllUsersResumedInformation(null,function(err,res){
@@ -188,22 +194,60 @@ module.exports = function(app,passport,model) {
 	 });
 
 	 /**
-	  * One user information
+	  * Discontinuities of one user (PAGINATED)
 	  */
 	 router.get('/users/:idUser', isLoggedIn, function (req,rsp,next){
-		 model.getDiscontinuitiesOfOneUser (req.params.idUser, function (err,res){	// TODO MODEL
-			if (!err){
-				res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
-				rsp.status(200);
-				rsp.render ('userdiscontinuity',res);
-			}
-			else{
-				rsp.status(500);
-				rsp.render ('error',{message:err});
-			}
-		 })
+		 var userPage= req.query.page===undefined? 0: req.query.page;
+		 model.getNumOfPages (null, "user", req.params.idUser, numPerPage, (err,numPages)=>{
+			 	if (err){rsp.status(500).render(error, {message:"Server error..."});}
+			 	if (userPage>=numPages){rsp.status(403).render('error', {message:"Page not available!"});}
+				else{
+					model.getPagedDiscontinuitiesOfOneUser(null, req.params.idUser, userPage, numPerPage, function (err,res){
+						if (!err){
+							res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
+							res.page=userPage;
+							res.maxPages=numPages-1;
+							showObject(res);
+							rsp.status(200);
+							rsp.render ('userdiscontinuity',res);
+						}
+						else{
+							rsp.status(500);
+							rsp.render ('error',{message:err});
+						}
+					})
+				}			
+		 } );
 	 });
-
+	 
+	 /**
+	  * Discontinuities of one session (PAGINATED)
+	  */
+	 router.get('/sessions/:idSession', isLoggedIn, function (req,rsp,next){
+		 var userPage= req.query.page===undefined? 0: req.query.page;
+		 model.getNumOfPages (null,"session", req.params.idSession,numPerPage, (err,numPages)=>{
+			 	if (err){rsp.status(500).render(error, {message:"Server error..."});}
+			 	if (userPage>=numPages){rsp.status(403).render('error', {message:"Page not available!"});}
+				else {
+					model.getPagedDiscontinuitiesOfOneSession(null, req.params.idSession, userPage, numPerPage, function (err,res){
+						if (!err){
+							res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
+							res.page=userPage;
+							res.maxPages=numPages-1;
+							showObject(res);
+							rsp.status(200);
+							rsp.render ('sessiondiscontinuity',res);
+						}
+						else{
+							rsp.status(500);
+							rsp.render ('error',{message:err});
+						}
+					})
+				}
+		 } );
+			
+	 });
+	
 	 /**
 	  * Contributors information
 	  */
@@ -238,37 +282,19 @@ module.exports = function(app,passport,model) {
 	  });
 
 	 /**
-	  * Discontinuities of one session
+	  * All discontinuities of the system (PAGINATED)
 	  */
-	 router.get('/sessions/:idSession', isLoggedIn, function (req,rsp,next){
-		model.getDiscontinuitiesFromOneSession(req.params.idSession, function (err,res){
-			if (!err){
-				res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
-				rsp.status(200);
-				rsp.render ('sessiondiscontinuity',res);
-			}
-			else{
-				rsp.status(500);
-				rsp.render ('error',{message:err});
-			}
-		});
-	 });
-
-	 /**
-	  * All discontinuities of the system
-	  */
-	router.get('/discontinuities', isLoggedIn, function (req,rsp,next){
+	 router.get('/discontinuities', isLoggedIn, function (req,rsp,next){
 		var userPage= req.query.page===undefined? 0: req.query.page;
-		var numPerPage=5;
-		model.getNumberOfApiPages (null, function (err,numPages){
+		
+		model.getNumberOfDiscontinuitiesPages (null, function (err,numPages){
 				if (err){rsp.status(500).render(error, {message:"Server error..."});}
 				else {
 					if (userPage >=numPages) {
-						console.log ("userPageGreather than available pages!");
 						rsp.status(403).render('error', {message:"Page not available!"});
 					}
 					else{
-						model.getPagedDiscontinuities(null,function (err,res){
+						model.getPagedDiscontinuities(null,userPage,numPerPage, function (err,res){
 							if (!err){
 								res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
 								res.page=userPage;
@@ -280,7 +306,7 @@ module.exports = function(app,passport,model) {
 								rsp.status(500);
 								rsp.render ('error',{message:err});
 							}
-						},userPage,numPerPage);
+						});
 					}
 				}
 	 	},numPerPage);

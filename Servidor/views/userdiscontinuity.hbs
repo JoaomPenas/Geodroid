@@ -11,7 +11,13 @@
               <h4 class="float-right"><a href="\admin">Admin area </a></h4>
           {{/if}}
           <h1>User</h1>
-          
+          <h5 class="float-right">
+            Page {{page}} of {{maxPages}}
+            <a href="?page=0">❮❮</a>
+            <a href="?page={{#getPrevPage page}}{{/getPrevPage}}">❮</a>
+            <a href="?page={{#getNextPage page maxPages}}{{/getNextPage}}">❯</a>
+            <a href="?page={{maxPages}}">❯❯</a>
+          </h5>
 
           <h2 align="center">{{discontinuities.[0].idUser}}</h2> <!-- because the session is allways the same...-->
           <div class="table-responsive">
@@ -57,12 +63,12 @@
 
           
           <h2> </h2>
-          <h3>Legend:</h3>
+          <h3>Conditions legend:</h3>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Conditions</th>
+                  <th></th>
                   <th>Class 0</th>
                   <th>Class 1</th>
                   <th>Class 2</th>
@@ -73,7 +79,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Discontinuity length <br>(persistence)</td>
+                  <td><b>Persistence</b><br>(discontinuity length)</td>
                   <td>N.A.</td>
                   <td>inf. 1m</td>
                   <td>1 -3m</td>
@@ -82,7 +88,7 @@
                   <td>sup. 20m</td>
                 </tr>
                 <tr>
-                  <td>Separation<br>(aperture)</td>
+                  <td><b>Aperture</b><br>(separation)</td>
                   <td>N.A.</td>
                   <td>None</td>
                   <td>inf 0.1mm</td>
@@ -91,7 +97,7 @@
                   <td>sup. 5mm</td>
                 </tr>
                 <tr>
-                  <td>Roughness</td>
+                  <td><b>Roughness</b></td>
                   <td>N.A.</td>
                   <td>Very rough</td>
                   <td>Rough</td>
@@ -100,7 +106,7 @@
                   <td>Slickensided</td>
                 </tr>
                 <tr>
-                  <td>Infilling</td>
+                  <td><b>Infilling</b></td>
                   <td>N.A.</td>
                   <td>None</td>
                   <td>Hard filling, <br>inf. 5mm</td>
@@ -109,7 +115,7 @@
                   <td>Soft filling, <br>sup. 5mm</td>
                 </tr>
                 <tr>
-                  <td>Weathering</td>
+                  <td><b>Weathering</b></td>
                   <td>N.A.</td>
                   <td>Unweathered</td>
                   <td>Slightly <br>weathered</td>
@@ -120,7 +126,13 @@
               </tbody>
             </table>
           </div>
-
+          <h5>
+            Page {{page}} of {{maxPages}}
+            <a href="?page=0">❮❮</a>
+            <a href="?page={{#getPrevPage page}}{{/getPrevPage}}">❮</a>
+            <a href="?page={{#getNextPage page maxPages}}{{/getNextPage}}">❯</a>
+            <a href="?page={{maxPages}}">❯❯</a>
+          </h5>
         </main>
       </div>
     </div>

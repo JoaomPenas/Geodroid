@@ -1,5 +1,8 @@
 'use strict'
+/*
+Provides the follow routes:
 
+ */
 module.exports = function(model, app) {          
     const router 		= require('express').Router();
 	var jwt             = require('jsonwebtoken');      // used to create, sign, and verify tokens
@@ -66,7 +69,7 @@ module.exports = function(model, app) {
 			   //rsp.render('error',{message:err})
 		   }
 		});
-   });
+   	 });
 
    /**
 	* Rota para remover da base de dados um utilizador existente
@@ -86,6 +89,26 @@ module.exports = function(model, app) {
 		});
 	 });
 
+
+   /**
+	* Rota para remover da base de dados uma sessão existente (e respectivas descontinuidades)
+	* Função apenas disponível para o administrador (admin)
+    */
+   router.delete('/api/deletesession/:idSession', VerifyToken, IsAdmin,  function (req,rsp,next){
+	
+		model.deleteSession(req.params.idSession, function (err, message){
+			if (err){
+				rsp.status(404);
+				rsp.json({message:err})
+			}
+			else {
+				rsp.status(200);
+				rsp.json({message:message})
+			}	
+		});
+	 });
+
+
 	/**
 	 * Devolve informação de todas as sessões
 	 */
@@ -99,24 +122,8 @@ module.exports = function(model, app) {
 				rsp.status(500).json({ error: err });
 			}
 		});
-	});
+	 });
 
-	/**
-	 * Devolve informação de todas as descontinuidades
-	 */
-/*	
-	router.get('/api/discontinuities', VerifyToken, function (req,rsp,next){
-	//router.get('/api/discontinuities', function (req,rsp,next){
-		model.getAllDiscontinuities (null, function (err,res){
-			if (!err){
-				rsp.json(res);
-			}
-			else{
-				rsp.status(500).json({ error: err });
-			}
-		});
-	});
-*/
 	/**
 	 * Devolve informação de todas as descontinuidades de forma paginada
 	 * Caso não seja definida a paginação é retornada a primeira pagina (pagina 0)
@@ -127,39 +134,24 @@ module.exports = function(model, app) {
 		var numPerPage=10;
 		//var userPage = req.query.page;
 		var userPage= req.query.page===undefined? 0: req.query.page;
-/*
-		if (userPage===undefined) {
-			console.log ("entered on if!");
-			model.getAllDiscontinuities (null, function (err,res){
-				if (!err){
-					rsp.json(res);
-				}
+
+		model.getNumberOfDiscontinuitiesPages (null, function (err,numPages){
+			if (err){rsp.sendStatus(500);}
+			else{
+				if (userPage >=numPages) {
+					rsp.sendStatus(403);}	// não exitem tantas paginas quanto o solicitado!
 				else{
-					rsp.status(500).json({ error: err });
+					model.getPagedDiscontinuities (null,userPage,numPerPage, function (err,res){
+								if (!err){
+									rsp.json(res);
+								}
+								else{
+									rsp.sendStatus(500);
+								}
+					});
 				}
-			});
-		}
-		else {
-*/
-			//if (userPage===undefined) userPage=0;	
-			model.getNumberOfApiPages (null, function (err,numPages){
-				if (err){rsp.sendStatus(500);}
-				else{
-					if (userPage >=numPages) {
-						rsp.sendStatus(403);}	// não exitem tantas paginas quanto o solicitado!
-					else{
-						model.getPagedDiscontinuities (null,function (err,res){
-									if (!err){
-										rsp.json(res);
-									}
-									else{
-										rsp.sendStatus(500);
-									}
-						},userPage,numPerPage);
-					}
-				}
-			}, numPerPage);
-//		}
+			}
+		}, numPerPage);
 	});
 
 	/**

@@ -11,6 +11,7 @@ module.exports=function(_dal){
 
     /**
     * Função usada na área de administração, para criação de um novo utilizador
+    * (Usada pelo api-controler e web-controler)
     * @param {string} email - O email do ustilizador  
     * @param {string} password - A password do ustilizador  
     * @param {function} cb - função de callback
@@ -25,6 +26,7 @@ module.exports=function(_dal){
     
     /**
      * Função usada para Login
+     * (Usada apenas pelo webcontroler)
      * @param {string} email - designação do utilizador 
      * @param {function} cb - função de callback
      */
@@ -34,6 +36,7 @@ module.exports=function(_dal){
 
     /**
      * Função usada para remover um utilizador
+     * (Usada pelo api-controler e web-controler)
      * @param {string} email - designação do utilizador 
      * @param {function} cb - função de callback
      */
@@ -42,7 +45,9 @@ module.exports=function(_dal){
     }
 
     /**
+     * ---------------------------usar também na web api!--------------------
      * Função usada para remover uma sessão
+     * (usada apenas pelo webapp-controler)
      * @param {string} session - designação da sessão
      * @param {function} cb - função de callback
      */
@@ -52,6 +57,7 @@ module.exports=function(_dal){
 
     /**
      * O resultado é um objecto com o resumo de todos os utilizadores de acordo com o seguinte exemplo:
+     * (Usado pelo apenas pelo api-controler)
      *  {users:[{email:"w@mail.com",pass:"F1mZmpiuwK6b83ODjaS9r/1x7uWC+oSfrwd/eg4qxW0=",salt:114},
      *          {email:"z@mail.com",pass:"FG/+qep17U1wOphGUb8wnJ22I6ff4y7fE1lJx6KVm3E=",salt:113}]}
      * @param {function} cb - função de callback
@@ -67,8 +73,9 @@ module.exports=function(_dal){
      * O resultado é um objecto com o resumo de todas as sessões de acordo com o seguinte exemplo:
      * {users:[{email:"w@mail.com",sessions:2,discont:50},
      *         {email:"z@mail.com",sessions:5,discont:30}]}
+     * (Usado apenas pelo webapp-controler)
      * @param {function} cb - função de callback
-     * @param {boolean} onlyContributers - função de callback
+     * @param {boolean} onlyContributers - flag para determinar se se pretende (ou não) apenas user's com descontinuidades
      */
     function GetAllUsersResumedInformation(err, cb, onlyContributers){ 
             dal.getUserSummary( function(err,res){ 
@@ -81,9 +88,10 @@ module.exports=function(_dal){
     }
 
     /**
-     * O resultado é um objecto com o resumo de todas as sessões de acordo com o seguinte exemplo:
+     * Retorna um objecto com o resumo de todas as sessões de acordo com o seguinte exemplo:
      *  {sessions:[{session:"Arrabida",numUsers:2,numDiscont:50},
      *             {session:"FozCoa",numUsers:5,numDiscont:30}]}
+     * (usado apenas pelo webapp-controler)
      * @param {function} cb - função de callback
      */
     function GetAllSessionsResumedInformation(err, cb){ 
@@ -98,7 +106,7 @@ module.exports=function(_dal){
 
     /**
      * O resultado é um objecto com todas as descontinuidades, de acordo com o seguinte exemplo:
-     * (Função não encontra-se a ser utilizada)
+     * (Função usada apenas pelo api-controler)
      * var sess= {sessions: [{name:"Arrabida"}, {name:"FozCoa"}]}
      */
     function GetAllSessions(err, cb){
@@ -108,24 +116,13 @@ module.exports=function(_dal){
             });
     }
 
-    /**
-     * Obtém as descontinuidades de determinado utilizador, de acordo com o seguinte exemplo:
-     * var desc= {discontinuities: [{id:1, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2, note: "nota xpto"},
-     * 					            {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2, note: "nota xpto"}]} 
-     * @param {string} user - designação do utilizador
-     * @param {function} cb - função de callback
-     */
-    function GetDiscontinuitiesOfOneUser(user, cb){
-        dal.getDiscontinuitiesOfOneUser (user, function (err, res){
-             if(err) { cb("An error ocurred...please verifify your connection."); }
-             else {cb(null, {discontinuities:res});}
-        });
-    }
 
     /**
+     * * ---------------------A ser descontinuado...---------------------------
      * O resultado é um objecto com as descontinuidades de uma sessão, de acordo com o seguinte exemplo:
      * var desc= {discontinuities: [{id:1, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2},
      * 					            {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2}]} 
+     * (usado apenas pelo api-controler)
      * @param {string} session - nome da sessão
      * @param {function} cb - função de callback
      */
@@ -140,6 +137,7 @@ module.exports=function(_dal){
      * O resultado é um objecto com todas as descontinuidades, de acordo com o seguinte exemplo:
      *     var desc= {discontinuities: [{id:1, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2},
 	 *				  	                {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2}]}
+     * (Função usada pela rota gmaps)
      * @param {function} cb - função de callback
      * @param {int} page (opcional) - numero da página pretendida
      * @param {int} numPerPage (opcional) - numero de elementos por página
@@ -156,11 +154,12 @@ module.exports=function(_dal){
      * O resultado é um objecto com todas as descontinuidades, de acordo com o seguinte exemplo:
      *     var desc= {discontinuities: [{id:1, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2},
 	 *				  	                {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2}]}
+     * (Usado pelo api-controler e webapp-controler)
      * @param {function} cb - função de callback
-     * @param {int} page (opcional) - numero da página pretendida
-     * @param {int} numPerPage (opcional) - numero de elementos por página
+     * @param {int} page - numero da página pretendida
+     * @param {int} numPerPage - numero de elementos por página (usado para limitar os resultados)
      */
-    function GetPagedDiscontinuities (err, cb, page, numPerPage){
+    function GetPagedDiscontinuities (err, page, numPerPage, cb ){
         var paged=true;
         dal.readAll("discontinuities", function (err,res){
             if(err) { cb("An error ocurred...please verifify your connection."); }
@@ -168,9 +167,45 @@ module.exports=function(_dal){
         }, paged, page, numPerPage);
     }
 
+
+    /**
+     * O resultado passado ao cb é um objecto com as descontinuidades da pagina, de acordo com o seguinte exemplo:
+     *     var desc= {discontinuities: [{id:1, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2},
+	 *				  	                {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2}]}
+     * (Usado apenas pelo webapp-controler)
+     * @param {string} user - designacao do utilizador
+     * @param {int} page - numero da página pretendida
+     * @param {int} numPerPage - numero de elementos por página (usado para limitar os resultados)
+     * @param {function} cb - função de callback
+     */
+    function GetPagedDiscontinuitiesOfOneUser(err, user, page, numPerPage, cb ){
+        dal.getPagedDiscontinuitiesOfOneUserOrSession(null, "user", user, page, numPerPage, function (err,res){
+            if(err) { cb("An error ocurred...please verifify your connection."); }
+            else {cb (null,{discontinuities:res});}
+        });
+    }
+
+    /**
+     * O resultado passado ao cb é um objecto com as descontinuidades da pagina, de acordo com o seguinte exemplo:
+     *     var desc= {discontinuities: [{id:1, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2},
+	 *				  	                {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2}]}
+     * (Usado apenas pelo webapp-controler)
+     * @param {string} session - designacao da sessão
+     * @param {int} page - numero da página pretendida
+     * @param {int} numPerPage - numero de elementos por página
+     * @param {function} cb - função de callback
+     */
+    function GetPagedDiscontinuitiesOfOneSession(err, session, page, numPerPage, cb ){
+        dal.getPagedDiscontinuitiesOfOneUserOrSession(null, "session", session, page, numPerPage, function (err,res){
+            if(err) { cb("An error ocurred...please verifify your connection."); }
+            else {cb (null,{discontinuities:res});}
+        });
+    }
+
     /**
      * O resultado é um objecto semelhante ao seguinte:
      * { summary: [ RowDataPacket { NumUsers: 3, NumSessions: 4, NumDiscontinuities: 15 } ] }
+     * (Usado apenas pelo webapp-controler)
      * @param {function} cb - função de callback
      */
     function GetSummary (err, cb){
@@ -184,7 +219,8 @@ module.exports=function(_dal){
     }
 
     /**
-     * Função para inserir um conjunto de descontinuidades (usada pelo controlador da Web Api)
+     * Função para inserir um conjunto de descontinuidades 
+     * (usada apenas pelo api-controler)
      * @param {object} disc - objecto semelhante ao seguinte:
      * { "discontinuities": [{"aperture":5,"dip":66,"direction":50,"id":100,"infilling":5,"latitude":38,"longitude":9,"persistence":5,"roughness":5,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5 },
      *                       {"aperture":2,"dip":66,"direction":50,"id":101,"2nfilling":4,"latitude":38,"longitude":9,"persistence":1,"roughness":3,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5 } ]}
@@ -195,6 +231,8 @@ module.exports=function(_dal){
     }
 
     /**
+     * Função de autenticação de um utilizador
+     * (Usada pelo api-controler e passport)
      * @param {string} email - designação do utilizador
      * @param {string} password - password do utilizador
      * @param {function} done - função de callback
@@ -233,19 +271,38 @@ module.exports=function(_dal){
 					return done(null, user);
 				}
 			});   
-    	}
+    }
 
     /**
-     * O resultado é um objecto , de acordo com o seguinte exemplo:
+     * Obtém o número de páginas (para todas as descontinuidades):
+     * (Usada pelo api-controler e webapp-controler)
      * @param {function} cb - função de callback
      * @param {int} numPerPage - número de descontinuidades por página
      */
-    function GetNumberOfApiPages (err, cb, numPerPage){
+    function GetNumberOfDiscontinuitiesPages (err, cb, numPerPage){
         dal.getSummaryCount(function (err,res){
             if(err) { cb("An error ocurred...please verifify your connection."); }
             else {
                 var numDiscont = res[0].NumDiscontinuities;
                 var numPages = Math.ceil(numDiscont/numPerPage);    
+                cb (null,numPages);
+            }
+        });
+    }
+
+    /**
+     * Obtém o número de páginas (para todas as descontinuidades de um determinado utilizador):
+     * (Usada apenas pelo webapp-controler)
+     * @param {string} type - can be only "user" or "session""
+     * @param {string} name - the name/identification of the user or the session
+     * @param {int} numPerPage - número de descontinuidades por página
+     * @param {function} cb - função de callback
+     */
+    function GetNumOfPages (err, type, name, numPerPage, cb){
+        dal.getNumOfDiscOfOneUserOrSession(null, type, name, numPerPage, function (err,res){
+            if(err) { cb("An error ocurred...please verifify your connection."); }
+            else {
+                var numPages = Math.ceil(res/numPerPage);
                 cb (null,numPages);
             }
         });
@@ -258,15 +315,17 @@ module.exports=function(_dal){
         getAllUsers: GetAllUsers,
         getAllSessions:GetAllSessions,
         deleteSession: DeleteSession,
-        getDiscontinuitiesOfOneUser: GetDiscontinuitiesOfOneUser,
         getDiscontinuitiesFromOneSession:GetDiscontinuitiesFromOneSession,
         getAllDiscontinuities:GetAllDiscontinuities,
         getPagedDiscontinuities:GetPagedDiscontinuities,
+        getPagedDiscontinuitiesOfOneUser:GetPagedDiscontinuitiesOfOneUser,
+        getPagedDiscontinuitiesOfOneSession:GetPagedDiscontinuitiesOfOneSession,
         postDiscontinuities:PostDiscontinuities,
         getSummary:GetSummary,
         getAllUsersResumedInformation:GetAllUsersResumedInformation,
         getAllSessionsResumedInformation:GetAllSessionsResumedInformation,
         authenticate:Authenticate,
-        getNumberOfApiPages:GetNumberOfApiPages
+        getNumberOfDiscontinuitiesPages:GetNumberOfDiscontinuitiesPages,
+        getNumOfPages:GetNumOfPages
     }
 }
