@@ -12,5 +12,7 @@
         <item name="android:textColorPrimary">@color/iron</item>
     </style>
 
+    <style name="noTitleBar" parent="Theme.AppCompat.NoActionBar">
+    </style>
 
 </resources>

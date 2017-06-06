@@ -1,11 +1,14 @@
 package com.example.ps.geodroidapp.Activities;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.ps.geodroidapp.DB.SqlDataBase;
@@ -15,7 +18,8 @@ public class MainActivityStart extends AppCompatActivity {
 
     private String usermail ="",token="";
 
-    Button existSessionbutton, createSessionbutton;
+    ImageButton existSessionbutton;
+    Button createSessionbutton;
     Intent listSession, createSession;
     private SqlDataBase sql=null;
 
@@ -23,7 +27,6 @@ public class MainActivityStart extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_start);
-
         Log.d("HPS", "2nd level MainActivityStart Activity oncreate");
 
         Bundle extras = getIntent().getExtras();
@@ -37,7 +40,7 @@ public class MainActivityStart extends AppCompatActivity {
         listSession     = new Intent(this, ListSession.class);
         createSession   = new Intent(this, CreateSession.class);
 
-        existSessionbutton = (Button) findViewById(R.id.button_existingSession);
+        existSessionbutton = (ImageButton) findViewById(R.id.button_existingSession);
         createSessionbutton = (Button) findViewById(R.id.button_createSession);
 
 

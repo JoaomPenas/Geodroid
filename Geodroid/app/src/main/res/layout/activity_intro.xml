@@ -22,15 +22,16 @@
         android:layout_centerHorizontal="true" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="220dp"
         android:layout_height="225dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:background="#33ffffff"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="25dp"
-        android:id="@+id/linearLayout"
-        android:layout_marginTop="80dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        tools:layout_editor_absoluteY="25dp">
 
         <LinearLayout
             android:layout_width="366dp"

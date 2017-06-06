@@ -11,14 +11,12 @@ public class AuthenticateResponse {
     private  boolean success;
     private  String message;
     private  String token;
-    private  DtoCatalog  dto;
 
     public AuthenticateResponse(boolean success, String message, String token,DtoCatalog  dto) {
 
         this.success = success;
         this.message = message;
         this.token = token;
-        this.dto = dto;
     }
 
     public String getMessage() {
@@ -44,12 +42,5 @@ public class AuthenticateResponse {
         this.token = token;
     }
 
-    public DtoCatalog getDto() {
-        return dto;
-    }
-
-    public void setDto(DtoCatalog dto) {
-        this.dto = dto;
-    }
 
 }

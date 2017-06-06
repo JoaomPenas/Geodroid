@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,87 +9,98 @@
     tools:layout_editor_absoluteX="0dp">
 
     <ImageButton
-        android:id="@+id/imageButton_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/session_menu_button_map"
-        app:srcCompat="@drawable/image_upload_btn" />
-    <Button
-        android:id="@+id/session_menu_button_new_regist"
-        android:layout_width="170dp"
-        android:layout_height="60dp"
-        android:text="@string/sessionMenu_newRegistration"
-        android:textSize="18sp"
-        android:textAllCaps="false"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/session_menu_button_sessiondata"
-        app:layout_constraintTop_toBottomOf="@+id/session_menu_tv_session_name" />
-
-    <Button
-        android:id="@+id/session_menu_button_sessiondata"
-        android:layout_width="170dp"
-        android:layout_height="60dp"
-        android:textAllCaps="false"
-        android:text="@string/sessionMenu_data"
-        android:textSize="18sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/session_menu_button_statistics"
-        app:layout_constraintTop_toBottomOf="@+id/session_menu_button_new_regist" />
-
-    <Button
-        android:id="@+id/session_menu_button_statistics"
-        android:layout_width="170dp"
-        android:layout_height="60dp"
-        android:textAllCaps="false"
-        android:text="@string/sessionMenu_statistics"
-        android:textSize="18sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/session_menu_button_map"
-        app:layout_constraintTop_toBottomOf="@+id/session_menu_button_sessiondata" />
-
-    <Button
-        android:id="@+id/session_menu_button_map"
-        android:layout_width="170dp"
-        android:layout_height="60dp"
-        android:textAllCaps="false"
-        android:text="@string/sessionMenu_map"
-        android:textSize="18sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton_upload"
-        app:layout_constraintTop_toBottomOf="@+id/session_menu_button_statistics" />
-
-    <TextView
-        android:id="@+id/session_menu_tv_session_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAllCaps="false"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/session_menu_button_new_regist"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
         android:id="@+id/imageButton_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/ic_menu_share"
         tools:layout_editor_absoluteX="323dp"
-        tools:layout_editor_absoluteY="16dp" />
+        tools:layout_editor_absoluteY="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/session_menu_tv_session_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/session_menu_button_new_regist"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/session_menu_button_new_regist"
+        android:layout_width="240dp"
+        android:layout_height="60dp"
+        android:layout_weight="0.34"
+        android:text="@string/sessionMenu_newRegistration"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/session_menu_button_sessiondata"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/session_menu_tv_session_name"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/imageButton_share"
+        android:layout_alignStart="@+id/session_menu_button_sessiondata" />
+
+    <Button
+        android:id="@+id/session_menu_button_sessiondata"
+        android:layout_width="238dp"
+        android:layout_height="60dp"
+        android:layout_weight="0.11"
+        android:text="@string/sessionMenu_data"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:layout_marginTop="26dp"
+        android:layout_below="@+id/session_menu_button_new_regist"
+        android:layout_alignStart="@+id/session_menu_button_map" />
+
+    <Button
+        android:id="@+id/session_menu_button_statistics"
+        android:layout_width="236dp"
+        android:layout_height="60dp"
+        android:layout_weight="0.17"
+        android:text="@string/sessionMenu_statistics"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:layout_above="@+id/imageButton_upload"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="21dp" />
+
+    <Button
+        android:id="@+id/session_menu_button_map"
+        android:layout_width="238dp"
+        android:layout_height="60dp"
+        android:layout_weight="0.16"
+        android:text="@string/sessionMenu_map"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/session_menu_button_sessiondata"
+        android:layout_alignStart="@+id/session_menu_button_statistics" />
+
+    <ImageButton
+        android:id="@+id/imageButton_upload"
+        android:layout_width="84dp"
+        android:layout_height="76dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/session_menu_button_map"
+        app:srcCompat="@drawable/image_upload_btn"
+        tools:layout_editor_absoluteY="372dp"
+        android:layout_marginBottom="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
