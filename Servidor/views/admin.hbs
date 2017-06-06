@@ -1,8 +1,6 @@
 <body>
     <div class="container-fluid">
       <div class="row">
- 
-
         <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
           <h4 class="float-right">
             <a href="\logout">Logout</a>
@@ -22,14 +20,6 @@
               </a>
               <h4>Delete Session</h4>
             </div>
-            <!--
-            <div class="col-4 col-sm-4 placeholder">
-              <a href="admin/discontinuities">
-              <img src="images/discontinuities.jpg" width="200" height="200" class="img-fluid rounded-circle" alt="Discontinuities thumbnail">
-              </a>
-              <h4>Delete Discontinuities</h4>
-            </div>
-            -->
           </section>
 
           <h2>Data resume</h2>
@@ -37,7 +27,7 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Contributers</th>
+                  <th>Contributors</th>
                   <th>Sessions</th>
                   <th>Measures</th>
                 </tr>
@@ -46,7 +36,7 @@
               <tbody>
                 {{#each summary}}
                 <tr>
-                  <td><a href="/contributers">{{NumUsers}}</a></td>
+                  <td><a href="/contributors">{{NumUsers}}</a></td>
                   <td><a href="/sessions">{{NumSessions}}</a></td>
                   <td><a href="/discontinuities">{{NumDiscontinuities}}</a></td>
                 </tr>

@@ -1,5 +1,8 @@
 'use strict'
+/*
+Provides the follow routes:
 
+ */
 module.exports = function(model, app) {          
     const router 		= require('express').Router();
 	var jwt             = require('jsonwebtoken');      // used to create, sign, and verify tokens
@@ -9,7 +12,7 @@ module.exports = function(model, app) {
 	 * Responde um JsonWebToken em caso de sucesso.
 	 */
 	router.post('/api/authenticate', function (req,rsp,next){ 
-		
+		console.log(req.body);
 		model.authenticate (req.body.email, req.body.pass, function(err, user){	// check if password matches
 			if (err) {
 				rsp.json({ success: false, message: 'Authentication failed' });
@@ -19,19 +22,16 @@ module.exports = function(model, app) {
 					rsp.json({ success: false, message: 'Authentication failed. Wrong credentials!' });
 				} else 
 				if (user) {
-				
-				// if user is found and password is right create a token
-				var token = jwt.sign({username:user.username}, app.get('superSecret'),{expiresIn:'24h'});	// DUVIDA
-				
-				// return the information including token as JSON
-				rsp.json({
-					success: true,
-					message: 'Enjoy your token!',
-					token: token
-				});
-			}
+					// if user is found and password is right create a token
+					var token = jwt.sign({username:user.username}, app.get('superSecret'),{expiresIn:'24h'});				
+					// return the information including token as JSON
+					rsp.json({
+						success: true,
+						message: 'Enjoy your token!',
+						token: token
+					});
+				}
 		});
-
 	});
 
 	/**
@@ -46,13 +46,12 @@ module.exports = function(model, app) {
 			else 	{
 				rsp.json(res);
 			}
-			
 		});	
 	});
 
 	/**
 	 * Rota para inserir um novo user (necessário enviar um Json semelhante ao seguinte
-	 * exemplo: {"username":"wer4", "password":"123"}). 
+	 * exemplo: {"username":"wer4", "password":"123"}
 	 * Função apenas disponível para o administrador (admin)
 	 */
 	router.post('/api/users', VerifyToken, IsAdmin, function (req,rsp,next){   
@@ -70,7 +69,7 @@ module.exports = function(model, app) {
 			   //rsp.render('error',{message:err})
 		   }
 		});
-   });
+   	 });
 
    /**
 	* Rota para remover da base de dados um utilizador existente
@@ -90,6 +89,26 @@ module.exports = function(model, app) {
 		});
 	 });
 
+
+   /**
+	* Rota para remover da base de dados uma sessão existente (e respectivas descontinuidades)
+	* Função apenas disponível para o administrador (admin)
+    */
+   router.delete('/api/deletesession/:idSession', VerifyToken, IsAdmin,  function (req,rsp,next){
+	
+		model.deleteSession(req.params.idSession, function (err, message){
+			if (err){
+				rsp.status(404);
+				rsp.json({message:err})
+			}
+			else {
+				rsp.status(200);
+				rsp.json({message:message})
+			}	
+		});
+	 });
+
+
 	/**
 	 * Devolve informação de todas as sessões
 	 */
@@ -103,21 +122,36 @@ module.exports = function(model, app) {
 				rsp.status(500).json({ error: err });
 			}
 		});
-	});
+	 });
 
 	/**
-	 * Devolve informação de todas as descontinuidades
+	 * Devolve informação de todas as descontinuidades de forma paginada
+	 * Caso não seja definida a paginação é retornada a primeira pagina (pagina 0)
+	 * Exemplo de utilização: localhost:3010/api/discont?page=1
+	 * Se tiver a página retorna a pagina; se não retorna 403
 	 */
 	router.get('/api/discontinuities', VerifyToken, function (req,rsp,next){
-	//router.get('/api/discontinuities', function (req,rsp,next){
-		model.getAllDiscontinuities (null, function (err,res){
-			if (!err){
-				rsp.json(res);
-			}
+		var numPerPage=10;
+		//var userPage = req.query.page;
+		var userPage= req.query.page===undefined? 0: req.query.page;
+
+		model.getNumberOfDiscontinuitiesPages (null, function (err,numPages){
+			if (err){rsp.sendStatus(500);}
 			else{
-				rsp.status(500).json({ error: err });
+				if (userPage >=numPages) {
+					rsp.sendStatus(403);}	// não exitem tantas paginas quanto o solicitado!
+				else{
+					model.getPagedDiscontinuities (null,userPage,numPerPage, function (err,res){
+								if (!err){
+									rsp.json(res);
+								}
+								else{
+									rsp.sendStatus(500);
+								}
+					});
+				}
 			}
-		});
+		}, numPerPage);
 	});
 
 	/**
@@ -139,7 +173,7 @@ module.exports = function(model, app) {
 	 * Rota para inserir na base de dados um conjunto de descontinuidades
 	 * Espera-se um pedido com dados Json com estrutura semelhante à seguinte:
      * { "discontinuities": [{"aperture":5,"dip":66,"direction":50,"id":100,"infilling":5,"latitude":38,"longitude":9,"persistence":5,"roughness":5,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5 },
-     *                       {"aperture":2,"dip":66,"direction":50,"id":101,"2nfilling":4,"latitude":38,"longitude":9,"persistence":1,"roughness":3,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5 } ]}
+     *                       {"aperture":2,"dip":66,"direction":50,"id":101,"infilling":4,"latitude":38,"longitude":9,"persistence":1,"roughness":3,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5 } ]}
 	 */
 	router.post('/api/discontinuities', VerifyToken, function (req,rsp,next){ 
 		model.postDiscontinuities(req.body,function (err,result){
@@ -149,8 +183,7 @@ module.exports = function(model, app) {
 			}
 			else{
 				rsp.sendStatus(200);
-			}
-				
+			}	
 		});
 	});
 
@@ -171,14 +204,13 @@ module.exports = function(model, app) {
 			// verifies secret and checks exp
 			jwt.verify(token, app.get('superSecret'), function(err, decoded) {      
 					if (err) {
-						return res.json({ success: false, message: 'Failed to authenticate token.' });    
+						return res.status(403).json({ success: false, message: 'Failed to authenticate token.' });    
 					} else {
 						// if everything is good, save to request for use later
 						req.decoded = decoded;    
 						next();
 					}
 				});
-
 		} else {
 			// if there is no token return an error
 			return res.status(403).send({ 

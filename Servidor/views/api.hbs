@@ -18,34 +18,36 @@
           <h3>Authentication</h3>
           <div class="container">
                 <h4> POST for (...)/api/authenticate</h4>
-                <p>Retrieve JsonWebToken to use api. Save the token in your aplication and send it together with york request's. The token expires in 24H.</p>
+                <p>Retrieve <b>JsonWebToken</b> to use api. Save the token in your aplication and send it together with york request's. <b>The token expires in 24H.</b></p>
                   <ul>
                       <li>URL: <b>/api/authenticate</b></li>
-                      <li>Example: <b>POST</b> for (...)/api/authenticate sending us your credentials. Example: 
-                      <b>Content-Type: application/x-www-form-urlencoded</b> with the follow information: <b>email=yourEmailHere&pass=yourPasswordHere</b> or
-                      <b>Content-Type: {"Content-Type":"application/json"}</b> with the follow information: <b>{"email": "yourEmailHere",	"pass": "yourPasswordHere"}</b>
-                      If you have sucess, you will receive an similar json response:
-                        {
+                      <li>Example: <br><b>POST</b> for (...)/api/authenticate, sending us your credentials. E.g.: <br>
+                      <b>Content-Type: application/x-www-form-urlencoded</b> with the follow information on body: <b>email=yourEmailHere&pass=yourPasswordHere</b> or
+                      <b>Content-Type: {"Content-Type":"application/json"}</b> with the follow information on body: <b>{"email": "yourEmailHere",	"pass": "yourPasswordHere"}</b>
+                      <br><br>If you have sucess, you will receive an similar json response:
+                      <br>{
                           "success": true,
                           "message": "Enjoy your token!",
                           "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InhwdG9AeHB0by5wdCIsImlhdCI6MTQ5NTgwNzMzOCwiZXhwIjoxNDk1ODkzNzM4fQ.m_1o-C8Qikhj9pDmTsnT2auT0BJtxNhpgKnCExGuOkU"
                         }
-                        <p>After you get your token, you should save it and use with each request. You can do your requests in two way: </p>
-                        <p>	- Passing the token using an x-access-token header type</p>
-                        <p>	- Passing the token as a URL parameter. E.G. for an GET: localhost:3010/api/discontinuities?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InhwdG9AeHB0by5wdCIsImlhdCI6MTQ5NTgwNzMzOCwiZXhwIjoxNDk1ODkzNzM4fQ.m_1o-C8Qikhj9pDmTsnT2auT0BJtxNhpgKnCExGuOkU</p>
+                        <br><br>After you get your token, you should save it in your aplication and use with each request you do to this web api. You can do your requests in two way:
+                        <br>- Passing the token using an <b>x-access-token</b> header <b>Content-Type</b>
+                        <br>- Passing the token as a <b>URL parameter</b>. E.G. for an GET: localhost:3010/api/discontinuities?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InhwdG9AeHB0by5wdCIsImlhdCI6MTQ5NTgwNzMzOCwiZXhwIjoxNDk1ODkzNzM4fQ.m_1o-C8Qikhj9pDmTsnT2auT0BJtxNhpgKnCExGuOkU
 
                       </li>  
                   </ul>
           </div>
 
-          <h3>Users</h3>
+          <br><h3>Users</h3>
           <div class="container">
           <h4> GET for (...)/api/users</h4>
           <p>Retrieve information for all users in our database.</p>
             <ul>
                 <li>URL: <b>/api/users</b></li>
-                <li>Example: <a href="/api/users">(...)/api/users</a></li>  
+                <li>Example of the response: <p>{ "users": [{"email": "yx@mail.com","pass": "pqqSMMLNLhjR52iIMTkh9YfwOTgc1hf7mjiMmExWWM0=","salt": 556795943876104232 },
+                                            {"email": "x@mail.com","pass": "7zENUJrsmz/ISJrf6SLdZem/ws7B71yLf/vUPAKvYsM=", "salt": 316795907876104200}</p></li>  
             </ul>
+
          <h4> POST for (...)/api/users</h4>
           <p>Post's a new user in database. Note that is only possible for administrator users</p>
           <ul>
@@ -53,22 +55,100 @@
                 <li>Example: POST for url: (...)/api/users</li>  
           </ul>
           </div>
-          <h3>Sessions</h3>
+          <h4>DELETE for (...)api/discontinuities/deleteuser/:UserId</h4>
+          <p>Removes one user and the respectives discontinuities</p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities/deleteuser/:UserId</b></li>
+                
+          </ul>
+
+
+          <br><h3>Sessions</h3>
           <div class="container">
           <h4> GET for (...)/api/sessions</h4>
           <p>Retrieve information for all sessions in our database.</p>
             <ul>
                 <li>URL: <b>/api/sessions</b></li>
-                <li>Example: <a href="/api/sessions">(...)/api/sessions</a></li>  
+                <li>Example of the response: <p>{"sessions": [{"name": "Arrabida"},{"name": "isel"}]}</p></li>  
             </ul>
-          </div>
-          <h3>Discontinuities</h3>
-        <div class="container">
-          <h4>GET for (...)api/discontinuities</h4>
-          <p>Retrieve the follow information for all discontinuities: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering. </p>
+          <h4>GET for (...)api/discontinuities/:SessionId</h4>
+          <p>Retrieve the follow information for one session discontinuities: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering. </p>
           <ul>
-                <li>URL: <b>(...)api/discontinuities</b></li>
-                <li>Example: <a href="/api/discontinuities">GET for url: (...)/api/discontinuities</a></li>  
+                <li>URL: <b>(...)api/discontinuities/:SessionId</b></li>
+                <li>Example of the response: <p>{
+                                                    "discontinuities": [
+                                                      {
+                                                        "id": 1,
+                                                        "idUser": "w@mail.com",
+                                                        "idSession": "Arrabida",
+                                                        "direction": 59,
+                                                        "dip": 44,
+                                                        "latitude": 38.52,
+                                                        "longitude": -8.99,
+                                                        "persistence": 2,
+                                                        "aperture": 4,
+                                                        "roughness": 1,
+                                                        "infilling": 2,
+                                                        "weathering": 2
+                                                      },
+                                                      {
+                                                        "id": 2,
+                                                        "idUser": "w@mail.com",
+                                                        "idSession": "Arrabida",
+                                                        "direction": 223,
+                                                        "dip": -12,
+                                                        "latitude": 38.7556,
+                                                        "longitude": -9.11446,
+                                                        "persistence": 2,
+                                                        "aperture": 4,
+                                                        "roughness": 1,
+                                                        "infilling": 2,
+                                                        "weathering": 2
+                                                      }]}</p></li> 
+          </ul>
+          </div>
+          <h4>DELETE for (...)api/discontinuities/deletesession/:SessionId</h4>
+          <p>Removes one session and the respective Discontinuities</p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities/deletesession/:SessionId</b></li>
+                
+          </ul>
+          <br><h3>Discontinuities</h3>
+        <div class="container">
+          <h4>GET for (...)api/discontinuities?page:num</h4>
+          <p>This endpoint is <b>paginated</b>, with a maximum of 50 results per page. </p>
+          <p>Retrieve the follow information for all discontinuities: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling, weathering and the note. </p>
+          <ul>
+                <li>URL: <b>(...)api/discontinuities?page=0</b></li>
+                <li>Example of the response: <p>{"discontinuities": [{
+                                                                        "id": 1,
+                                                                        "idUser": "w@mail.com",
+                                                                        "idSession": "Arrabida",
+                                                                        "direction": 59,
+                                                                        "dip": 44,
+                                                                        "latitude": 38.52,
+                                                                        "longitude": -8.99,
+                                                                        "persistence": 2,
+                                                                        "aperture": 4,
+                                                                        "roughness": 1,
+                                                                        "infilling": 2,
+                                                                        "weathering": 2,
+                                                                        "note":"nota1"
+                                                                      },
+                                                                      {
+                                                                        "id": 1,
+                                                                        "idUser": "x@mail.com",
+                                                                        "idSession": "session1",
+                                                                        "direction": 11,
+                                                                        "dip": 111,
+                                                                        "latitude": 1.1,
+                                                                        "longitude": 1.2,
+                                                                        "persistence": 2,
+                                                                        "aperture": 2,
+                                                                        "roughness": 2,
+                                                                        "infilling": 2,
+                                                                        "weathering": 2,
+                                                                        "note":"nota2" }]}</p></li>  
           </ul>
 
           <h4>POST for (...)api/discontinuities</h4>
@@ -77,13 +157,6 @@
           <ul>
                 <li>URL: <b>(...)api/discontinuities</b></li>
                 <li>Example: POST for url: (...)/api/discontinuities</li>
-          </ul>
-
-          <h4>GET for (...)api/discontinuities/:SessionId</h4>
-          <p>Retrieve the follow information for one session discontinuities: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering. </p>
-          <ul>
-                <li>URL: <b>(...)api/discontinuities/:SessionId</b></li>
-                <li>Example: <a href="/api/discontinuities/Arrabida">GET for url: (...)/api/discontinuities/Arrabida</a></li> 
           </ul>
         </div>
 

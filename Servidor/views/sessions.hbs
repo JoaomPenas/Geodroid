@@ -26,7 +26,7 @@
               <tbody>
                 {{#each sessions}}
                 <tr>
-                  <td><a href="/sessions/{{sessao}}">{{sessao}}</a></td>
+                  <td>{{#if numUsers}}<a href="/sessions/{{sessao}}">{{/if}}{{sessao}}</a></td>
                   <td>{{numUsers}}</td>
                   <td>{{numDiscont}}</td>
                 </tr>

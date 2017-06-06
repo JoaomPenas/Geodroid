@@ -16,7 +16,7 @@
 
           <h1>Maps</h1>
         <h1 id="map" style="width: 100%; height:600px; position:relative; overflow:hidden;"> </h1>
-     
+        <p style="text-align: center;">Total {{numDiscont}} discontinuities</p>
       </main>
     </div>
   </section>
@@ -68,11 +68,20 @@
     var marker, i;
 
     for (i = 0; i < locations.length; i++) {  
-      marker = new google.maps.Marker({position: new google.maps.LatLng(locations[i].latitude, locations[i].longitude),map: map});
+      var symbol = {
+          path: 'm 0 -12 l 0 24 m 0 -12 l 5 0',
+          strokeWeight: 3,
+          rotation:locations[i].direction
+        };
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i].latitude, locations[i].longitude),
+        //icon:'./../../strike.png',
+        icon:symbol,
+        map: map});
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-          infowindow.setContent(locations[i].id);
+          infowindow.setContent("("+locations[i].id +","+ locations[i].idSession + ","+locations[i].idUser+")/("+locations[i].direction+"º,"+locations[i].dip+"º)");
           infowindow.open(map, marker);
         }
       })(marker, i));
