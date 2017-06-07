@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.R;
@@ -24,13 +24,14 @@ public class ExtraData extends AppCompatActivity {
     CheckedTextView tv_roughness_1class,tv_roughness_2class,tv_roughness_3class,tv_roughness_4class,tv_roughness_5class;
     CheckedTextView tv_infilling_1class,tv_infilling_2class,tv_infilling_3class,tv_infilling_4class,tv_infilling_5class;
     CheckedTextView tv_weathering_1class,tv_weathering_2class,tv_weathering_3class,tv_weathering_4class,tv_weathering_5class;
+    EditText editDescription;
     TableRow tbrPercistence, tbrAperture, tbrRoughness,tbrInfiling,tbrWeathering;
     int azimut, dip_;
     int id = -1;        //inicia a -1 para sabermos se estamos perante um update ou um insert
     double latitude, longitude;
     int persistence = 0, aperture = 0, roughness = 0, infilling = 0, weathering = 0;
     Intent dataTable;
-    private String session, usermail;
+    private String session, usermail, note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class ExtraData extends AppCompatActivity {
 
         // botão
         Button b = (Button) findViewById(R.id.extra_data_save_button);
-
+        editDescription = (EditText)findViewById(R.id.editText_extra_description);
         //TableRow
         tbrPercistence = (TableRow) findViewById(R.id.tableRow_persistence);
         tbrAperture = (TableRow) findViewById(R.id.tableRow_aperture);
@@ -100,7 +101,8 @@ public class ExtraData extends AppCompatActivity {
             roughness = extras.getInt("roug");
             infilling = extras.getInt("infil");
             weathering = extras.getInt("weat");
-            initTable(persistence,aperture,roughness,infilling,weathering);
+            note = db.getDiscontinuity(id).getNote();
+            initTable(persistence,aperture,roughness,infilling,weathering, note);
 
         }else {
             azimut = Integer.parseInt(extras.getString("Azimute"));
@@ -195,6 +197,7 @@ public class ExtraData extends AppCompatActivity {
         tv_weathering_4class.setOnClickListener(listener);
         tv_weathering_5class.setOnClickListener(listener);
 
+        //id = -1 insert id!=-1 update
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,12 +212,12 @@ public class ExtraData extends AppCompatActivity {
 
                 if(id!=-1){
                     //Toast.makeText(com.example.ps.geodroidapp.Activities.ExtraData.this,"UPDATE",Toast.LENGTH_LONG).show();
-                    db.updateDiscontinuity(id,persistence,aperture,roughness,infilling,weathering,NOTSENT);
+                    db.updateDiscontinuity(id,persistence,aperture,roughness,infilling,weathering,editDescription.getText().toString(),NOTSENT);
                     dataTable.putExtra("Session",session);
                     startActivity(dataTable);
                 }
                 else{
-                    db.insertDiscontinuity(azimut, dip_,latitude,longitude,persistence,aperture,roughness,infilling,weathering,NOTSENT,usermail,session);
+                    db.insertDiscontinuity(azimut, dip_,latitude,longitude,persistence,aperture,roughness,infilling,weathering,editDescription.getText().toString(),NOTSENT,usermail,session);
                 }
                 finish();
             }
@@ -224,7 +227,7 @@ public class ExtraData extends AppCompatActivity {
     /**
      * Caso seja para editar os dados inicia a tabela já preenchida com os dados atuais
      */
-    private void initTable(int persistence, int aperture, int roughness, int infilling, int weathering) {
+    private void initTable(int persistence, int aperture, int roughness, int infilling, int weathering,String description) {
         if(persistence != 0) {
             autoSelectTable(persistence,tbrPercistence);
         }
@@ -240,6 +243,7 @@ public class ExtraData extends AppCompatActivity {
         if(weathering != 0) {
             autoSelectTable(weathering,tbrWeathering);
         }
+        editDescription.setText(description);
     }
 
     /**

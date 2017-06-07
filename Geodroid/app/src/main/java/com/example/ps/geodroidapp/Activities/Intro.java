@@ -21,6 +21,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,11 +32,12 @@ import retrofit2.Response;
 
 public class Intro extends AppCompatActivity {
 
-    private Intent mainActivityStartIntent;
+    private Intent mainActivityStartIntent, sessionMenu;
     private EditText email;
     private EditText pass;
     private Button enterButton;
     private SqlDataBase db;
+    private Bundle extras;
     private final BussulaApi service = BussulaApi.Factory.getInstance();
     private AuthenticateResponse authenticateResponse;
 
@@ -43,22 +45,25 @@ public class Intro extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-
         db = SqlDataBase.getInstance(this);
 
         Log.d("HPS", "1st level Intro Activity oncreate");
         // POPULATE DATABASE
         db.insertSession("Arrabida");
         db.insertSession("Foz Coa");
-        db.insertDiscontinuity(new Discontinuity(10,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.52,-8.99, 2,4, 1, 2, 2,0,"w@mail.com", "Arrabida"));
+        db.insertDiscontinuity(new Discontinuity(10,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.52,-8.99, 2,4, 1, 2, 2,"",0,"w@mail.com", "Arrabida"));
 
         Toast.makeText(Intro.this,"Inserted 6 discontinuities in SqliteDB \n(3 in Arrabida and 3 in Foz Coa)" , Toast.LENGTH_SHORT).show();
 
         mainActivityStartIntent = new Intent(this, MainActivityStart.class);
-
+        sessionMenu = new Intent(this, SessionMenu.class);
         email = (EditText) findViewById(R.id.intro_et_email);
         pass = (EditText) findViewById(R.id.intro_et_password);
         enterButton = (Button) findViewById(R.id.intro_button_enter);
+
+        Intent aux = getIntent();
+        extras = aux.getExtras();
+
 
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,14 +89,16 @@ public class Intro extends AppCompatActivity {
                                 progressDialog.dismiss();
                             }
                         }, 3000);*/
-                if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString())){
+                if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString()) &&  extras == null){
                     mainActivityStartIntent.putExtra("usermail",email.getText().toString());
                     Toast.makeText(Intro.this,"Wellcome!" + email.getText().toString(), Toast.LENGTH_LONG).show();
                     startActivity(mainActivityStartIntent);
+                    //finish();
                 }
                 else{
-                    //requestApiToken(new User(email.getText().toString(), pass.getText().toString()));
-                    requestGetAllUsers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndAbWFpbC5jb20iLCJpYXQiOjE0OTYyMzkyMzYsImV4cCI6MTQ5NjMyNTYzNn0.w3vaAhH-0SDfagFOCZGfQAtRpsb96Y28P0bzGI0Ns8Y");
+                    Toast.makeText(Intro.this,"ELSE",Toast.LENGTH_SHORT).show();
+                    requestApiToken(new User(email.getText().toString(), pass.getText().toString()));
+                    //requestGetAllUsers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndAbWFpbC5jb20iLCJpYXQiOjE0OTYyMzkyMzYsImV4cCI6MTQ5NjMyNTYzNn0.w3vaAhH-0SDfagFOCZGfQAtRpsb96Y28P0bzGI0Ns8Y");
                 }
 
             }
@@ -105,17 +112,25 @@ public class Intro extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Gson gson = new Gson();
-                String body = null;
                 if (response.isSuccessful()) {
                     try {
                         DtoCatalog xpto = gson.fromJson(response.body().string(), DtoCatalog.class);
                         List<User> list = xpto.getUser();
                         db.insertUsers(list);
                         Log.d("JY", response.message());
-                        Toast.makeText(Intro.this, "Updated internal DB from Remote DB!\nAvailable users: \n", Toast.LENGTH_SHORT).show();
-                        mainActivityStartIntent.putExtra("usermail", email.getText().toString());
-                        mainActivityStartIntent.putExtra("token", token);//authenticateResponse.getToken());
-                        startActivity(mainActivityStartIntent);
+                        if(extras != null){
+                            sessionMenu.putExtra("usermail", email.getText().toString());
+                            sessionMenu.putExtra("token", token);//authenticateResponse.getToken());
+                            sessionMenu.putExtra("SessionName", extras.getString("SessionName"));//authenticateResponse.getToken());
+                            startActivity(sessionMenu);
+                            finish();
+                        }else {
+                            Toast.makeText(Intro.this, "Updated internal DB from Remote DB!\nAvailable users: \n", Toast.LENGTH_SHORT).show();
+                            mainActivityStartIntent.putExtra("usermail", email.getText().toString());
+                            mainActivityStartIntent.putExtra("token", token);//authenticateResponse.getToken());
+                            startActivity(mainActivityStartIntent);
+                        }
+                        //finish();
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(Intro.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();

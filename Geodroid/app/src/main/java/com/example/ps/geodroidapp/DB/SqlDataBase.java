@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.ps.geodroidapp.Domain.Discontinuity;
 import com.example.ps.geodroidapp.Domain.Session;
@@ -51,6 +52,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
     public static final String ROUGHNESS                    = "roughness";
     public static final String INFLILLING                   = "infilling";
     public static final String WEATHERING                   = "weathering";
+    public static final String NOTE                         = "description";
     public static final String SENT                         = "sent";
 
 
@@ -84,6 +86,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
             +ROUGHNESS                      + " INTEGER, "
             +INFLILLING                     + " INTEGER, "
             +WEATHERING                     + " INTEGER, "
+            + NOTE                          + " TEXT, "
             +SENT                           + " INTEGER,"
             +" PRIMARY KEY ("+ DISCONTINUITY_ID+", "+FK_DISCONTINUITY_ID_SESSION+", "+FK_ID_USER + "), "
             +" FOREIGN KEY ("+ FK_DISCONTINUITY_ID_SESSION +") REFERENCES "+SESSION_TABLE_NAME+" ("+ SESSION_ID_NAME +"),"
@@ -95,7 +98,8 @@ public class SqlDataBase extends SQLiteOpenHelper {
         +USER_TABLE_NAME + " ("
         +USER_ID_EMAIL + " TEXT PRIMARY KEY, "
         +USER_PASS + " TEXT NOT NULL,"
-        +USER_SALT + " BIGINT NOT NULL);";
+        +USER_SALT + " BIGINT NOT NULL,"
+        +USER_TOKEN_API + " TEXT );";
     // create Session table
     private static final String CREATE_SESSION_TABLE = "CREATE TABLE "
             +SESSION_TABLE_NAME + " ("
@@ -154,6 +158,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
             db.insert(USER_TABLE_NAME, null, values);
             return true;
         } catch (Exception e) {
+            Log.d("error",e.getMessage());
         } finally {
             db.close();
         }
@@ -179,11 +184,11 @@ public class SqlDataBase extends SQLiteOpenHelper {
     public boolean insertDiscontinuity(Discontinuity discontinuity) {
         return insertDiscontinuity(discontinuity.getDirection(), discontinuity.getDip(),
                 discontinuity.getLatitude(), discontinuity.getLongitude(),discontinuity.getPersistence(), discontinuity.getAperture(),
-                discontinuity.getRoughness(),discontinuity.getInfilling(), discontinuity.getWeathreing(), discontinuity.getSent(),discontinuity.getIdUser(),discontinuity.getIdSession() );
+                discontinuity.getRoughness(),discontinuity.getInfilling(), discontinuity.getWeathreing(),discontinuity.getNote(),discontinuity.getSent(),discontinuity.getIdUser(),discontinuity.getIdSession() );
 
     }
     public boolean insertDiscontinuity(double direction, int dip, double latitude, double longitude, int persistence, int aperture, int roughness,
-                                       int infilling, int weathering, int changed, String idUser,String idSession) {
+                                       int infilling, int weathering,String note, int changed, String idUser,String idSession) {
         SQLiteDatabase db = null;
         SQLiteDatabase db2 = null;
         try {
@@ -212,6 +217,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
             values.put(ROUGHNESS, roughness);
             values.put(INFLILLING,infilling);
             values.put(WEATHERING,weathering);
+            values.put(NOTE,note);
             values.put(SENT,changed);
 
             db.insert(DISCONTINUITY_TABLE_NAME, null, values);
@@ -225,18 +231,19 @@ public class SqlDataBase extends SQLiteOpenHelper {
     }
 
     public boolean updateDiscontinuity(int id,int persistence, int aperture, int roughness,
-                                       int infilling, int weathering, int changed) {
+                                       int infilling, int weathering,String note, int changed) {
         SQLiteDatabase db = null;
         try {
 
             ContentValues values = new ContentValues();
-            Discontinuity discontinuity = getDiscontinuity(id);
+           // Discontinuity discontinuity = getDiscontinuity(id);
             db = this.getWritableDatabase();
             values.put(PERSISTENCE,persistence);
             values.put(APERTURE,aperture);
             values.put(ROUGHNESS, roughness);
             values.put(INFLILLING,infilling);
             values.put(WEATHERING,weathering);
+            values.put(NOTE,note);
             values.put(SENT,changed);
 
             db.update(DISCONTINUITY_TABLE_NAME,values,DISCONTINUITY_ID+" = ?",new String[]{""+id});
@@ -272,7 +279,8 @@ public class SqlDataBase extends SQLiteOpenHelper {
             desc.setRoughness   (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(ROUGHNESS))));
             desc.setInfilling   (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(INFLILLING))));
             desc.setWeathreing  (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(WEATHERING))));
-            desc.setSent(Integer.parseInt       (cursor.getString(cursor.getColumnIndex(SENT))));
+            desc.setNote        (cursor.getString(cursor.getColumnIndex(NOTE)));
+            desc.setSent        (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(SENT))));
             desc.setIdSession   (cursor.getString(cursor.getColumnIndex(FK_DISCONTINUITY_ID_SESSION)));
             desc.setIdUser      (cursor.getString(cursor.getColumnIndex(FK_ID_USER)));
 

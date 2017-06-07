@@ -40,7 +40,7 @@ public interface BussulaApi {
 
     @POST("api/discontinuities")
     //Call <AuthenticateResponse>postDiscontinuities(@Header("x-access-token") String token,@Body DtoDiscontinuity dtoDiscontinuity);
-    Call <ResponseBody>postDiscontinuities(@Body DtoDiscontinuity dtoDiscontinuity);
+    Call <ResponseBody>postDiscontinuities(@Header("x-access-token") String token,@Body DtoDiscontinuity dtoDiscontinuity);
     //Call <DtoDiscontinuity>postDiscontinuities(@Body DtoDiscontinuity dtoDiscontinuity);
 
     class Factory{

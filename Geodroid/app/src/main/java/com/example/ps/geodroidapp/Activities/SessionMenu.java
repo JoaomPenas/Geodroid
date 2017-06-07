@@ -2,6 +2,7 @@ package com.example.ps.geodroidapp.Activities;
 import com.example.ps.geodroidapp.BussulaApi;
 import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.Domain.Discontinuity;
+import com.example.ps.geodroidapp.Domain.DtoCatalog;
 import com.example.ps.geodroidapp.Domain.DtoDiscontinuity;
 import com.example.ps.geodroidapp.Domain.Session;
 import com.example.ps.geodroidapp.Domain.User;
@@ -9,6 +10,7 @@ import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
 import com.example.ps.geodroidapp.Utils.Utils;
 import com.github.mikephil.charting.utils.FileUtils;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.app.Service;
@@ -58,7 +60,8 @@ public class SessionMenu extends AppCompatActivity {
     private Intent dataTableIntent;
     private Intent dataMapIntent;
     private Intent statisticsIntent;
-
+    private Intent loginAct;
+    private final BussulaApi service = BussulaApi.Factory.getInstance();
     private SqlDataBase db;
 
     @Override
@@ -76,10 +79,11 @@ public class SessionMenu extends AppCompatActivity {
         uploadButton        = (ImageButton)findViewById(R.id.imageButton_upload);
         shareButton         = (ImageButton)findViewById(R.id.imageButton_share);
 
-        dataTableIntent = new Intent(this, DataTable.class);
-        compassIntent       = new Intent(SessionMenu.this,Compass.class);
-        dataMapIntent = new Intent(SessionMenu.this, DataMap.class);
-        statisticsIntent=new Intent(SessionMenu.this, StatisticTable.class);
+        dataTableIntent  = new Intent(this, DataTable.class);
+        compassIntent    = new Intent(this, Compass.class);
+        dataMapIntent    = new Intent(this, DataMap.class);
+        statisticsIntent = new Intent(this, StatisticTable.class);
+        loginAct         = new Intent(this, Intro.class);
 
         Intent aux = getIntent();
         Bundle extras = aux.getExtras();
@@ -143,14 +147,19 @@ public class SessionMenu extends AppCompatActivity {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BussulaApi service = BussulaApi.Factory.getInstance();
                 final View buttonUpload = v;
                 final ArrayList <Discontinuity>list = db.areUploads(session);// db.getAllDiscontinuities(session);
                 DtoDiscontinuity dtoDiscontinuity = new DtoDiscontinuity(list);
                 //requestApiToken(db.getUser(usermail));
                 //postDiscont(service,dtoDiscontinuity,list,buttonUpload);
-                Call <ResponseBody> postDisc = service.postDiscontinuities(dtoDiscontinuity);
-
+                //Call <ResponseBody> postDisc = service.postDiscontinuities(dtoDiscontinuity);
+                if(token == null){
+                    loginAct.putExtra("SessionName",session);
+                    startActivity(loginAct);
+                    finish();
+                }else
+                    postDiscontinuity(token,dtoDiscontinuity,buttonUpload,list);
+                /*
                 postDisc.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -164,14 +173,44 @@ public class SessionMenu extends AppCompatActivity {
                         Toast.makeText(SessionMenu.this,t.getMessage()+", dados NAO enviados para o Servidor!", Toast.LENGTH_LONG).show();
                         Log.d("JJJJJ",""+t);
                     }
-                });
+                });*/
 
 
             }
         });
 
     }
-    /*
+    private void postDiscontinuity(String token, DtoDiscontinuity dtoDiscontinuity,final View buttonUpload, final ArrayList <Discontinuity> list){
+        Log.d("TTTT",token);
+        Call<ResponseBody> requestCatalogg = service.postDiscontinuities(token,dtoDiscontinuity);
+        requestCatalogg.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Gson gson = new Gson();
+                if (response.isSuccessful()) {
+                        Toast.makeText(SessionMenu.this,response.message()+", dados enviados para o Servidor!", Toast.LENGTH_LONG).show();
+                        db.putSent(list);
+                        buttonUpload.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    try {
+                        AuthenticateResponse authenticate = gson.fromJson(response.errorBody().string(),AuthenticateResponse.class);
+                        Toast.makeText(SessionMenu.this,response.message()+authenticate.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(SessionMenu.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("JX",t.getMessage());
+                Toast.makeText(SessionMenu.this,"Cannot update users from Database...(requestGetAllUsers)"+t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public void requestApiToken(User user){
         BussulaApi servicee = BussulaApi.Factory.getInstance();
         Call<AuthenticateResponse> requestCatalog = servicee.postAuthenticate(user);
@@ -193,7 +232,7 @@ public class SessionMenu extends AppCompatActivity {
             }
         });
         //return reqTokenRes;
-    }*/
+    }
     /*
     private void postDiscont(BussulaApi service, DtoDiscontinuity dtoDiscontinuity,final ArrayList <Discontinuity>list,final View buttonUpload){
         Call <AuthenticateResponse> postDisc = service.postDiscontinuities(token,dtoDiscontinuity);

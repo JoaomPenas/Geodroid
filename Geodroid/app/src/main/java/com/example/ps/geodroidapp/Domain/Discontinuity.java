@@ -21,12 +21,13 @@ public class Discontinuity {
     private int roughness;
     private int infilling;
     private int weathering;
+    private String note;
     private int sent;    // possible values 0 and 1
 
 
     public Discontinuity(){}
     public Discontinuity(int id, int direction, int dip, double latitude, double longitude, int persistence,
-                         int aperture, int roughness, int infilling, int Weathering, int sent, String idUser, String idSession){
+                         int aperture, int roughness, int infilling, int weathering, String note, int sent, String idUser, String idSession){
         this.id             = id;
         this.direction      = direction;
         this.dip            = dip;
@@ -36,7 +37,8 @@ public class Discontinuity {
         this.aperture       = aperture;
         this.roughness      = roughness;
         this.infilling      = infilling;
-        this.weathering     = Weathering;
+        this.weathering     = weathering;
+        this.note = note;
         this.sent           = sent;
         this.idUser         = idUser;
         this.idSession      = idSession;
@@ -47,6 +49,15 @@ public class Discontinuity {
     }
 
     public void setId(int id) { this.id = id;}
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getNote() {
+
+        return note;
+    }
 
     public int getDirection() {
         return direction;
