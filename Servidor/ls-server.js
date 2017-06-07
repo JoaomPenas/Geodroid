@@ -33,7 +33,7 @@ app.use(passport.session());                        // persistent login sessions
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.engine('hbs', expressHbs({extname:'hbs', defaultLayout:'base', helpers: {
-        foo: function (xpto) { return JSON.stringify(xpto); },
+        stringify: function (xpto) { return JSON.stringify(xpto); },
         getNextPage:function (page, maxpages){if (parseInt(page)<parseInt(maxpages))return parseInt(page)+1; else return page;},
         getPrevPage:function (page){if (parseInt(page)>0)return parseInt(page)-1; else return 0;},
         bar: function () { return 'BAR'; }

@@ -249,8 +249,9 @@ module.exports = function(app,passport,model) {
 	 });
 	
 	 /**
-	  * Contributors information
+	  * Contributors information (DEPRECATED...)
 	  */
+	  /*
 	 router.get('/contributors', isLoggedIn, function (req,rsp,next){
 		model.getAllUsersResumedInformation(null,function(err,res){
 			if(!err){
@@ -263,6 +264,8 @@ module.exports = function(app,passport,model) {
 			}
 		},true);
 	 });
+*/
+
 
 	 /**
 	  * Sessions information

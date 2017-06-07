@@ -1,5 +1,6 @@
 'use strict';
 const crypto 		= require('crypto');
+const numPerPage=10;
 
 function User(email, password){
     this.email=email;
@@ -64,7 +65,7 @@ module.exports=function(_dal){
      */
     function GetAllUsers(err, cb){
             dal.readAll("users", function(err,res){
-                if(err) { cb("An error ocurred...please verifify your connection."); }
+                if(err) { cb("An error ocurred..."); }
                 else { cb(null, {users:res});}
             });
     }
@@ -80,7 +81,7 @@ module.exports=function(_dal){
     function GetAllUsersResumedInformation(err, cb, onlyContributers){ 
             dal.getUserSummary( function(err,res){ 
                 
-                if(err) { cb("An error ocurred...please verifify your connection."); }
+                if(err) { cb("An error ocurred..."); }
                 else {
                     cb(null, {users:res});
                 }
@@ -111,7 +112,7 @@ module.exports=function(_dal){
      */
     function GetAllSessions(err, cb){
             dal.readAll("sessions",function(err,res){
-                if(err) { cb("An error ocurred...please verifify your connection."); }
+                if(err) { cb("An error ocurred..."); }
                 else {cb(null, {sessions:res});}
             });
     }
@@ -142,10 +143,10 @@ module.exports=function(_dal){
      * @param {int} page (opcional) - numero da página pretendida
      * @param {int} numPerPage (opcional) - numero de elementos por página
      */
-    function GetAllDiscontinuities (err, cb, page, numPerPage){
+    function GetAllDiscontinuities (err, cb /*, page, numPerPage */){
         var paged=false;
         dal.readAll("discontinuities", function (err,res){
-            if(err) { cb("An error ocurred...please verifify your connection."); }
+            if(err) { cb("An error ocurred..."); }
             else {cb (null,{discontinuities:res});}
         });
     }
@@ -162,7 +163,7 @@ module.exports=function(_dal){
     function GetPagedDiscontinuities (err, page, numPerPage, cb ){
         var paged=true;
         dal.readAll("discontinuities", function (err,res){
-            if(err) { cb("An error ocurred...please verifify your connection."); }
+            if(err) { cb("An error ocurred..."); }
             else {cb (null,{discontinuities:res});}
         }, paged, page, numPerPage);
     }
@@ -180,7 +181,7 @@ module.exports=function(_dal){
      */
     function GetPagedDiscontinuitiesOfOneUser(err, user, page, numPerPage, cb ){
         dal.getPagedDiscontinuitiesOfOneUserOrSession(null, "user", user, page, numPerPage, function (err,res){
-            if(err) { cb("An error ocurred...please verifify your connection."); }
+            if(err) { cb("An error ocurred..."); }
             else {cb (null,{discontinuities:res});}
         });
     }
@@ -197,7 +198,7 @@ module.exports=function(_dal){
      */
     function GetPagedDiscontinuitiesOfOneSession(err, session, page, numPerPage, cb ){
         dal.getPagedDiscontinuitiesOfOneUserOrSession(null, "session", session, page, numPerPage, function (err,res){
-            if(err) { cb("An error ocurred...please verifify your connection."); }
+            if(err) { cb("An error ocurred..."); }
             else {cb (null,{discontinuities:res});}
         });
     }
@@ -205,12 +206,46 @@ module.exports=function(_dal){
     /**
      * O resultado é um objecto semelhante ao seguinte:
      * { summary: [ RowDataPacket { NumUsers: 3, NumSessions: 4, NumDiscontinuities: 15 } ] }
-     * (Usado apenas pelo webapp-controler)
+     * (Usado pelo webapp-controler e api-controler)
      * @param {function} cb - função de callback
      */
     function GetSummary (err, cb){
         dal.getSummaryCount(function (err,res){
-            if(err) { cb("An error ocurred...please verifify your connection."); }
+            if(err) { cb("An error ocurred..."); }
+            else {
+                console.log({summary:res})
+                cb (null,{summary:res});
+            }
+        });
+    }
+
+
+
+    /**
+     * O resultado é um objecto semelhante ao seguinte:
+     * { summary: [ RowDataPacket { NumUsers: 3, NumSessions: 4, NumDiscontinuities: 15 } ] }
+     * (Usado pelo webapp-controler e api-controler)
+     * @param {function} cb - função de callback
+     */
+    function GetSummaryByUser (err, user, cb){
+        dal.getSummaryCountByUser(user, function (err,res){
+            if(err) { cb("An error ocurred..."); }
+            else {
+                console.log({summary:res})
+                cb (null,{summary:res});
+            }
+        });
+    }
+
+       /**
+     * O resultado é um objecto semelhante ao seguinte:
+     * { summary: [ RowDataPacket { NumUsers: 3, NumSessions: 4, NumDiscontinuities: 15 } ] }
+     * (Usado pelo webapp-controler e api-controler)
+     * @param {function} cb - função de callback
+     */
+    function GetSummaryBySession (err, session, cb){
+        dal.getSummaryCountBySession(session, function (err,res){
+            if(err) { cb("An error ocurred..."); }
             else {
                 console.log({summary:res})
                 cb (null,{summary:res});
@@ -281,7 +316,7 @@ module.exports=function(_dal){
      */
     function GetNumberOfDiscontinuitiesPages (err, cb, numPerPage){
         dal.getSummaryCount(function (err,res){
-            if(err) { cb("An error ocurred...please verifify your connection."); }
+            if(err) { cb("An error ocurred..."); }
             else {
                 var numDiscont = res[0].NumDiscontinuities;
                 var numPages = Math.ceil(numDiscont/numPerPage);    
@@ -300,7 +335,7 @@ module.exports=function(_dal){
      */
     function GetNumOfPages (err, type, name, numPerPage, cb){
         dal.getNumOfDiscOfOneUserOrSession(null, type, name, numPerPage, function (err,res){
-            if(err) { cb("An error ocurred...please verifify your connection."); }
+            if(err) { cb("An error ocurred..."); }
             else {
                 var numPages = Math.ceil(res/numPerPage);
                 cb (null,numPages);
@@ -309,23 +344,25 @@ module.exports=function(_dal){
     }
 
     return {
-		createUser:	CreateUser,
-        getUser:   GetUser,
-        deleteUser: DeleteUser,
-        getAllUsers: GetAllUsers,
-        getAllSessions:GetAllSessions,
-        deleteSession: DeleteSession,
-        getDiscontinuitiesFromOneSession:GetDiscontinuitiesFromOneSession,
-        getAllDiscontinuities:GetAllDiscontinuities,
-        getPagedDiscontinuities:GetPagedDiscontinuities,
-        getPagedDiscontinuitiesOfOneUser:GetPagedDiscontinuitiesOfOneUser,
-        getPagedDiscontinuitiesOfOneSession:GetPagedDiscontinuitiesOfOneSession,
-        postDiscontinuities:PostDiscontinuities,
-        getSummary:GetSummary,
-        getAllUsersResumedInformation:GetAllUsersResumedInformation,
-        getAllSessionsResumedInformation:GetAllSessionsResumedInformation,
-        authenticate:Authenticate,
-        getNumberOfDiscontinuitiesPages:GetNumberOfDiscontinuitiesPages,
-        getNumOfPages:GetNumOfPages
+		createUser                          :CreateUser,
+        getUser                             :GetUser,
+        deleteUser                          :DeleteUser,
+        getAllUsers                         :GetAllUsers,
+        getAllSessions                      :GetAllSessions,
+        deleteSession                       :DeleteSession,
+        getDiscontinuitiesFromOneSession    :GetDiscontinuitiesFromOneSession,
+        getAllDiscontinuities               :GetAllDiscontinuities,
+        getPagedDiscontinuities             :GetPagedDiscontinuities,
+        getPagedDiscontinuitiesOfOneUser    :GetPagedDiscontinuitiesOfOneUser,
+        getPagedDiscontinuitiesOfOneSession :GetPagedDiscontinuitiesOfOneSession,
+        postDiscontinuities                 :PostDiscontinuities,
+        getSummary                          :GetSummary,
+        getSummaryByUser                    :GetSummaryByUser,
+        getSummaryBySession                 :GetSummaryBySession,
+        getAllUsersResumedInformation       :GetAllUsersResumedInformation,
+        getAllSessionsResumedInformation    :GetAllSessionsResumedInformation,
+        authenticate                        :Authenticate,
+        getNumberOfDiscontinuitiesPages     :GetNumberOfDiscontinuitiesPages,
+        getNumOfPages                       :GetNumOfPages
     }
 }

@@ -13,7 +13,9 @@ var getConnection = function(_hostP, _userP, _passwordP, _databaseP){
 					});
 			}
 
-// função auxiliar - para debug (para apagar)
+/**
+ * função auxiliar - para debug
+ */ 
 function showObject(obj) {
     for (var k in obj) {
         console.log("o[\'" + k          // k       -> contem a string da chave
@@ -212,9 +214,6 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	 * @param {function} cb - função de callback
 	 */
 	function GetNumOfDiscOfOneUserOrSession (err, type, name, numPerPages, cb){
-		console.log("@dal.GetNumberOfDiscontinuitiesPagesOfOneUserOrSession.type = "+ type);
-		console.log("@dal.GetNumberOfDiscontinuitiesPagesOfOneUserOrSession.name = "+ name);
-		console.log("@dal.GetNumberOfDiscontinuitiesPagesOfOneUserOrSession.numPerPages = "+ numPerPages);
 		var fieldN="";
 		if (type == "user") fieldN ="idUser";
 		if (type == "session") fieldN= "idSession";
@@ -282,6 +281,15 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		connection.end();
 	}
 
+	/**
+	 * Obtém as descontinuidades de um utilizador ou uma sessão
+	 * @param {*} err 
+	 * @param {string} str - deverá ser passado a string "user" ou "session"
+	 * @param {string} element - a designação do utilizador ou da sessão
+	 * @param {int} page - número da pagina pretendida
+	 * @param {int} numPerPage - número de elementos por página 
+	 * @param {function} cb - função de callback
+	 */
 	function GetPagedDiscontinuitiesOfOneUserOrSession (err, str, element, page, numPerPage, cb){
 		
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
@@ -308,8 +316,38 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	function GetSummaryCount (cb){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
-		var sql = 'select count(distinct idUser) as NumUsers, count(distinct name) as NumSessions , count(id) as NumDiscontinuities from (select * from Discontinuity RIGHT JOIN Session on Discontinuity.idSession=Session.name) as X'
+		var sql = 'SELECT (SELECT COUNT(*) FROM User) AS NumUsers, (SELECT COUNT(*) FROM Session) AS NumSessions, (SELECT COUNT(*) FROM Discontinuity) AS NumDiscontinuities'
 		//var sql = 'select count(distinct idUser) as NumUsers, count(distinct idSession) as NumSessions , count(id) as NumDiscontinuities from Discontinuity'
+		connection.query(sql, function(err, rows, fields) {
+			if (!err){ cb(null,rows)}
+		});
+		connection.end();
+	}
+
+	/**
+	 * Devolve as contagens dos descontinuidades e sessões de determinado utilizador 
+	 * É passado um array de semelhante:
+	 * [RowDataPacket { NumDiscontinuities: 15, NumSessions: 4} ]
+	 */
+	function GetSummaryCountByUser (user, cb){
+		var connection = getConnection(hostP, userP, passwordP, databaseP);
+    	connection.connect();
+		var sql = 'select count(id) as NumDiscontinuities, count(distinct idSession) as NumSessions from Discontinuity where idUser="'+user+'"';
+		connection.query(sql, function(err, rows, fields) {
+			if (!err){ cb(null,rows)}
+		});
+		connection.end();
+	}
+
+	/**
+	 * Devolve as contagens dos descontinuidades e users de determinada sessão
+	 * É passado um array de semelhante:
+	 * [RowDataPacket { NumDiscontinuities: 15, NumUsers: 3  } ]
+	 */
+	function GetSummaryCountBySession (session, cb){
+		var connection = getConnection(hostP, userP, passwordP, databaseP);
+    	connection.connect();
+		var sql = 'select count(id) as NumDiscontinuities, count(distinct idUser) as NumUsers from Discontinuity where idSession="'+session+'"';
 		connection.query(sql, function(err, rows, fields) {
 			if (!err){ cb(null,rows)}
 		});
@@ -367,6 +405,8 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		readAll								:ReadAll,	
 		getPagedDiscontinuitiesOfOneUserOrSession:GetPagedDiscontinuitiesOfOneUserOrSession,					
 		getSummaryCount						:GetSummaryCount,
+		getSummaryCountByUser				:GetSummaryCountByUser,
+		getSummaryCountBySession			:GetSummaryCountBySession,
 		getUserSummary						:GetUserSummary,
 		getSessionSummary					:GetSessionSummary
     };

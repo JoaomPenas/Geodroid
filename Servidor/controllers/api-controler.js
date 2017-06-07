@@ -90,6 +90,22 @@ module.exports = function(model, app) {
 	 });
 
 
+	/**
+	 * Devolve informação de todas as sessões
+	 */
+	router.get('/api/sessions', VerifyToken, function (req,rsp,next){
+	//router.get('/api/sessions',  function (req,rsp,next){
+		model.getAllSessions(null,function (err, res){
+			if (!err){
+				rsp.json(res);
+			}
+			else{
+				rsp.status(500).json({ error: err });
+			}
+		});
+	 });
+
+
    /**
 	* Rota para remover da base de dados uma sessão existente (e respectivas descontinuidades)
 	* Função apenas disponível para o administrador (admin)
@@ -108,21 +124,50 @@ module.exports = function(model, app) {
 		});
 	 });
 
+	 /**
+	  * Devolve informação sobre o numero de descontinuidades, utilizadores e sessões
+	  */
+	router.get('/api/summary' /*, VerifyToken*/, function (req,rsp,next){
+		model.getSummary(null,function (err,res){
+			if (err){
+				rsp.status(500);
+				rsp.json({message:err})
+			}
+			else {
+				rsp.status(200).json(res)
+			}
+		},false);
+	});
 
-	/**
-	 * Devolve informação de todas as sessões
-	 */
-	router.get('/api/sessions', VerifyToken, function (req,rsp,next){
-	//router.get('/api/sessions',  function (req,rsp,next){
-		model.getAllSessions(null,function (err, res){
-			if (!err){
-				rsp.json(res);
+
+	 /**
+	  * Devolve informação sobre o numero de descontinuidades e sessões de determinado utilizador
+	  */
+	router.get('/api/usersummary/:idUser', VerifyToken, function (req,rsp,next){
+		model.getSummaryByUser(null,req.params.idUser, function (err,res){
+			if (err){
+				rsp.status(500);
+				rsp.json({message:err})
 			}
-			else{
-				rsp.status(500).json({ error: err });
+			else {
+				rsp.status(200).json(res)
 			}
-		});
-	 });
+		},false);
+	});
+ /**
+	  * Devolve informação sobre o numero de descontinuidades e utilizadores de determinada sessão
+	  */
+	router.get('/api/sessionsummary/:idSession' /*, VerifyToken*/, function (req,rsp,next){
+		model.getSummaryBySession(null,req.params.idSession, function (err,res){
+			if (err){
+				rsp.status(500);
+				rsp.json({message:err})
+			}
+			else {
+				rsp.status(200).json(res)
+			}
+		},false);
+	});
 
 	/**
 	 * Devolve informação de todas as descontinuidades de forma paginada
