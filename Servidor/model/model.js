@@ -1,6 +1,6 @@
 'use strict';
 const crypto 		= require('crypto');
-const numPerPage=10;
+//const numPerPage=10;
 
 function User(email, password){
     this.email=email;
@@ -225,6 +225,7 @@ module.exports=function(_dal){
      * O resultado é um objecto semelhante ao seguinte:
      * { summary: [ RowDataPacket { NumUsers: 3, NumSessions: 4, NumDiscontinuities: 15 } ] }
      * (Usado pelo webapp-controler e api-controler)
+     * @param {string} user - designação do utilizador
      * @param {function} cb - função de callback
      */
     function GetSummaryByUser (err, user, cb){
@@ -241,6 +242,7 @@ module.exports=function(_dal){
      * O resultado é um objecto semelhante ao seguinte:
      * { summary: [ RowDataPacket { NumUsers: 3, NumSessions: 4, NumDiscontinuities: 15 } ] }
      * (Usado pelo webapp-controler e api-controler)
+     * @param {string} session - designação da sessão
      * @param {function} cb - função de callback
      */
     function GetSummaryBySession (err, session, cb){
@@ -334,9 +336,11 @@ module.exports=function(_dal){
      * @param {function} cb - função de callback
      */
     function GetNumOfPages (err, type, name, numPerPage, cb){
+        console.log(type+","+name+","+numPerPage)
         dal.getNumOfDiscOfOneUserOrSession(null, type, name, numPerPage, function (err,res){
             if(err) { cb("An error ocurred..."); }
             else {
+                console.log ("res="+res)
                 var numPages = Math.ceil(res/numPerPage);
                 cb (null,numPages);
             }

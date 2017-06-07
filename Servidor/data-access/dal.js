@@ -214,6 +214,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	 * @param {function} cb - função de callback
 	 */
 	function GetNumOfDiscOfOneUserOrSession (err, type, name, numPerPages, cb){
+		console.log(type+","+name+","+numPerPages)
 		var fieldN="";
 		if (type == "user") fieldN ="idUser";
 		if (type == "session") fieldN= "idSession";
@@ -255,13 +256,12 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	 * @param {string} str - valores  possíveis para str: 'users', 'sessions' or 'discontinuities'
 	 * @param {boolean} paged - se pretende leitura paginada
 	 * @param {int} page - número da página a pedir
-	 * @param {inr} numPerPage - número de leituras por página
+	 * @param {int} numPerPage - número de leituras por página
 	 */
-	function ReadAll(str,cb, paged, page, numPerPage, user){
+	function ReadAll(str,cb, paged, page, numPerPage){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
 		var table;
-		//console.log("@ReadAll!!!")
 		if (str=="users") 			table = "User";
 		if (str=="sessions") 		table = "Session";
 		if (str=="discontinuities") table = "Discontinuity";
@@ -272,7 +272,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		else{
 			str='SELECT * from '+table;
 		}
-		console.log(str)
+		
 		connection.query(str, function(err, rows, fields) {
 			if (!err){ cb(null,rows)}		
 			else {cb(err);}	
@@ -309,9 +309,10 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	}
 
 	/**
-	 * Devolve as contagens dos users, sessões e descontinuidades
-	 * É passado um array de semelhante:
+	 * Devolve o numero de utilizadores, de sessões e descontinuidades existentes no sistema
+	 * É passado ao callback um array semelhante ao seguinte:
 	 * [RowDataPacket { NumUsers: 3, NumSessions: 4, NumDiscontinuities: 15 } ]
+	 * @param {function} cb - função de callback
 	 */
 	function GetSummaryCount (cb){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
@@ -325,30 +326,34 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	}
 
 	/**
-	 * Devolve as contagens dos descontinuidades e sessões de determinado utilizador 
-	 * É passado um array de semelhante:
+	 * Devolve as contagens das descontinuidades e das sessões de um determinado utilizador 
+	 * É passado ao callback um array de semelhante ao seguinte:
 	 * [RowDataPacket { NumDiscontinuities: 15, NumSessions: 4} ]
+	 * @param {string} user - desingnação do utilizador
+	 * @param {function} cb - função de callback
 	 */
 	function GetSummaryCountByUser (user, cb){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
-		var sql = 'select count(id) as NumDiscontinuities, count(distinct idSession) as NumSessions from Discontinuity where idUser="'+user+'"';
-		connection.query(sql, function(err, rows, fields) {
+		var sql = 'select count(id) as NumDiscontinuities, count(distinct idSession) as NumSessions from Discontinuity where idUser=?';
+		connection.query(sql, user, function(err, rows, fields) {
 			if (!err){ cb(null,rows)}
 		});
 		connection.end();
 	}
 
 	/**
-	 * Devolve as contagens dos descontinuidades e users de determinada sessão
-	 * É passado um array de semelhante:
+	 * Devolve as contagens das descontinuidades e dos utilizadores de uma determinada sessão
+	 * É passado ao callback um array de semelhante ao seguinte:
 	 * [RowDataPacket { NumDiscontinuities: 15, NumUsers: 3  } ]
+	 * @param {string} session - designação da sessão
+	 * @param {function} cb - função de callback
 	 */
 	function GetSummaryCountBySession (session, cb){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
-		var sql = 'select count(id) as NumDiscontinuities, count(distinct idUser) as NumUsers from Discontinuity where idSession="'+session+'"';
-		connection.query(sql, function(err, rows, fields) {
+		var sql = 'select count(id) as NumDiscontinuities, count(distinct idUser) as NumUsers from Discontinuity where idSession=?';
+		connection.query(sql, session, function(err, rows, fields) {
 			if (!err){ cb(null,rows)}
 		});
 		connection.end();
