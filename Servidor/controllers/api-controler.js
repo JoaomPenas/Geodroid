@@ -1,5 +1,7 @@
 'use strict'
-const numPerPage=10;
+const config  	= require('./../setup');
+
+const numPerPage=config.apiNumPerPage;
 
 module.exports = function(model, app) {          
     const router 		= require('express').Router();

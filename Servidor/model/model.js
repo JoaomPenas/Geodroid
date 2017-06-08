@@ -1,14 +1,35 @@
 'use strict';
 const crypto 		= require('crypto');
-//const numPerPage=10;
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const json2csv = require('json2csv');
 
 function User(email, password){
     this.email=email;
     this.password=password;
 }
 
+function saveFile(path, data, fileName) {
+    var completePath = path+"\\" + fileName;
+    mkdirp.sync(path, null);
+    fs.writeFile(completePath, data ,(err) =>{return console.log(err);});
+}
+
 module.exports=function(_dal){
     const dal=_dal;
+
+    function GetDiscontinuitiesFromOneSessionOrUserCsv (type, session, cb){
+        //console.log("sessão: "+session)
+        function x (err, res){
+            let fields = ['id','idUser','idSession','direction','dip','latitude','longitude','persistence','aperture','roughness','infilling','weathering','note'];
+			let myArray = res.discontinuities;
+			
+			let csv = json2csv({ data: myArray, fields: fields });
+            cb(null,csv);
+        }
+        if (type =="session") GetAllDiscontinuitiesFromOneSession (session, x);
+        if (type =="user") GetAllDiscontinuitiesFromOneUser (session, x);
+    }
 
     /**
     * Função usada na área de administração, para criação de um novo utilizador
@@ -113,13 +134,14 @@ module.exports=function(_dal){
     function GetAllSessions(err, cb){
             dal.readAll("sessions",function(err,res){
                 if(err) { cb("An error ocurred..."); }
-                else {cb(null, {sessions:res});}
+                else {
+                    cb(null, {sessions:res});
+                }
             });
     }
 
 
     /**
-     * * ---------------------A ser descontinuado...---------------------------
      * O resultado é um objecto com as descontinuidades de uma sessão, de acordo com o seguinte exemplo:
      * var desc= {discontinuities: [{id:1, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2},
      * 					            {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2}]} 
@@ -127,12 +149,28 @@ module.exports=function(_dal){
      * @param {string} session - nome da sessão
      * @param {function} cb - função de callback
      */
-    function GetDiscontinuitiesFromOneSession (session, cb){
+    function GetAllDiscontinuitiesFromOneSession (session, cb){
         dal.readDiscontinuitiesFromOneSession (session, function (err, res){
              if(err) { cb("An error ocurred...please verifify your connection."); }
              else {cb(null, {discontinuities:res});}
         });
     }
+
+/**
+     * O resultado é um objecto com as descontinuidades de um user, de acordo com o seguinte exemplo:
+     * var desc= {discontinuities: [{id:1, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2},
+     * 					            {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2}]} 
+     * (usado apenas pelo api-controler)
+     * @param {string} user - designação do utilizador
+     * @param {function} cb - função de callback
+     */
+    function GetAllDiscontinuitiesFromOneUser (user, cb){
+        dal.readDiscontinuitiesFromOneUser (user, function (err, res){
+             if(err) { cb("An error ocurred...please verifify your connection."); }
+             else {cb(null, {discontinuities:res});}
+        });
+    }
+
 
     /**
      * O resultado é um objecto com todas as descontinuidades, de acordo com o seguinte exemplo:
@@ -140,10 +178,8 @@ module.exports=function(_dal){
 	 *				  	                {id:2, idUser: "w@mail.com", idSession: "Arrabida", direction: 59, dip: 44, latitude: 38.52, longitude: -8.99, persistence: 2, aperture: 4, roughness: 1, infilling: 2, weathering: 2}]}
      * (Função usada pela rota gmaps)
      * @param {function} cb - função de callback
-     * @param {int} page (opcional) - numero da página pretendida
-     * @param {int} numPerPage (opcional) - numero de elementos por página
      */
-    function GetAllDiscontinuities (err, cb /*, page, numPerPage */){
+    function GetAllDiscontinuities (err, cb){
         var paged=false;
         dal.readAll("discontinuities", function (err,res){
             if(err) { cb("An error ocurred..."); }
@@ -182,7 +218,9 @@ module.exports=function(_dal){
     function GetPagedDiscontinuitiesOfOneUser(err, user, page, numPerPage, cb ){
         dal.getPagedDiscontinuitiesOfOneUserOrSession(null, "user", user, page, numPerPage, function (err,res){
             if(err) { cb("An error ocurred..."); }
-            else {cb (null,{discontinuities:res});}
+            else {
+                cb (null,{discontinuities:res});
+            }
         });
     }
 
@@ -348,13 +386,15 @@ module.exports=function(_dal){
     }
 
     return {
+        getDiscontinuitiesFromOneSessionOrUserCsv :GetDiscontinuitiesFromOneSessionOrUserCsv,
 		createUser                          :CreateUser,
         getUser                             :GetUser,
         deleteUser                          :DeleteUser,
         getAllUsers                         :GetAllUsers,
         getAllSessions                      :GetAllSessions,
         deleteSession                       :DeleteSession,
-        getDiscontinuitiesFromOneSession    :GetDiscontinuitiesFromOneSession,
+        getAllDiscontinuitiesFromOneSession :GetAllDiscontinuitiesFromOneSession,
+        getAllDiscontinuitiesFromOneUser :GetAllDiscontinuitiesFromOneUser,
         getAllDiscontinuities               :GetAllDiscontinuities,
         getPagedDiscontinuities             :GetPagedDiscontinuities,
         getPagedDiscontinuitiesOfOneUser    :GetPagedDiscontinuitiesOfOneUser,

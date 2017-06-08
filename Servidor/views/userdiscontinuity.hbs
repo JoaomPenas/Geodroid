@@ -17,6 +17,7 @@
             <a href="?page={{#getPrevPage page}}{{/getPrevPage}}">❮</a>
             <a href="?page={{#getNextPage page maxPages}}{{/getNextPage}}">❯</a>
             <a href="?page={{maxPages}}">❯❯</a>
+            
           </h5>
 
           <h2 align="center">{{discontinuities.[0].idUser}}</h2> <!-- because the session is allways the same...-->
@@ -133,6 +134,12 @@
             <a href="?page={{#getNextPage page maxPages}}{{/getNextPage}}">❯</a>
             <a href="?page={{maxPages}}">❯❯</a>
           </h5>
+          <br><h5><a class="btn btn-lg btn-primary btn-block" href ="/csvuserdiscontinuities/{{discontinuities.[0].idUser}}">Download All Discontinuities of {{discontinuities.[0].idUser}}</a></h5>
         </main>
       </div>
     </div>
+
+<script>
+  function MyFunction(){
+
+  }

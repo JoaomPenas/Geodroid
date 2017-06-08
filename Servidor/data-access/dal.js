@@ -234,14 +234,31 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	}
 
 	/**
-	 * Devolve uma linha da tabela Discontinuity para determinada sessão
+	 * Devolve todas as descontinuidades para determinada sessão
 	 * @param {string} session - designação da sessão
 	 */
 	function ReadDiscontinuitiesFromOneSession (session, cb){
-		console.log("@ReadDiscontinuitiesFromOneSession");
+		
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
 		connection.query('SELECT * from Discontinuity where idSession=?',[session], function(err, rows, fields) {
+  			if (!err){ cb(null,rows);}	
+  			else { cb(err);	}
+    				
+    	}); 
+		connection.end();
+	}
+
+	/**
+	 * Devolve todas as descontinuidades para determinado utilizador
+	 * (Usado para retornar dados de utilizador em csv)
+	 * @param {string} session - designação da sessão
+	 */
+	function ReadDiscontinuitiesFromOneUser (user, cb){
+		
+		var connection = getConnection(hostP, userP, passwordP, databaseP);
+    	connection.connect();
+		connection.query('SELECT * from Discontinuity where idUser=?',[user], function(err, rows, fields) {
   			if (!err){ cb(null,rows);}	
   			else { cb(err);	}
     				
@@ -404,6 +421,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		getUser   							:GetUser,
 		postUser							:PostUser,
 		getNumOfDiscOfOneUserOrSession		:GetNumOfDiscOfOneUserOrSession,
+		readDiscontinuitiesFromOneUser		:ReadDiscontinuitiesFromOneUser,
         postDiscontinuities					:PostDiscontinuities,
 		getDiscontinuitiesOfOneUser			:GetDiscontinuitiesOfOneUser,
 		readDiscontinuitiesFromOneSession	:ReadDiscontinuitiesFromOneSession,	
