@@ -1,5 +1,8 @@
 'use strict'
-const numPerPage=10;
+const fs 		= require('fs')
+const config  	= require('./../setup');
+
+const numPerPage=config.webAppNumPerPage;
 function showObject(obj) {
     for (var k in obj) {
         console.log("o[\'" + k          // k       -> contem a string da chave
@@ -15,6 +18,52 @@ module.exports = function(app,passport,model) {
     router.get('/', function (req,rsp,next){
     	rsp.status(200);
 		rsp.render('home'); 
+    });
+
+	/**
+	 * Route to return  user discontinuities in csv formart
+	 */
+    router.get('/csvuserdiscontinuities/:idUser', isLoggedIn,function (req,rsp,next){
+		model.getDiscontinuitiesFromOneSessionOrUserCsv ("user",req.params.idUser, (err, res)=>{
+			if (!err){
+				//TODO : random name
+				/*
+				fs.writeFile("./public/csv/MyFile.csv", res, (err)=>{
+					rsp.redirect ("/MyFile.csv");
+				});
+				  */ 
+				rsp
+				 .set('Content-Disposition','attachment;filename=Dicontinuities.csv')
+				 .status(200)
+				 .end (res);
+			}
+			else{
+				rsp.status(500);
+				rsp.render ('error',{message:err});
+			} 
+			
+		});
+    });
+
+	/**
+	 * Route to return  user session in csv formart
+	 */
+    router.get('/csvsessiondiscontinuities/:idSession', isLoggedIn, function (req,rsp,next){
+		
+		model.getDiscontinuitiesFromOneSessionOrUserCsv ("session",req.params.idSession, (err, res)=>{
+			if (!err){
+				rsp
+				.set('Content-Disposition','attachment;filename=Dicontinuities.csv')
+				 .status(200)
+				 .end (res);
+			}
+			else{
+				rsp.status(500);
+				rsp.render ('error',{message:err});
+			} 
+			
+		});
+    	
     });
 
 	/**
@@ -249,8 +298,9 @@ module.exports = function(app,passport,model) {
 	 });
 	
 	 /**
-	  * Contributors information
+	  * Contributors information (DEPRECATED...)
 	  */
+	  /*
 	 router.get('/contributors', isLoggedIn, function (req,rsp,next){
 		model.getAllUsersResumedInformation(null,function(err,res){
 			if(!err){
@@ -263,6 +313,8 @@ module.exports = function(app,passport,model) {
 			}
 		},true);
 	 });
+*/
+
 
 	 /**
 	  * Sessions information

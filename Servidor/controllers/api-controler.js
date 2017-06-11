@@ -1,8 +1,8 @@
 'use strict'
-/*
-Provides the follow routes:
+const config  	= require('./../setup');
 
- */
+const numPerPage=config.apiNumPerPage;
+
 module.exports = function(model, app) {          
     const router 		= require('express').Router();
 	var jwt             = require('jsonwebtoken');      // used to create, sign, and verify tokens
@@ -38,7 +38,6 @@ module.exports = function(model, app) {
 	 * Devolve a informação dos utilizadores
 	 */
 	router.get('/api/users', VerifyToken, function (req,rsp,next){
-	//router.get('/api/users', function (req,rsp,next){
 		model.getAllUsers(null,function (err, res){
 			if (err){
 				rsp.status(500).json({ error: err });
@@ -54,9 +53,7 @@ module.exports = function(model, app) {
 	 * exemplo: {"username":"wer4", "password":"123"}
 	 * Função apenas disponível para o administrador (admin)
 	 */
-	router.post('/api/users', VerifyToken, IsAdmin, function (req,rsp,next){   
-	//router.post('/api/users', function (req,rsp,next){  
-		console.log(req.body);
+	router.post('/api/users', VerifyToken, IsAdmin, function (req,rsp,next){    
 	   model.createUser(req.body.username, req.body.password, function (err, message){
 		   if (!err){
 				//console.log(message+"created! :)");
@@ -69,7 +66,7 @@ module.exports = function(model, app) {
 			   //rsp.render('error',{message:err})
 		   }
 		});
-   	 });
+   	});
 
    /**
 	* Rota para remover da base de dados um utilizador existente
@@ -87,7 +84,21 @@ module.exports = function(model, app) {
 				rsp.json({message:message})
 			}	
 		});
-	 });
+   });
+
+	/**
+	 * Devolve informação de todas as sessões
+	 */
+	router.get('/api/sessions', VerifyToken, function (req,rsp,next){
+		model.getAllSessions(null,function (err, res){
+			if (!err){
+				rsp.json(res);
+			}
+			else{
+				rsp.status(500).json({ error: err });
+			}
+		});
+    });
 
 
    /**
@@ -106,23 +117,53 @@ module.exports = function(model, app) {
 				rsp.json({message:message})
 			}	
 		});
-	 });
+   });
+
+	 /**
+	  * Devolve informação sobre o numero de descontinuidades, utilizadores e sessões
+	  */
+	router.get('/api/summary', VerifyToken, function (req,rsp,next){
+		model.getSummary(null,function (err,res){
+			if (err){
+				rsp.status(500);
+				rsp.json({message:err})
+			}
+			else {
+				rsp.status(200).json(res)
+			}
+		},false);
+	});
 
 
-	/**
-	 * Devolve informação de todas as sessões
-	 */
-	router.get('/api/sessions', VerifyToken, function (req,rsp,next){
-	//router.get('/api/sessions',  function (req,rsp,next){
-		model.getAllSessions(null,function (err, res){
-			if (!err){
-				rsp.json(res);
+	 /**
+	  * Devolve informação sobre o numero de descontinuidades e sessões de determinado utilizador
+	  */
+	router.get('/api/usersummary/:idUser', VerifyToken, function (req,rsp,next){
+		model.getSummaryByUser(null,req.params.idUser, function (err,res){
+			if (err){
+				rsp.status(500);
+				rsp.json({message:err})
 			}
-			else{
-				rsp.status(500).json({ error: err });
+			else {
+				rsp.status(200).json(res)
 			}
-		});
-	 });
+		},false);
+	});
+
+ 	/**
+	  * Devolve informação sobre o número de descontinuidades e utilizadores de determinada sessão
+	  */
+	router.get('/api/sessionsummary/:idSession', VerifyToken, function (req,rsp,next){
+		model.getSummaryBySession(null,req.params.idSession, function (err,res){
+			if (err){
+				rsp.status(500);
+				rsp.json({message:err})
+			}
+			else {
+				rsp.status(200).json(res)
+			}
+		},false);
+	});
 
 	/**
 	 * Devolve informação de todas as descontinuidades de forma paginada
@@ -131,8 +172,6 @@ module.exports = function(model, app) {
 	 * Se tiver a página retorna a pagina; se não retorna 403
 	 */
 	router.get('/api/discontinuities', VerifyToken, function (req,rsp,next){
-		var numPerPage=10;
-		//var userPage = req.query.page;
 		var userPage= req.query.page===undefined? 0: req.query.page;
 
 		model.getNumberOfDiscontinuitiesPages (null, function (err,numPages){
@@ -154,20 +193,59 @@ module.exports = function(model, app) {
 		}, numPerPage);
 	});
 
-	/**
-	 * Devolve informação das descontinuidades de uma sessão
+	/**	
+	 * Devolve informação das descontinuidades de uma sessão de forma paginada
 	 */
- 	router.get('/api/discontinuities/:idSession', VerifyToken, function (req,rsp,next){
-	//router.get('/api/discontinuities/:idSession', function (req,rsp,next){
-		model.getDiscontinuitiesFromOneSession(req.params.idSession, function (err,res){
-			if (!err){
-				rsp.json(res);
-			}
-			else{
-				rsp.status(500).json({ error: err });
-			}
-		});
-	 });
+ 	router.get('/api/discontinuities/session/:idSession', VerifyToken, function (req,rsp,next){
+		var userPage= req.query.page===undefined? 0: req.query.page
+		model.getNumOfPages (null,"session", req.params.idSession,numPerPage, (err,numPages)=>{
+			 	if (err){
+					rsp.status(500).json({ error: err });
+				}
+				else {
+					if (userPage >=numPages) {
+						rsp.sendStatus(403);}	// não exitem tantas paginas quanto o solicitado!
+					else{
+						model.getPagedDiscontinuitiesOfOneSession(null, req.params.idSession, userPage, numPerPage,function (err,res){
+							if (!err){
+								console.log ("o resultado é: "+res);
+								rsp.json(res);
+							}
+							else{
+								rsp.sendStatus(500);
+							}
+						});
+					}
+				}
+		 } );
+	});
+
+	 /**	
+	 * Devolve informação das descontinuidades de um utilizador de forma paginada
+	 */
+ 	router.get('/api/discontinuities/user/:idUser' , VerifyToken, function (req,rsp,next){
+		var userPage= req.query.page===undefined? 0: req.query.page
+		model.getNumOfPages (null,"user", req.params.idUser,numPerPage, (err,numPages)=>{
+			 	if (err){
+					rsp.status(500).json({ error: err });
+				}
+				else {
+					if (userPage >=numPages) {
+						rsp.sendStatus(403);}	// não exitem tantas paginas quanto o solicitado!
+					else{
+						model.getPagedDiscontinuitiesOfOneUser(null, req.params.idUser, userPage, numPerPage,function (err,res){
+							if (!err){
+								console.log ("o resultado é: "+res);
+								rsp.json(res);
+							}
+							else{
+								rsp.sendStatus(500);
+							}
+						});
+					}
+				}
+		 } );
+	});
 
 	/**
 	 * Rota para inserir na base de dados um conjunto de descontinuidades
@@ -185,7 +263,7 @@ module.exports = function(model, app) {
 				rsp.sendStatus(200);
 			}	
 		});
-	});
+    });
 
     return router
 

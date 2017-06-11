@@ -13,7 +13,9 @@ var getConnection = function(_hostP, _userP, _passwordP, _databaseP){
 					});
 			}
 
-// função auxiliar - para debug (para apagar)
+/**
+ * função auxiliar - para debug
+ */ 
 function showObject(obj) {
     for (var k in obj) {
         console.log("o[\'" + k          // k       -> contem a string da chave
@@ -212,9 +214,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	 * @param {function} cb - função de callback
 	 */
 	function GetNumOfDiscOfOneUserOrSession (err, type, name, numPerPages, cb){
-		console.log("@dal.GetNumberOfDiscontinuitiesPagesOfOneUserOrSession.type = "+ type);
-		console.log("@dal.GetNumberOfDiscontinuitiesPagesOfOneUserOrSession.name = "+ name);
-		console.log("@dal.GetNumberOfDiscontinuitiesPagesOfOneUserOrSession.numPerPages = "+ numPerPages);
+		console.log(type+","+name+","+numPerPages)
 		var fieldN="";
 		if (type == "user") fieldN ="idUser";
 		if (type == "session") fieldN= "idSession";
@@ -234,14 +234,31 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	}
 
 	/**
-	 * Devolve uma linha da tabela Discontinuity para determinada sessão
+	 * Devolve todas as descontinuidades para determinada sessão
 	 * @param {string} session - designação da sessão
 	 */
 	function ReadDiscontinuitiesFromOneSession (session, cb){
-		console.log("@ReadDiscontinuitiesFromOneSession");
+		
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
 		connection.query('SELECT * from Discontinuity where idSession=?',[session], function(err, rows, fields) {
+  			if (!err){ cb(null,rows);}	
+  			else { cb(err);	}
+    				
+    	}); 
+		connection.end();
+	}
+
+	/**
+	 * Devolve todas as descontinuidades para determinado utilizador
+	 * (Usado para retornar dados de utilizador em csv)
+	 * @param {string} session - designação da sessão
+	 */
+	function ReadDiscontinuitiesFromOneUser (user, cb){
+		
+		var connection = getConnection(hostP, userP, passwordP, databaseP);
+    	connection.connect();
+		connection.query('SELECT * from Discontinuity where idUser=?',[user], function(err, rows, fields) {
   			if (!err){ cb(null,rows);}	
   			else { cb(err);	}
     				
@@ -256,13 +273,12 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	 * @param {string} str - valores  possíveis para str: 'users', 'sessions' or 'discontinuities'
 	 * @param {boolean} paged - se pretende leitura paginada
 	 * @param {int} page - número da página a pedir
-	 * @param {inr} numPerPage - número de leituras por página
+	 * @param {int} numPerPage - número de leituras por página
 	 */
-	function ReadAll(str,cb, paged, page, numPerPage, user){
+	function ReadAll(str,cb, paged, page, numPerPage){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
 		var table;
-		//console.log("@ReadAll!!!")
 		if (str=="users") 			table = "User";
 		if (str=="sessions") 		table = "Session";
 		if (str=="discontinuities") table = "Discontinuity";
@@ -273,7 +289,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		else{
 			str='SELECT * from '+table;
 		}
-		console.log(str)
+		
 		connection.query(str, function(err, rows, fields) {
 			if (!err){ cb(null,rows)}		
 			else {cb(err);}	
@@ -282,6 +298,15 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		connection.end();
 	}
 
+	/**
+	 * Obtém as descontinuidades de um utilizador ou uma sessão
+	 * @param {*} err 
+	 * @param {string} str - deverá ser passado a string "user" ou "session"
+	 * @param {string} element - a designação do utilizador ou da sessão
+	 * @param {int} page - número da pagina pretendida
+	 * @param {int} numPerPage - número de elementos por página 
+	 * @param {function} cb - função de callback
+	 */
 	function GetPagedDiscontinuitiesOfOneUserOrSession (err, str, element, page, numPerPage, cb){
 		
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
@@ -301,16 +326,51 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	}
 
 	/**
-	 * Devolve as contagens dos users, sessões e descontinuidades
-	 * É passado um array de semelhante:
+	 * Devolve o numero de utilizadores, de sessões e descontinuidades existentes no sistema
+	 * É passado ao callback um array semelhante ao seguinte:
 	 * [RowDataPacket { NumUsers: 3, NumSessions: 4, NumDiscontinuities: 15 } ]
+	 * @param {function} cb - função de callback
 	 */
 	function GetSummaryCount (cb){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
-		var sql = 'select count(distinct idUser) as NumUsers, count(distinct name) as NumSessions , count(id) as NumDiscontinuities from (select * from Discontinuity RIGHT JOIN Session on Discontinuity.idSession=Session.name) as X'
+		var sql = 'SELECT (SELECT COUNT(*) FROM User) AS NumUsers, (SELECT COUNT(*) FROM Session) AS NumSessions, (SELECT COUNT(*) FROM Discontinuity) AS NumDiscontinuities'
 		//var sql = 'select count(distinct idUser) as NumUsers, count(distinct idSession) as NumSessions , count(id) as NumDiscontinuities from Discontinuity'
 		connection.query(sql, function(err, rows, fields) {
+			if (!err){ cb(null,rows)}
+		});
+		connection.end();
+	}
+
+	/**
+	 * Devolve as contagens das descontinuidades e das sessões de um determinado utilizador 
+	 * É passado ao callback um array de semelhante ao seguinte:
+	 * [RowDataPacket { NumDiscontinuities: 15, NumSessions: 4} ]
+	 * @param {string} user - desingnação do utilizador
+	 * @param {function} cb - função de callback
+	 */
+	function GetSummaryCountByUser (user, cb){
+		var connection = getConnection(hostP, userP, passwordP, databaseP);
+    	connection.connect();
+		var sql = 'select count(id) as NumDiscontinuities, count(distinct idSession) as NumSessions from Discontinuity where idUser=?';
+		connection.query(sql, user, function(err, rows, fields) {
+			if (!err){ cb(null,rows)}
+		});
+		connection.end();
+	}
+
+	/**
+	 * Devolve as contagens das descontinuidades e dos utilizadores de uma determinada sessão
+	 * É passado ao callback um array de semelhante ao seguinte:
+	 * [RowDataPacket { NumDiscontinuities: 15, NumUsers: 3  } ]
+	 * @param {string} session - designação da sessão
+	 * @param {function} cb - função de callback
+	 */
+	function GetSummaryCountBySession (session, cb){
+		var connection = getConnection(hostP, userP, passwordP, databaseP);
+    	connection.connect();
+		var sql = 'select count(id) as NumDiscontinuities, count(distinct idUser) as NumUsers from Discontinuity where idSession=?';
+		connection.query(sql, session, function(err, rows, fields) {
 			if (!err){ cb(null,rows)}
 		});
 		connection.end();
@@ -361,12 +421,15 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		getUser   							:GetUser,
 		postUser							:PostUser,
 		getNumOfDiscOfOneUserOrSession		:GetNumOfDiscOfOneUserOrSession,
+		readDiscontinuitiesFromOneUser		:ReadDiscontinuitiesFromOneUser,
         postDiscontinuities					:PostDiscontinuities,
 		getDiscontinuitiesOfOneUser			:GetDiscontinuitiesOfOneUser,
 		readDiscontinuitiesFromOneSession	:ReadDiscontinuitiesFromOneSession,	
 		readAll								:ReadAll,	
 		getPagedDiscontinuitiesOfOneUserOrSession:GetPagedDiscontinuitiesOfOneUserOrSession,					
 		getSummaryCount						:GetSummaryCount,
+		getSummaryCountByUser				:GetSummaryCountByUser,
+		getSummaryCountBySession			:GetSummaryCountBySession,
 		getUserSummary						:GetUserSummary,
 		getSessionSummary					:GetSessionSummary
     };

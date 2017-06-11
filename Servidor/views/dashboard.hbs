@@ -1,4 +1,4 @@
-<body>
+
     <div class="container-fluid">
       <div class="row">
         <main class="col-sm-9 offset-sm-4 col-md-10 offset-md-1 pt-3">
@@ -42,7 +42,7 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Contributors</th>
+                  <th>Users</th>
                   <th>Sessions</th>
                   <th>Measures</th>
                 </tr>
@@ -51,7 +51,7 @@
               <tbody>
                 {{#each summary}}
                 <tr>
-                  <td><a href="/contributors">{{NumUsers}}</a></td>
+                  <td><a href="/users">{{NumUsers}}</a></td>
                   <td><a href="/sessions">{{NumSessions}}</a></td>
                   <td><a href="/discontinuities">{{NumDiscontinuities}}</a></td>
                 </tr>
@@ -63,4 +63,3 @@
         </main>
       </div>
     </div>
-</body>

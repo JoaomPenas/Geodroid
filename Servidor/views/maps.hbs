@@ -10,10 +10,6 @@
               <h4 class="float-right"><a href="\admin">Admin area </a></h4>
           {{/if}}
 
-          {{#each locat}}
-            <p>x</p>
-          {{/each}}
-
           <h1>Maps</h1>
         <h1 id="map" style="width: 100%; height:600px; position:relative; overflow:hidden;"> </h1>
         <p style="text-align: center;">Total {{numDiscont}} discontinuities</p>
@@ -24,8 +20,8 @@
     <script>
       function initMap() {
 
-        var locations = JSON.parse('{{#foo discontinuities}} {{/foo}}'); 
-/*
+        var locations = JSON.parse('{{#stringify discontinuities}} {{/stringify}}'); 
+        /*
         var locations =  [
 							{
 							id: 1,
@@ -42,7 +38,7 @@
 							weathering: 2
 							},
 							{	a mesma coisa...	}];
-*/
+        */
         // critério para centrar: o primeiro que encontrar, se nao houver nenhum ponto, um ponto predefinido
         var centerLat=0;
         var centerLong=0;
@@ -65,35 +61,35 @@
 
         var infowindow = new google.maps.InfoWindow();
 
-    var marker, i;
+        var marker, i;
 
-    for (i = 0; i < locations.length; i++) {  
-      var symbol = {
-          path: 'm 0 -12 l 0 24 m 0 -12 l 5 0',
-          strokeWeight: 3,
-          rotation:locations[i].direction
-        };
-      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(locations[i].latitude, locations[i].longitude),
-        //icon:'./../../strike.png',
-        icon:symbol,
-        map: map});
+        for (i = 0; i < locations.length; i++) {  
+            var symbol = {
+                path: 'm 0 -12 l 0 24 m 0 -12 l 5 0',
+                strokeWeight: 3,
+                rotation:locations[i].direction
+              };
+            marker = new google.maps.Marker({
+              position: new google.maps.LatLng(locations[i].latitude, locations[i].longitude),
+              //icon:'./../../strike.png',
+              icon:symbol,
+              map: map});
 
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infowindow.setContent("("+locations[i].id +","+ locations[i].idSession + ","+locations[i].idUser+")/("+locations[i].direction+"º,"+locations[i].dip+"º)");
-          infowindow.open(map, marker);
-        }
-      })(marker, i));
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                infowindow.setContent("("+locations[i].id +","+ locations[i].idSession + ","+locations[i].idUser+")/("+locations[i].direction+"º,"+locations[i].dip+"º)");
+                infowindow.open(map, marker);
+              }
+            })(marker, i));
 
-        /*
-        var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map,
-          title: 'Hello World!'
-        });
-        */
-      }
+              /*
+              var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                title: 'Hello World!'
+              });
+              */
+          }
     }
     </script>
 

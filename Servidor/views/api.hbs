@@ -1,4 +1,4 @@
-<body>
+
 
 <!--   API    -->
       <div class="container">
@@ -158,10 +158,31 @@
                 <li>URL: <b>(...)api/discontinuities</b></li>
                 <li>Example: POST for url: (...)/api/discontinuities</li>
           </ul>
+
+
+          <br><h3>System Summary</h3>
+          <div class="container">
+          <h4> GET for (...)/api/summary</h4>
+          <p>Retrieve the number of discountinuities, sessions and users in the database.</p>
+            <ul>
+                <li>URL: <b>/api/summary</b></li>
+                <li>Example of the response: <p>{"summary": [ { "NumUsers": 10, "NumSessions": 9, "NumDiscontinuities": 47 }]}</p></li>  
+            </ul>
+          <h4> GET for (...)/api/usersummary/:idUser</h4>
+          <p>Retrieve the number of discountinuities and sessions of an user.</p>
+            <ul>
+                <li>URL: <b>(...)/api/usersummary/:idUser</b></li>
+                <li>Example of the response: <p>{"summary": [ { "NumDiscontinuities": 37,  "NumSessions": 3 } ]}</p></li>  
+            </ul>
+            <h4> GET for (...)/api/sessionsummary/:idSession</h4>
+          <p>Retrieve the number of  discountinuities, sessions and users in the database.</p>
+            <ul>
+                <li>URL: <b>(...)/api/sessionsummary/:idSession</b></li>
+                <li>Example of the response: <p>{ "summary":[{"NumDiscontinuities": 18, "NumUsers": 3}]}</p></li>  
+            </ul>
+
         </div>
 
       </div>
       
 
-
-      </body>

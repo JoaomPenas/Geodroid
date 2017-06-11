@@ -15,5 +15,7 @@ module.exports = {
     host     : 'ef5b0283-1975-48ca-a23a-a74600efeb35.mysql.sequelizer.com',
     user     : 'ncleqdgbkfluzczb',
     password : 'mW8jmft5uBuG6MzA5SGPcPAfef4JAJZedhiuWcMdSAepbbsxcFLrHhoDu3efkRCT',
-    database : 'dbef5b0283197548caa23aa74600efeb35'
+    database : 'dbef5b0283197548caa23aa74600efeb35',
+    webAppNumPerPage:10,
+    apiNumPerPage:10
   }
