@@ -2,6 +2,7 @@ package com.example.ps.geodroidapp.Activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -148,19 +150,38 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         } else {
             locationManager.requestLocationUpdates("gps", 0, 1, locationListener);
         }
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Compass.this, "Azim:" + azimuth + " roll:" + roll + "\nLat:" + _lat + " Long:" + _long, Toast.LENGTH_SHORT).show();
-
-                // Pass data to activity
                 intentForParamsExtraAcivity.putExtra("Azimute", ""+ azCalc);
                 intentForParamsExtraAcivity.putExtra("Dip", ""+ dip);
                 intentForParamsExtraAcivity.putExtra("Latitude", ""+_lat);     //"38.98765");
-                intentForParamsExtraAcivity.putExtra("Longitude", ""+_long); //"9.8765");
+                intentForParamsExtraAcivity.putExtra("Longitude", ""+_long);
+                if(_lat == 0 || _long == 0 ){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Compass.this);
+                    builder.setMessage("Location not aquire yet do you want proceed?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(intentForParamsExtraAcivity);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }else{
+                    startActivity(intentForParamsExtraAcivity); // inicia a actividade
+                }
+                // Pass data to activity
+               ; //"9.8765");
 
-                startActivity(intentForParamsExtraAcivity); // inicia a actividade
+
 
                 //startActivity(itentForTabelaActivity);    // inicia a actividade da tabela (experimental)
 
