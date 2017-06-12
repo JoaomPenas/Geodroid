@@ -96,7 +96,7 @@ public class SessionMenu extends AppCompatActivity {
         }
         compassIntent.putExtra("Session", session);
         compassIntent.putExtra("usermail",usermail);
-
+        statisticsIntent.putExtra("Session", session);
         newRegistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
