@@ -60,6 +60,16 @@ public class Utils {
         return  original.equals(attemptPass);
     }
 
+    public static String createPassHash(String pass, long salt){
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        String hash = pass+salt;
+        return encodeToString(md.digest(hash.getBytes()),NO_WRAP);
+    }
     /**
      * Guarda o ficheiro .csv no dispositivo
      * @param discontinuitys

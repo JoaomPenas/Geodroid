@@ -358,6 +358,12 @@ public class SqlDataBase extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Verifica se o user existe
+     * @param email
+     * @param pass
+     * @return
+     */
     public boolean IsUserAvailable(String email, String pass) {
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor cursor = db.rawQuery("select * from user where "+USER_ID_EMAIL+" =\"" + email + "\" and "+USER_PASS+" =\"" + pass + "\"" , null);
@@ -432,9 +438,8 @@ public class SqlDataBase extends SQLiteOpenHelper {
     }
 
     /**
-     * retorna um ArrayList<Discontinuity> com as descontinuidades que não estão no servidor
      * @param sessionId
-     * @return
+     * @return um ArrayList<Discontinuity> com as descontinuidades que não estão no servidor
      */
     public ArrayList<Discontinuity> areUploads(String sessionId) {
         ArrayList<Discontinuity> list = new ArrayList<>();

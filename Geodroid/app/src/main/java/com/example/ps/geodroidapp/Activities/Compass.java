@@ -160,7 +160,7 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
                 intentForParamsExtraAcivity.putExtra("Longitude", ""+_long);
                 if(_lat == 0 || _long == 0 ){
                     AlertDialog.Builder builder = new AlertDialog.Builder(Compass.this);
-                    builder.setMessage("Location not aquire yet do you want proceed?")
+                    builder.setMessage("Location is not available, do you want proceed?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

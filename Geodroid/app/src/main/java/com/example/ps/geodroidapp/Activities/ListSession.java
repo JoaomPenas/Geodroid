@@ -3,9 +3,11 @@ import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.Domain.Session;
 import com.example.ps.geodroidapp.R;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -91,10 +93,24 @@ public class ListSession extends AppCompatActivity {
             case R.id.menu_deleteSessionRow:
                 adapter.remove(adapter.getItem(info.position));
                 sessionName = ((TextView)info.targetView.findViewById(R.id.textView_item)).getText().toString();
-                //db.areUploads(sessionName);
-
-               // db.deleteSessionDiscontinuity(sessionName,usermail);
-
+                if(db.areUploads(sessionName).size() != 0 ){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ListSession.this);
+                    builder.setMessage("Some discontinuities are not uploaded?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    db.deleteSessionDiscontinuity(sessionName,usermail);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
                 return true;
             default:
                 return super.onContextItemSelected(item);

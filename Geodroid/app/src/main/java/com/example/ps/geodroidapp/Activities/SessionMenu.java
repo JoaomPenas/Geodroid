@@ -2,24 +2,17 @@ package com.example.ps.geodroidapp.Activities;
 import com.example.ps.geodroidapp.BussulaApi;
 import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.Domain.Discontinuity;
-import com.example.ps.geodroidapp.Domain.DtoCatalog;
 import com.example.ps.geodroidapp.Domain.DtoDiscontinuity;
-import com.example.ps.geodroidapp.Domain.Session;
 import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
 import com.example.ps.geodroidapp.Utils.Utils;
-import com.github.mikephil.charting.utils.FileUtils;
 import com.google.gson.Gson;
 
-import android.app.Activity;
-import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,17 +21,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -83,7 +68,7 @@ public class SessionMenu extends AppCompatActivity {
         compassIntent    = new Intent(this, Compass.class);
         dataMapIntent    = new Intent(this, DataMap.class);
         statisticsIntent = new Intent(this, StatisticTable.class);
-        loginAct         = new Intent(this, Intro.class);
+        loginAct         = new Intent(this, Login.class);
 
         Intent aux = getIntent();
         Bundle extras = aux.getExtras();
@@ -195,6 +180,7 @@ public class SessionMenu extends AppCompatActivity {
                 else{
                     try {
                         AuthenticateResponse authenticate = gson.fromJson(response.errorBody().string(),AuthenticateResponse.class);
+                        //Adicionar campo ao erro da mensagem para saber se o erro foi do token não estar válido; se foi erro da password...
                         Toast.makeText(SessionMenu.this,response.message()+authenticate.getMessage(), Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
