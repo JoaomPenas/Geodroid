@@ -3,6 +3,7 @@ package com.example.ps.geodroidapp.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,72 +97,13 @@ public class Login extends AppCompatActivity {
                     //finish();
                 }
                 else{
-                    Toast.makeText(Login.this,"ELSE",Toast.LENGTH_SHORT).show();
                     requestApiToken(new User(email.getText().toString(), pass.getText().toString()));
-                    //requestGetAllUsers("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndAbWFpbC5jb20iLCJpYXQiOjE0OTYyMzkyMzYsImV4cCI6MTQ5NjMyNTYzNn0.w3vaAhH-0SDfagFOCZGfQAtRpsb96Y28P0bzGI0Ns8Y");
-                }
+                 }
 
             }
         });
 
     }
-    private void requestGetAllUsers(final String token){
-        Log.d("TTTT",token);
-        Call<ResponseBody> requestCatalogg = service.getUser(token);
-        requestCatalogg.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.isSuccessful()) {
-                    try {
-                        DtoCatalog xpto = gson.fromJson(response.body().string(), DtoCatalog.class);
-                        List<User> list = xpto.getUser();
-                        db.insertUsers(list);
-                        Log.d("JY", response.message());
-                        if(extras != null){
-                            sessionMenu.putExtra("usermail", email.getText().toString());
-                            sessionMenu.putExtra("token", token);//authenticateResponse.getToken());
-                            sessionMenu.putExtra("SessionName", extras.getString("SessionName"));//authenticateResponse.getToken());
-                            startActivity(sessionMenu);
-                            finish();
-                        }else {
-                            Toast.makeText(Login.this, "Updated internal DB from Remote DB!\nAvailable users: \n", Toast.LENGTH_SHORT).show();
-                            long randomSalt = new Random().nextLong();
-                            String hashPass = Utils.createPassHash(pass.getText().toString(),randomSalt);
-                            db.insertUser(email.getText().toString(),hashPass,randomSalt,token);
-                            mainActivityStartIntent.putExtra("usermail", email.getText().toString());
-                            mainActivityStartIntent.putExtra("token", token);//authenticateResponse.getToken());
-                            startActivity(mainActivityStartIntent);
-                        }
-                        //finish();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(Login.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    try {
-                        ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                        if(!connMgr.getActiveNetworkInfo().isConnected()){
-                            Toast.makeText(Login.this,"Connect to internet", Toast.LENGTH_SHORT).show();
-                        }
-                        AuthenticateResponse authenticate = gson.fromJson(response.errorBody().string(),AuthenticateResponse.class);
-                        Toast.makeText(Login.this,response.message()+authenticate.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(Login.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("JX",t.getMessage());
-                Toast.makeText(Login.this,"Cannot update users from Database...(requestGetAllUsers)"+t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
     public void requestApiToken(User user){
         BussulaApi servicee = BussulaApi.Factory.getInstance();
         Call<AuthenticateResponse> requestCatalog = servicee.postAuthenticate(user);
@@ -194,16 +136,25 @@ public class Login extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<AuthenticateResponse> call, Throwable t) {
-                ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                if(!connMgr.getActiveNetworkInfo().isConnected()){
-                    Toast.makeText(Login.this,"Connect to internet", Toast.LENGTH_SHORT).show();
+                if(!isOnline()) {
+                        Toast.makeText(Login.this, "Connect to internet", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(Login.this,"Authenticate Fail...(requestApiToken)", Toast.LENGTH_LONG).show();
                 }
                 authenticateResponse = null;
-                Log.d("JJ",t.getMessage());
-                Toast.makeText(Login.this,"Authenticate Fail...(requestApiToken)", Toast.LENGTH_LONG).show();
             }
         });
-        //return reqTokenRes;
+    }
+
+    /**
+     *Verifica se existe ligação à internet
+     * @return boolean se esta ligado a internet
+     */
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
 }
