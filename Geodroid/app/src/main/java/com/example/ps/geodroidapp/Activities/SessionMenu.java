@@ -135,15 +135,13 @@ public class SessionMenu extends AppCompatActivity {
                 final View buttonUpload = v;
                 final ArrayList <Discontinuity>list = db.areUploads(session);// db.getAllDiscontinuities(session);
                 DtoDiscontinuity dtoDiscontinuity = new DtoDiscontinuity(list);
-                //requestApiToken(db.getUser(usermail));
+                //requestApiToken(db.getUserToken(usermail));
                 //postDiscont(service,dtoDiscontinuity,list,buttonUpload);
                 //Call <ResponseBody> postDisc = service.postDiscontinuities(dtoDiscontinuity);
-                if(token == null){
-                    loginAct.putExtra("SessionName",session);
-                    startActivity(loginAct);
-                    finish();
-                }else
-                    postDiscontinuity(token,dtoDiscontinuity,buttonUpload,list);
+                if(token == null ) {
+                    token = db.getUserToken(usermail);
+                }
+                postDiscontinuity(token,dtoDiscontinuity,buttonUpload,list);
                 /*
                 postDisc.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -180,7 +178,10 @@ public class SessionMenu extends AppCompatActivity {
                 else{
                     try {
                         AuthenticateResponse authenticate = gson.fromJson(response.errorBody().string(),AuthenticateResponse.class);
-                        //Adicionar campo ao erro da mensagem para saber se o erro foi do token não estar válido; se foi erro da password...
+                        loginAct.putExtra("SessionName",session);
+                        startActivity(loginAct);
+                        finish();
+                        //Adicionar campo ao erro da mensagem na API para saber se o erro foi do token não estar válido; se foi erro da password...
                         Toast.makeText(SessionMenu.this,response.message()+authenticate.getMessage(), Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();

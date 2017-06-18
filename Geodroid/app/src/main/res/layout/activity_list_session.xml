@@ -12,10 +12,9 @@
         android:id="@+id/list_session_userTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="idUser"
+        android:text="User"
         android:textSize="24sp"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
     <TextView
         android:id="@+id/list_session_userName"
         android:layout_width="184dp"

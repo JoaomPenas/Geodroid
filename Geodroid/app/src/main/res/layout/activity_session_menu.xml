@@ -72,9 +72,9 @@
         android:text="@string/sessionMenu_statistics"
         android:textAllCaps="false"
         android:textSize="18sp"
-        android:layout_above="@+id/imageButton_upload"
+        android:layout_below="@+id/session_menu_button_map"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="21dp" />
+        android:layout_marginTop="24dp" />
 
     <Button
         android:id="@+id/session_menu_button_map"

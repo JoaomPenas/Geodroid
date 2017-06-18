@@ -5,6 +5,7 @@ public class User {
     private String email;
     private String pass;
     private long salt;
+    private String token;
 
     public User(){}
     public User(String email, String pass) {
@@ -31,4 +32,5 @@ public class User {
     public long getSalt() {
         return salt;
     }
+    public String getToken() {return token;}
 }

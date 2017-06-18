@@ -19,7 +19,7 @@ public class MainActivityStart extends AppCompatActivity {
     private String usermail ="",token="";
 
     ImageButton existSessionbutton;
-    Button createSessionbutton;
+    ImageButton createSessionbutton;
     Intent listSession, createSession;
     private SqlDataBase sql=null;
 
@@ -41,14 +41,14 @@ public class MainActivityStart extends AppCompatActivity {
         createSession   = new Intent(this, CreateSession.class);
 
         existSessionbutton = (ImageButton) findViewById(R.id.button_existingSession);
-        createSessionbutton = (Button) findViewById(R.id.button_createSession);
+        createSessionbutton = (ImageButton) findViewById(R.id.button_createSession);
 
 
         existSessionbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listSession.putExtra("usermail", usermail);
-                createSession.putExtra("token", token);
+                listSession.putExtra("token", token);
                 startActivity(listSession);
                 //MainActivityStart.this.startActionMode(mActionModeCallback);
                 //registerForContextMenu(v);

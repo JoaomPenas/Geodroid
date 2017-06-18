@@ -28,7 +28,7 @@ public interface BussulaApi {
     //String BASE_URL ="http://10.10.31.140:3010";
     //String BASE_URL ="http://192.168.1.3:3010";
     @GET("api/users")
-        //Call<DtoCatalog> getUser();
+        //Call<DtoCatalog> getUserToken();
     Call<ResponseBody> getUser(@Header("x-access-token") String token);
 
 
