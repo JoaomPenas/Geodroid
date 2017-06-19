@@ -33,9 +33,13 @@ public class Utils {
         return res;
     }
 
-    public static boolean phoneIsOnline(Context context){
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+    /**
+     *Verifica se existe ligação à internet
+     * @return boolean se esta ligado a internet
+     */
+    public static boolean isOnline(Context context) {
+        ConnectivityManager connMgr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }
 

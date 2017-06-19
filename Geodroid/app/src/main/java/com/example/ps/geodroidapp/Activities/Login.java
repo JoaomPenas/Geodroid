@@ -136,7 +136,7 @@ public class Login extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<AuthenticateResponse> call, Throwable t) {
-                if(!isOnline()) {
+                if(!Utils.isOnline(getApplicationContext())) {
                         Toast.makeText(Login.this, "Connect to internet", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(Login.this,"Authenticate Fail...(requestApiToken)", Toast.LENGTH_LONG).show();
@@ -146,15 +146,6 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    /**
-     *Verifica se existe ligação à internet
-     * @return boolean se esta ligado a internet
-     */
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
+
 
 }

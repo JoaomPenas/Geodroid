@@ -76,7 +76,7 @@ public class SessionMenu extends AppCompatActivity {
             session = extras.getString("SessionName");
             usermail=extras.getString("usermail");
             token = extras.getString("token");
-            sessionName.setText("Session: "+ session);
+            sessionName.setText(session);
 
         }
         compassIntent.putExtra("Session", session);
