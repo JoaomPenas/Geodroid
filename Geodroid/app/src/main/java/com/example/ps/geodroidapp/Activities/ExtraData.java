@@ -43,11 +43,9 @@ public class ExtraData extends AppCompatActivity {
         Intent i = getIntent();
         Bundle extras = i.getExtras();
         if (extras!=null){
-            //Toast.makeText(ExtraData.this,"Azinute: "+extras.getString("Dip"), Toast.LENGTH_SHORT).show();
             session = extras.getString("Session");
             usermail= extras.getString("usermail");
             id = extras.getInt("id",id);
-
         }
 
         // botão
@@ -109,7 +107,6 @@ public class ExtraData extends AppCompatActivity {
             dip_ = Integer.parseInt(extras.getString("Dip"));
             latitude = Double.parseDouble(extras.getString("Latitude"));
             longitude = Double.parseDouble(extras.getString("Longitude"));
-
             // atitudes e sessao
             TextView tv = (TextView) findViewById(R.id.AtitudeDaDesco);
             TextView tv2 = (TextView) findViewById(R.id.LocalizacaoDaDescont);
@@ -129,10 +126,8 @@ public class ExtraData extends AppCompatActivity {
                     TableRow tbr = (TableRow)ckt.getParent();
                     putExtraValue(ckt,tbr);
                     chekOrUncheck(ckt,tbr);
-                    //Toast.makeText(com.example.ps.geodroidapp.Activities.ExtraData.this,"persistence = " + persistence , Toast.LENGTH_SHORT).show();
                 }
             }
-
             /**
              * Verifica qual a CheckedTextView slecionada de uma TableRow para que se consiga saber o valor que se quer guardar
              * i = 1 porque é onde inicia o CheckedTextView, se fosse 0 iria dar a textView que contem o nome da linha
@@ -201,15 +196,6 @@ public class ExtraData extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    /*Toast.makeText(ExtraData.this,"Saved in database!"
-                            +"\nSessão:"        +session
-                            +"\nUser:"          +usermail
-                            +"\nPersistencia: " +persistence
-                            +"\nAperture: "     +aperture
-                            +"\nRougness: "     +roughness
-                            +"\nInfilling: "    +infilling
-                            +"\nWeathering: "   +weathering, Toast.LENGTH_LONG).show();*/
-
                 if(id!=-1){
                     //Toast.makeText(com.example.ps.geodroidapp.Activities.ExtraData.this,"UPDATE",Toast.LENGTH_LONG).show();
                     db.updateDiscontinuity(id,persistence,aperture,roughness,infilling,weathering,editDescription.getText().toString(),NOTSENT);

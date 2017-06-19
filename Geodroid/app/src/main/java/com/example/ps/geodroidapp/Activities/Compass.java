@@ -56,16 +56,12 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
     LocationManager locationManager;
     LocationListener locationListener;
 
-    //private static SensorManager sensorServive;
-    //private Sensor sensor;
     private float currentDegree = 0f;
-
-
     private int azimuth;
     private int roll;
     private int pitch;
-    double _lat;
-    double _long;
+    double latitude;
+    double longitude;
 
     private Intent intentForParamsExtraAcivity;
 
@@ -80,7 +76,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         mMagnetometer  = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         //-----------------------------------------------------------
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         iv_arrow = (ImageView) findViewById(R.id.ic_arrow);
         tv_session = (TextView)findViewById(R.id.compass_tv_session);
         tv_degrees = (TextView) findViewById(R.id.compass_tc_degrees);
@@ -97,7 +92,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
 
         Bundle extras = aux.getExtras();
         if (extras!=null){
-            //Toast.makeText(ExtraData.this,"Azinute: "+extras.getString("Dip"), Toast.LENGTH_SHORT).show();
             session = extras.getString("Session");
             usermail = extras.getString("usermail");
             tv_session.setText("User:"+usermail+"\nSession:" + session);
@@ -108,10 +102,9 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                _lat = location.getLatitude();
-                _long = location.getLongitude();
-                Log.d("HS","Here!");
-                textView.setText("Lat: " + String.format("%.3f", _lat) + (char) 0x00B0 + " Long:" + String.format("%.3f", _long) + (char) 0x00B0);
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                textView.setText("Lat: " + String.format("%.3f", latitude) + (char) 0x00B0 + " Long:" + String.format("%.3f", longitude) + (char) 0x00B0);
             }
 
             @Override
@@ -153,12 +146,12 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Compass.this, "Azim:" + azimuth + " roll:" + roll + "\nLat:" + _lat + " Long:" + _long, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Compass.this, "Azim:" + azimuth + " roll:" + roll + "\nLat:" + latitude + " Long:" + longitude, Toast.LENGTH_SHORT).show();
                 intentForParamsExtraAcivity.putExtra("Azimute", ""+ azCalc);
                 intentForParamsExtraAcivity.putExtra("Dip", ""+ dip);
-                intentForParamsExtraAcivity.putExtra("Latitude", ""+_lat);     //"38.98765");
-                intentForParamsExtraAcivity.putExtra("Longitude", ""+_long);
-                if(_lat == 0 || _long == 0 ){
+                intentForParamsExtraAcivity.putExtra("Latitude", ""+ latitude);
+                intentForParamsExtraAcivity.putExtra("Longitude", ""+ longitude);
+                if(latitude == 0 || longitude == 0 ){
                     AlertDialog.Builder builder = new AlertDialog.Builder(Compass.this);
                     builder.setMessage("Location is not available, do you want proceed?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -178,19 +171,9 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
                 }else{
                     startActivity(intentForParamsExtraAcivity); // inicia a actividade
                 }
-                // Pass data to activity
-               ; //"9.8765");
-
-
-
-                //startActivity(itentForTabelaActivity);    // inicia a actividade da tabela (experimental)
 
             }
         });
-
-        // OLD CODE...
-        //sensorServive = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        //sensor = sensorServive.getDefaultSensor(Sensor.TYPE_ORIENTATION);
     }
 
     @Override
@@ -223,15 +206,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         }else{
             Toast.makeText(this, "Compass not suported in this device!", Toast.LENGTH_SHORT).show();
         }
-
-        //-------------------------------
-/*      // CÓDIGO ANTIGO QUE USA O Sensor.TYPE_ORIENTATION
-        if (sensor!= null){
-            sensorServive.registerListener(this,sensor,SensorManager.SENSOR_DELAY_FASTEST);
-        }else{
-            Toast.makeText(this, "Compass not suported in this device!", Toast.LENGTH_SHORT).show();
-        }
-*/
     }
 
     @Override
@@ -280,7 +254,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
                 azimuth =(int) (Math.toDegrees(orientation[0])); // orientation contains: azimut, pitch and roll
-                //azimth -> -pi and pi, and we need azimuth between 0 and 360
                 if(azimuth < 0){
                     azimuth += 360;
                 }
@@ -297,7 +270,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
                         //3º e 4º Quadrante
                         if (azimuth > 180) azCalc = azimuth - 180;
                     }
-
                     tv_degrees.setText("(" + Integer.toString(azCalc) + (char) 0x00B0  +  ", " + Integer.toString(dip) + (char) 0x00B0+")");
                     tv_direction.setText(Utils.getNormaliedAtitudeFromRawAtitude(azCalc, dip));
                     tv_pitch.setText("P=" + Integer.toString(pitch) +(char)0x00B0);
@@ -318,9 +290,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
             }
         }
     }
-
-
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

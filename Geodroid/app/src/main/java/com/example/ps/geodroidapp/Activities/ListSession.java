@@ -5,13 +5,11 @@ import com.example.ps.geodroidapp.R;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +24,9 @@ import java.util.List;
 public class ListSession extends AppCompatActivity {
 
     String usermail,token="";
-    private TextView userTv;
+    private TextView userTextView;
     private ListView list;
     private ArrayAdapter<String> adapter;
-    private Toast t;
     private Intent sessionAct;
     private SqlDataBase db;
     SqlDataBase dataBase;
@@ -42,14 +38,14 @@ public class ListSession extends AppCompatActivity {
         db = SqlDataBase.getInstance(this);
         Log.d("HPS", "3rd level - ListSession Activity oncreate");
 
-        userTv = (TextView) findViewById(R.id.list_session_userName);
+        userTextView = (TextView) findViewById(R.id.list_session_userName);
 
         Intent aux = getIntent();
         Bundle extras = aux.getExtras();
         if(extras!=null) {
             usermail = extras.getString("usermail");
             token = extras.getString("token");
-            userTv.setText(usermail);
+            userTextView.setText(usermail);
         }
 
         list = (ListView)findViewById(R.id.listview_list);
@@ -60,13 +56,13 @@ public class ListSession extends AppCompatActivity {
         for (Session s:sessions) {
             listSessions.add(s.getName());
         }
-
         sessionAct = new Intent(this, SessionMenu.class);
 
-        adapter = new ArrayAdapter<String>(this,R.layout.list_item,R.id.textView_item,new ArrayList<>(listSessions));//
+        adapter = new ArrayAdapter<String>(this,R.layout.list_item,R.id.textView_item,new ArrayList<>(listSessions));
         list.setAdapter(adapter);
 
         registerForContextMenu(list);
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -85,7 +81,14 @@ public class ListSession extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_session, menu);
     }
+
     String sessionName;
+
+    /**
+     * to delete session when long press
+     * @param item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();

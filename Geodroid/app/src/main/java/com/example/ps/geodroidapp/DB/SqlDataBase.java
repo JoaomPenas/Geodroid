@@ -330,34 +330,6 @@ public class SqlDataBase extends SQLiteOpenHelper {
         }
         return list;
     }
-    //--------------------------------------User's-------------------------------------------
-    public ArrayList<User> getAllUsers(){
-        ArrayList<User> list = new ArrayList<>();
-        User user;
-        SQLiteDatabase db = null;
-        try {
-            db = this.getReadableDatabase();
-            Cursor cursor =  db.rawQuery("select * from "+USER_TABLE_NAME, null);
-
-            cursor.moveToFirst();
-            while(cursor.isAfterLast() == false){
-                user = new User();
-
-                user.setEmail(cursor.getString(cursor.getColumnIndex(USER_ID_EMAIL)));
-                user.setPass(cursor.getString(cursor.getColumnIndex(USER_PASS)));
-                user.setSalt(Long.parseLong(cursor.getString(cursor.getColumnIndex(USER_SALT))));
-
-                list.add(user);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }catch(Exception e) {
-        }finally {
-            db.close();
-        }
-        return list;
-    }
-
     /**
      * Verifica se o user existe
      * @param email
@@ -379,12 +351,6 @@ public class SqlDataBase extends SQLiteOpenHelper {
         }
         else
         return false;
-    }
-
-    public void insertUsers(List<User> list) {
-        for (User u:list) {
-           insertUser(u.getEmail(),u.getPass(),u.getSalt(),null);
-        }
     }
     //--------------------------------------Session's-------------------------------------------
 

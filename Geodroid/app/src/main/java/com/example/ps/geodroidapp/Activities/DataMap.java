@@ -58,7 +58,6 @@ public class DataMap extends FragmentActivity implements OnMapReadyCallback {
         ArrayList<Discontinuity> disc = db.getAllDiscontinuities(session);
         for (Discontinuity d:disc) {
            base=d;
-            //LatLng x = new LatLng(d.getLatitude(), d.getLongitude()).;
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(d.getLatitude(), d.getLongitude()))
                     .title(d.getId()+"("+d.getDirection()+","+d.getDip()+")")
@@ -68,13 +67,6 @@ public class DataMap extends FragmentActivity implements OnMapReadyCallback {
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.strike))
             );
         }
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(38.5, -9);
-        //LatLng sydney2 = new LatLng(38.5, -9.5);
-
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Portugal"));
-        //mMap.addMarker(new MarkerOptions().position(sydney2).title("Marker in Portugal2"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(base.getLatitude(),base.getLongitude()),10));
     }
 }

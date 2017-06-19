@@ -114,7 +114,6 @@ public class SessionMenu extends AppCompatActivity {
             public void onClick(View v) {
                 Utils.saveOnFile(SqlDataBase.getInstance(getApplicationContext()).getAllDiscontinuities(session),SessionMenu.this);
                 String fileName = "Session"+".csv";
-                //File f = new File(SessionMenu.this.getFilesDir().getAbsolutePath(), fileName);
                 File f = new File(SessionMenu.this.getExternalCacheDir(), fileName);
                 Intent emailIntent = ShareCompat.IntentBuilder
                         .from(SessionMenu.this)
@@ -133,36 +132,24 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final View buttonUpload = v;
-                final ArrayList <Discontinuity>list = db.areUploads(session);// db.getAllDiscontinuities(session);
+                final ArrayList <Discontinuity>list = db.areUploads(session);
                 DtoDiscontinuity dtoDiscontinuity = new DtoDiscontinuity(list);
-                //requestApiToken(db.getUserToken(usermail));
-                //postDiscont(service,dtoDiscontinuity,list,buttonUpload);
-                //Call <ResponseBody> postDisc = service.postDiscontinuities(dtoDiscontinuity);
                 if(token == null ) {
                     token = db.getUserToken(usermail);
                 }
                 postDiscontinuity(token,dtoDiscontinuity,buttonUpload,list);
-                /*
-                postDisc.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Toast.makeText(SessionMenu.this,response.message()+", dados enviados para o Servidor!", Toast.LENGTH_LONG).show();
-                        db.putSent(list);
-                        buttonUpload.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(SessionMenu.this,t.getMessage()+", dados NAO enviados para o Servidor!", Toast.LENGTH_LONG).show();
-                        Log.d("JJJJJ",""+t);
-                    }
-                });*/
-
-
             }
         });
 
     }
+
+    /**
+     * Upload Discontinuity if token is fine
+     * @param token to validate on API
+     * @param dtoDiscontinuity Discontinuity to upload
+     * @param buttonUpload button to set visible or invisible
+     * @param list to set sent on device data base
+     */
     private void postDiscontinuity(String token, DtoDiscontinuity dtoDiscontinuity,final View buttonUpload, final ArrayList <Discontinuity> list){
         Log.d("TTTT",token);
         Call<ResponseBody> requestCatalogg = service.postDiscontinuities(token,dtoDiscontinuity);
@@ -197,50 +184,6 @@ public class SessionMenu extends AppCompatActivity {
             }
         });
     }
-
-    public void requestApiToken(User user){
-        BussulaApi servicee = BussulaApi.Factory.getInstance();
-        Call<AuthenticateResponse> requestCatalog = servicee.postAuthenticate(user);
-        requestCatalog.enqueue(new Callback<AuthenticateResponse>() {
-            @Override
-            public void onResponse(Call<AuthenticateResponse> call, Response<AuthenticateResponse> response) {
-                AuthenticateResponse authenticateResponse = response.body();
-                if(authenticateResponse.isSuccess()){
-                    token = authenticateResponse.getToken();
-                }
-                else{
-                    Toast.makeText(SessionMenu.this,"Sorry try again...", Toast.LENGTH_LONG).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<AuthenticateResponse> call, Throwable t) {
-                Log.d("JJ",t.getMessage());
-                Toast.makeText(SessionMenu.this,"Cannot update users from Database...(requestApiToken)", Toast.LENGTH_LONG).show();
-            }
-        });
-        //return reqTokenRes;
-    }
-    /*
-    private void postDiscont(BussulaApi service, DtoDiscontinuity dtoDiscontinuity,final ArrayList <Discontinuity>list,final View buttonUpload){
-        Call <AuthenticateResponse> postDisc = service.postDiscontinuities(token,dtoDiscontinuity);
-        postDisc.enqueue(new Callback<AuthenticateResponse>() {
-            @Override
-            public void onResponse(Call<AuthenticateResponse> call, Response<AuthenticateResponse> response) {
-                AuthenticateResponse authenticateResponse = response.body();
-                if(authenticateResponse.isSuccess()) {
-                    Toast.makeText(SessionMenu.this, response.message() + ", dados enviados para o Servidor!", Toast.LENGTH_LONG).show();
-                    db.putSent(list);
-                    buttonUpload.setVisibility(View.INVISIBLE);
-                }
-
-            }
-            @Override
-            public void onFailure(Call<AuthenticateResponse> call, Throwable t) {
-                Toast.makeText(SessionMenu.this,t.getMessage()+", dados NAO enviados para o Servidor!", Toast.LENGTH_LONG).show();
-                Log.d("JJJJJ",""+t);
-            }
-        });
-    }*/
     @Override
     protected void onResume() {
         super.onResume();

@@ -1,6 +1,5 @@
 package com.example.ps.geodroidapp.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckedTextView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -66,10 +64,7 @@ public class DataTable extends AppCompatActivity {
         ((TextView)row2.findViewById(R.id.tv_roug)).setText(""+discontinuity.getRoughness());
         ((TextView)row2.findViewById(R.id.tv_infil)).setText(""+discontinuity.getInfilling());
         ((TextView)row2.findViewById(R.id.tv_weath)).setText(""+discontinuity.getWeathreing());
-       // int tag = tbr.getId();
-        //tbr.setTag(incTbr++);
         registerForContextMenu(tbr);
-        //tbr.setOnClickListener(listener);
     }
 
     private View tbrSelected;
@@ -78,7 +73,6 @@ public class DataTable extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_datatable, menu);
-       // idTbr = (int) v.getTag();
         tbrSelected = v;
         tbrSelected.setBackgroundColor(Color.GRAY);
     }
@@ -103,6 +97,10 @@ public class DataTable extends AppCompatActivity {
         tbrSelected.setBackgroundColor(Color.TRANSPARENT);
     }
 
+    /**
+     * Delete Discontinuity
+     * @param v to delete
+     */
     private void deleteDiscontinuity(View v) {
         if(v instanceof TableRow) {
             TableRow tbr = (TableRow) v;
@@ -114,6 +112,10 @@ public class DataTable extends AppCompatActivity {
         }
     }
 
+    /**
+     * Edit Discontinuity
+     * @param v to edit
+     */
     private void editExtraData(View v){
         if(v instanceof TableRow){
             TableRow tbr = (TableRow) v;
@@ -136,49 +138,4 @@ public class DataTable extends AppCompatActivity {
             }
         }
     }
-    /*
-    @Override
-    protected void onResume() {
-        super.onResume();
-     //   if(updateTblrow!=null) {
-            //tl.removeView(updateTblrow);
-     //       setTextOnTableRw(updateTblrow);
-            //tl.refreshDrawableState();
-            //updateTblrow.invalidate();
-       // }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }*/
-      /*      listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v instanceof TableRow){
-                    TableRow tbr = (TableRow) v;
-                    if (tbr.getChildCount()>7) {
-                        updateTblrow = tbr;
-                        int id = Integer.parseInt(((TextView)tbr.getChildAt(0)).getText().toString());
-                        int pers = Integer.parseInt(((TextView)tbr.getChildAt(3)).getText().toString());
-                        int aper = Integer.parseInt(((TextView)tbr.getChildAt(4)).getText().toString());
-                        int roug = Integer.parseInt(((TextView)tbr.getChildAt(5)).getText().toString());
-                        int infil = Integer.parseInt(((TextView)tbr.getChildAt(6)).getText().toString());
-                        int weat = Integer.parseInt(((TextView)tbr.getChildAt(7)).getText().toString());
-                        extraData.putExtra("Session",session);
-                        extraData.putExtra("id",id);
-                        extraData.putExtra("pers",pers);
-                        extraData.putExtra("aper",aper);
-                        extraData.putExtra("roug",roug);
-                        extraData.putExtra("infil",infil);
-                        extraData.putExtra("weat",weat);
-
-                        startActivity(extraData);
-                        finish();
-                    }
-                }
-
-            }
-        };
-*/
 }

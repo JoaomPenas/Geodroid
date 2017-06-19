@@ -18,10 +18,9 @@ public class MainActivityStart extends AppCompatActivity {
 
     private String usermail ="",token="";
 
-    ImageButton existSessionbutton;
-    ImageButton createSessionbutton;
-    Intent listSession, createSession;
-    private SqlDataBase sql=null;
+    private ImageButton existSessionbutton;
+    private ImageButton createSessionbutton;
+    private Intent listSession, createSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +49,6 @@ public class MainActivityStart extends AppCompatActivity {
                 listSession.putExtra("usermail", usermail);
                 listSession.putExtra("token", token);
                 startActivity(listSession);
-                //MainActivityStart.this.startActionMode(mActionModeCallback);
-                //registerForContextMenu(v);
             }
         });
 
@@ -65,29 +62,4 @@ public class MainActivityStart extends AppCompatActivity {
         });
 
     }
-    /*
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_def, menu);                                        // VER QUESTAO DOS MENUS
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        Toast.makeText(MainActivityStart.this,"ENTER", Toast.LENGTH_SHORT).show();
-        //AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.menu_edit:
-                Toast.makeText(MainActivityStart.this, "EDIT", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.menu_delete:
-                Toast.makeText(MainActivityStart.this, "DELETE", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-    */
 }
