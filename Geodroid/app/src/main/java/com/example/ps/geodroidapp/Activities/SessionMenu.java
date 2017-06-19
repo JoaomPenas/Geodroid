@@ -178,8 +178,11 @@ public class SessionMenu extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("JX",t.getMessage());
-                Toast.makeText(SessionMenu.this,"Cannot update users from Database...(requestGetAllUsers)"+t.getMessage(), Toast.LENGTH_LONG).show();
+                if(!Utils.isOnline(getApplicationContext())) {
+                    Toast.makeText(SessionMenu.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(SessionMenu.this, "Cannot update users from Database...(requestGetAllUsers)" + t.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

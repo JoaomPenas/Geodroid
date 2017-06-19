@@ -130,7 +130,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onFailure(Call<AuthenticateResponse> call, Throwable t) {
                 if(!Utils.isOnline(getApplicationContext())) {
-                        Toast.makeText(Login.this, "Connect to internet", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(Login.this,"Authenticate Fail...(requestApiToken)", Toast.LENGTH_LONG).show();
                 }
