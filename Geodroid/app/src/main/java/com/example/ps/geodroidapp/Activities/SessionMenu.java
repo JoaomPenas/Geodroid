@@ -3,7 +3,6 @@ import com.example.ps.geodroidapp.BussulaApi;
 import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.Domain.Discontinuity;
 import com.example.ps.geodroidapp.Domain.DtoDiscontinuity;
-import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
 import com.example.ps.geodroidapp.Utils.Utils;
@@ -132,7 +131,7 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final View buttonUpload = v;
-                final ArrayList <Discontinuity>list = db.areUploads(session);
+                final ArrayList <Discontinuity>list = db.getDiscontinuitysNotUploaded(session);
                 DtoDiscontinuity dtoDiscontinuity = new DtoDiscontinuity(list);
                 if(token == null ) {
                     token = db.getUserToken(usermail);
@@ -159,7 +158,7 @@ public class SessionMenu extends AppCompatActivity {
                 Gson gson = new Gson();
                 if (response.isSuccessful()) {
                         Toast.makeText(SessionMenu.this,response.message()+", dados enviados para o Servidor!", Toast.LENGTH_LONG).show();
-                        db.putSent(list);
+                        db.setAllSentDiscontinuity(list);
                         buttonUpload.setVisibility(View.INVISIBLE);
                 }
                 else{
@@ -187,7 +186,7 @@ public class SessionMenu extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(db.areUploads(session).size()!=0){
+        if(db.getDiscontinuitysNotUploaded(session).size()!=0){
             uploadButton.setVisibility(View.VISIBLE);
         }else
             uploadButton.setVisibility(View.INVISIBLE);

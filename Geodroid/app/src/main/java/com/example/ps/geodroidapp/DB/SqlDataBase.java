@@ -407,7 +407,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
      * @param sessionId
      * @return um ArrayList<Discontinuity> com as descontinuidades que não estão no servidor
      */
-    public ArrayList<Discontinuity> areUploads(String sessionId) {
+    public ArrayList<Discontinuity> getDiscontinuitysNotUploaded(String sessionId) {
         ArrayList<Discontinuity> list = new ArrayList<>();
         for (Discontinuity dicont: getAllDiscontinuities(sessionId)) {
             if(dicont.getSent() == 0)
@@ -421,7 +421,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
      * @param list
      * @return
      */
-    public boolean putSent(ArrayList<Discontinuity> list) {
+    public boolean setAllSentDiscontinuity(ArrayList<Discontinuity> list) {
         SQLiteDatabase db = null;
         try {
             db = this.getWritableDatabase();

@@ -96,9 +96,9 @@ public class ListSession extends AppCompatActivity {
             case R.id.menu_deleteSessionRow:
                 adapter.remove(adapter.getItem(info.position));
                 sessionName = ((TextView)info.targetView.findViewById(R.id.textView_item)).getText().toString();
-                if(db.areUploads(sessionName).size() != 0 ){
+                if(db.getDiscontinuitysNotUploaded(sessionName).size() != 0 ){
                     AlertDialog.Builder builder = new AlertDialog.Builder(ListSession.this);
-                    builder.setMessage("Some discontinuities are not uploaded?")
+                    builder.setMessage("Some discontinuities have not uploaded! Do you want to proceed?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

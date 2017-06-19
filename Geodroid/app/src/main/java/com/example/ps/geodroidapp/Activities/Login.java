@@ -1,6 +1,8 @@
 package com.example.ps.geodroidapp.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -54,7 +56,7 @@ public class Login extends AppCompatActivity {
         db.insertSession("Foz Coa");
         db.insertDiscontinuity(new Discontinuity(10,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.52,-8.99, 2,4, 1, 2, 2,"",0,"w@mail.com", "Arrabida"));
 
-        Toast.makeText(Login.this,"Inserted 6 discontinuities in SqliteDB \n(3 in Arrabida and 3 in Foz Coa)" , Toast.LENGTH_SHORT).show();
+        Toast.makeText(Login.this,"Inserted 1 discontinuitie in SqliteDB \n(3 in Arrabida and 3 in Foz Coa)" , Toast.LENGTH_SHORT).show();
 
         mainActivityStartIntent = new Intent(this, MainActivityStart.class);
         sessionMenu = new Intent(this, SessionMenu.class);
@@ -69,7 +71,7 @@ public class Login extends AppCompatActivity {
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* final ProgressDialog progressDialog = new ProgressDialog(Login.this,
+               final ProgressDialog progressDialog = new ProgressDialog(Login.this,
                         DialogInterface.BUTTON_NEUTRAL);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Authenticating...");
@@ -78,27 +80,18 @@ public class Login extends AppCompatActivity {
                 new android.os.Handler().postDelayed(
                         new Runnable() {
                             public void run() {
-                                // On complete call either onLoginSuccess or onLoginFailed
-                                if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString())){
+                                if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString()) &&  extras == null){
                                     mainActivityStartIntent.putExtra("usermail",email.getText().toString());
                                     Toast.makeText(Login.this,"Wellcome!" + email.getText().toString(), Toast.LENGTH_LONG).show();
                                     startActivity(mainActivityStartIntent);
+                                    //finish();
                                 }
                                 else{
                                     requestApiToken(new User(email.getText().toString(), pass.getText().toString()));
                                 }
                                 progressDialog.dismiss();
                             }
-                        }, 3000);*/
-                if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString()) &&  extras == null){
-                    mainActivityStartIntent.putExtra("usermail",email.getText().toString());
-                    Toast.makeText(Login.this,"Wellcome!" + email.getText().toString(), Toast.LENGTH_LONG).show();
-                    startActivity(mainActivityStartIntent);
-                    //finish();
-                }
-                else{
-                    requestApiToken(new User(email.getText().toString(), pass.getText().toString()));
-                 }
+                        }, 3000);
 
             }
         });
