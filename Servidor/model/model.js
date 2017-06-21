@@ -3,6 +3,7 @@ const crypto 		= require('crypto');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const json2csv = require('json2csv');
+let dateFormat = require('dateformat');
 
 function User(email, password){
     this.email=email;
@@ -21,9 +22,14 @@ module.exports=function(_dal){
     function GetDiscontinuitiesFromOneSessionOrUserCsv (type, session, cb){
         //console.log("sessão: "+session)
         function x (err, res){
-            let fields = ['id','idUser','idSession','direction','dip','latitude','longitude','persistence','aperture','roughness','infilling','weathering','note'];
+            let fields = ['id','idUser','idSession','direction','dip','latitude','longitude','persistence','aperture','roughness','infilling','weathering','note','datetime'];
 			let myArray = res.discontinuities;
-			
+			dateFormat.masks.hammerTime = 'yyyy-mm-dd HH:MM:ss';
+
+            for (var i = 0; i < myArray.length; i++) {
+                myArray[i].datetime=dateFormat(myArray[i].datetime, "hammerTime");
+            }
+
 			let csv = json2csv({ data: myArray, fields: fields });
             cb(null,csv);
         }

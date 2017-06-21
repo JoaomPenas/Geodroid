@@ -148,11 +148,11 @@ module.exports = function(hostP, userP, passwordP, databaseP){
     	connection.connect();
 
     	// Construção da string (comando MySql) "insert into Discontinuity..."
-		let insertBaseStr = "insert into Discontinuity (id, idUser, idSession, direction, dip, latitude, longitude, persistence, aperture, roughness, infilling, weathering) values "
+		let insertBaseStr = "insert into Discontinuity (id, idUser, idSession, direction, dip, latitude, longitude, persistence, aperture, roughness, infilling, weathering, note, datetime) values "
     	let tempStr="";
 
 		disc.discontinuities.forEach(d=>{
-			tempStr = `${tempStr} ${insertBaseStr}(${connection.escape(d.id)}\,${connection.escape(d.idUser)},${connection.escape(d.idSession)},${connection.escape(d.direction)},${connection.escape(d.dip)},${connection.escape(d.latitude)},${connection.escape(d.longitude)},${connection.escape(d.persistence)},${connection.escape(d.aperture)},${connection.escape(d.roughness)},${connection.escape(d.infilling)},${connection.escape(d.weathering)}) on duplicate key update persistence=${connection.escape(d.persistence)}, aperture=${connection.escape(d.aperture)}, roughness=${connection.escape(d.roughness)}, infilling=${connection.escape(d.infilling)}, weathering=${connection.escape(d.weathering)};`
+			tempStr = `${tempStr} ${insertBaseStr}(${connection.escape(d.id)}\,${connection.escape(d.idUser)},${connection.escape(d.idSession)},${connection.escape(d.direction)},${connection.escape(d.dip)},${connection.escape(d.latitude)},${connection.escape(d.longitude)},${connection.escape(d.persistence)},${connection.escape(d.aperture)},${connection.escape(d.roughness)},${connection.escape(d.infilling)},${connection.escape(d.weathering)},${connection.escape(d.note)},${connection.escape(d.datetime)}) on duplicate key update persistence=${connection.escape(d.persistence)}, aperture=${connection.escape(d.aperture)}, roughness=${connection.escape(d.roughness)}, infilling=${connection.escape(d.infilling)}, weathering=${connection.escape(d.weathering)}, note=${connection.escape(d.note)}, datetime=${connection.escape(d.datetime)};`
 		})
 		//console.log(tempStr);
 		
