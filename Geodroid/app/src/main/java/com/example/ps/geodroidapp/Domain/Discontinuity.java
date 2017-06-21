@@ -1,6 +1,8 @@
 package com.example.ps.geodroidapp.Domain;
 
 
+import com.example.ps.geodroidapp.Utils.Utils;
+
 public class Discontinuity {
 
 /*
@@ -22,12 +24,13 @@ public class Discontinuity {
     private int infilling;
     private int weathering;
     private String note;
+    private String datetime;
     private int sent;    // possible values 0 and 1
 
 
     public Discontinuity(){}
     public Discontinuity(int id, int direction, int dip, double latitude, double longitude, int persistence,
-                         int aperture, int roughness, int infilling, int weathering, String note, int sent, String idUser, String idSession){
+                         int aperture, int roughness, int infilling, int weathering, String note, String datetime, int sent, String idUser, String idSession){
         this.id             = id;
         this.direction      = direction;
         this.dip            = dip;
@@ -38,7 +41,8 @@ public class Discontinuity {
         this.roughness      = roughness;
         this.infilling      = infilling;
         this.weathering     = weathering;
-        this.note = note;
+        this.note           = note;
+        this.datetime       = datetime;
         this.sent           = sent;
         this.idUser         = idUser;
         this.idSession      = idSession;
@@ -49,15 +53,6 @@ public class Discontinuity {
     }
 
     public void setId(int id) { this.id = id;}
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public String getNote() {
-
-        return note;
-    }
 
     public int getDirection() {
         return direction;
@@ -131,6 +126,16 @@ public class Discontinuity {
         this.weathering = weathreing;
     }
 
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getNote() {return note;}
+
+    public String getDatetime() {return datetime;}
+
+    public void setDatetime(String datetime) {this.datetime = datetime;}
+
     public int getSent() {
         return sent;
     }
@@ -155,6 +160,7 @@ public class Discontinuity {
         this.idSession = idSession;
     }
 
+    // Atention: The method toString is used to save file in CSV!
     @Override
     public String toString() {
 
@@ -170,7 +176,8 @@ public class Discontinuity {
                 "," + roughness +
                 "," + infilling +
                 "," + weathering +
-                "," + sent +
+                "," + note +
+                "," + datetime +
                 "\n";
     }
 }

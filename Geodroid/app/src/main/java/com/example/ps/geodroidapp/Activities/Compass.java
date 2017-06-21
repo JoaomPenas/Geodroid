@@ -35,12 +35,10 @@ import com.example.ps.geodroidapp.Utils.Utils;
 
 public class Compass extends AppCompatActivity implements SensorEventListener {
 
-    //-----------------------------------------------------------
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private Sensor mMagnetometer;
 
-    //-----------------------------------------------------------
     private String usermail;
     private String session;
 
@@ -63,18 +61,21 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
     double latitude;
     double longitude;
 
-    private Intent intentForParamsExtraAcivity;
+    private Intent intentForParamsExtraActivity;
 
+    float[] mGravity;
+    float[] mGeomagnetic;
+    public int handRigthAzimuth,dip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compass);
-        //-----------------------------------------------------------
+
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer  = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        //-----------------------------------------------------------
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         iv_arrow = (ImageView) findViewById(R.id.ic_arrow);
         tv_session = (TextView)findViewById(R.id.compass_tv_session);
@@ -87,7 +88,7 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        intentForParamsExtraAcivity = new Intent(this, com.example.ps.geodroidapp.Activities.ExtraData.class);
+        intentForParamsExtraActivity = new Intent(this, com.example.ps.geodroidapp.Activities.ExtraData.class);
         Intent aux = getIntent();
 
         Bundle extras = aux.getExtras();
@@ -96,8 +97,8 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
             usermail = extras.getString("usermail");
             tv_session.setText("User:"+usermail+"\nSession:" + session);
         }
-        intentForParamsExtraAcivity.putExtra("Session", session);
-        intentForParamsExtraAcivity.putExtra("usermail",usermail);
+        intentForParamsExtraActivity.putExtra("Session", session);
+        intentForParamsExtraActivity.putExtra("usermail",usermail);
 
         locationListener = new LocationListener() {
             @Override
@@ -147,17 +148,18 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Compass.this, "Azim:" + azimuth + " roll:" + roll + "\nLat:" + latitude + " Long:" + longitude, Toast.LENGTH_SHORT).show();
-                intentForParamsExtraAcivity.putExtra("Azimute", ""+ azCalc);
-                intentForParamsExtraAcivity.putExtra("Dip", ""+ dip);
-                intentForParamsExtraAcivity.putExtra("Latitude", ""+ latitude);
-                intentForParamsExtraAcivity.putExtra("Longitude", ""+ longitude);
+                intentForParamsExtraActivity.putExtra("Azimute", ""+ handRigthAzimuth);
+                intentForParamsExtraActivity.putExtra("Dip", ""+ dip);
+                intentForParamsExtraActivity.putExtra("Latitude", ""+ latitude);
+                intentForParamsExtraActivity.putExtra("Longitude", ""+ longitude);
+
                 if(latitude == 0 || longitude == 0 ){
                     AlertDialog.Builder builder = new AlertDialog.Builder(Compass.this);
                     builder.setMessage("Location is not available, do you want proceed?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    startActivity(intentForParamsExtraAcivity);
+                                    startActivity(intentForParamsExtraActivity);
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -169,7 +171,7 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
                     AlertDialog alert = builder.create();
                     alert.show();
                 }else{
-                    startActivity(intentForParamsExtraAcivity); // inicia a actividade
+                    startActivity(intentForParamsExtraActivity);
                 }
 
             }
@@ -217,29 +219,6 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
 
     }
 
-    float[] mGravity;
-    float[] mGeomagnetic;
-    // Get readings from accelerometer and magnetometer. To simplify calculations,
-    // consider storing these readings as unit vectors.
-    /*
-        SensorEvent.values[0]	Geomagnetic field strength along the x axis.
-        SensorEvent.values[1]	Geomagnetic field strength along the y axis.
-        SensorEvent.values[2]	Geomagnetic field strength along the z axis.
-
-        getOrientation:
-
-        added in API level 3
-        float[] getOrientation (float[] R,
-                        float[] values)
-        Computes the device's orientation based on the rotation matrix.
-
-        When it returns, the array values are as follows:
-
-        values[0]: Azimuth, angle of rotation about the -z axis. This value represents the angle between the device's y axis and the magnetic north pole. When facing north, this angle is 0, when facing south, this angle is π. Likewise, when facing east, this angle is π/2, and when facing west, this angle is -π/2. The range of values is -π to π.
-        values[1]: Pitch, angle of rotation about the x axis. This value represents the angle between a plane parallel to the device's screen and a plane parallel to the ground. Assuming that the bottom edge of the device faces the user and that the screen is face-up, tilting the top edge of the device toward the ground creates a positive pitch angle. The range of values is -π to π.
-        values[2]: Roll, angle of rotation about the y axis. This value represents the angle between a plane perpendicular to the device's screen and a plane perpendicular to the ground. Assuming that the bottom edge of the device faces the user and that the screen is face-up, tilting the left edge of the device toward the ground creates a positive roll angle. The range of values is -π/2 to π/2.
-    */
-    public int azCalc,dip;
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
@@ -251,27 +230,28 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         if (mGravity != null && mGeomagnetic != null) {
             float R[] = new float[9];
             if (SensorManager.getRotationMatrix(R, null, mGravity, mGeomagnetic)) {
-                float orientation[] = new float[3];
+                float orientation[] = new float[3];                             // orientation contains: azimut, pitch and roll
                 SensorManager.getOrientation(R, orientation);
-                azimuth =(int) (Math.toDegrees(orientation[0])); // orientation contains: azimut, pitch and roll
-                if(azimuth < 0){
-                    azimuth += 360;
-                }
-                pitch = (int)Math.toDegrees(orientation[1]);
-                roll = (int)Math.toDegrees(orientation[2]);
-                azCalc = azimuth;
+
+                azimuth =(int) (Math.round(Math.toDegrees(orientation[0])));    // azimute entre -180 e 180
+                if(azimuth < 0){azimuth += 360;}                                // azimute entre 0 e 359
+                pitch = (int)Math.toDegrees(orientation[1]);                    // pitch entre -90 e 90
+                roll = (int)Math.toDegrees(orientation[2]);                     // roll entre -180 e 180
+
+                handRigthAzimuth = azimuth;
                 dip = roll;
+
                 //Transform/calculate to handRightRule
-                if( roll > -90 && roll < 90) {
+                if( roll > -90 && roll < 90) {                                  // gama de valores para dispositivo virado para cima
                     if (roll < 0) {
                         dip = -roll;
                         //1º e 2º Quadrante
-                        if (azimuth < 180) azCalc = azimuth + 180;
+                        if (azimuth < 180) handRigthAzimuth = azimuth + 180;
                         //3º e 4º Quadrante
-                        if (azimuth > 180) azCalc = azimuth - 180;
+                        if (azimuth >= 180) handRigthAzimuth = azimuth - 180;
                     }
-                    tv_degrees.setText("(" + Integer.toString(azCalc) + (char) 0x00B0  +  ", " + Integer.toString(dip) + (char) 0x00B0+")");
-                    tv_direction.setText(Utils.getNormaliedAtitudeFromRawAtitude(azCalc, dip));
+                    tv_degrees.setText("(" + Integer.toString(handRigthAzimuth) + (char) 0x00B0  +  ", " + Integer.toString(dip) + (char) 0x00B0+")");
+                    tv_direction.setText(Utils.getNormaliedAtitudeFromRawAtitude(handRigthAzimuth, dip));
                     tv_pitch.setText("P=" + Integer.toString(pitch) +(char)0x00B0);
                 }
                 RotateAnimation ra = new RotateAnimation(

@@ -27,7 +27,7 @@ public class ExtraData extends AppCompatActivity {
     EditText editDescription;
     TableRow tbrPercistence, tbrAperture, tbrRoughness,tbrInfiling,tbrWeathering;
     int azimut, dip_;
-    int id = -1;        //inicia a -1 para sabermos se estamos perante um update ou um insert
+    int id = -1;    //inicia-se a -1 para distinguir se se está perante um update ou um insert (caso se mantenha como -1 depois de obtidos os extras do Bundle está-se perante um insert)
     double latitude, longitude;
     int persistence = 0, aperture = 0, roughness = 0, infilling = 0, weathering = 0;
     Intent dataTable;
@@ -38,9 +38,10 @@ public class ExtraData extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extra_data);
 
-        db= SqlDataBase.getInstance(getApplicationContext());
+        db = SqlDataBase.getInstance(getApplicationContext());
         dataTable = new Intent(this, DataTable.class);
         Intent i = getIntent();
+
         Bundle extras = i.getExtras();
         if (extras!=null){
             session = extras.getString("Session");
@@ -49,16 +50,17 @@ public class ExtraData extends AppCompatActivity {
         }
 
         // botão
-        Button b = (Button) findViewById(R.id.extra_data_save_button);
+        Button b        = (Button) findViewById(R.id.extra_data_save_button);
         editDescription = (EditText)findViewById(R.id.editText_extra_description);
-        //TableRow
-        tbrPercistence = (TableRow) findViewById(R.id.tableRow_persistence);
-        tbrAperture = (TableRow) findViewById(R.id.tableRow_aperture);
-        tbrRoughness = (TableRow) findViewById(R.id.tableRow_roughness);
-        tbrInfiling = (TableRow) findViewById(R.id.tableRow_infiling);
-        tbrWeathering = (TableRow) findViewById(R.id.tableRow_weathering);
 
-        //CheckedTextView Percistence
+        //TableRow
+        tbrPercistence  = (TableRow) findViewById(R.id.tableRow_persistence);
+        tbrAperture     = (TableRow) findViewById(R.id.tableRow_aperture);
+        tbrRoughness    = (TableRow) findViewById(R.id.tableRow_roughness);
+        tbrInfiling     = (TableRow) findViewById(R.id.tableRow_infiling);
+        tbrWeathering   = (TableRow) findViewById(R.id.tableRow_weathering);
+
+        //CheckedTextView Persistence
         tv_persist_1class = (CheckedTextView) findViewById(R.id.Desc_class_tv_persist_1class);
         tv_persist_2class = (CheckedTextView) findViewById(R.id.Desc_class_tv_persist_2class);
         tv_persist_3class = (CheckedTextView) findViewById(R.id.Desc_class_tv_persist_3class);
@@ -79,7 +81,7 @@ public class ExtraData extends AppCompatActivity {
         tv_roughness_4class =(CheckedTextView) findViewById(R.id.Desc_class_tv_rougness_4class);
         tv_roughness_5class =(CheckedTextView) findViewById(R.id.Desc_class_tv_rougness_5class);
 
-        //CheckedTextView Infiling
+        //CheckedTextView Infilling
         tv_infilling_1class =(CheckedTextView) findViewById(R.id.Desc_class_tv_infilling_1class);
         tv_infilling_2class =(CheckedTextView) findViewById(R.id.Desc_class_tv_infilling_2class);
         tv_infilling_3class =(CheckedTextView) findViewById(R.id.Desc_class_tv_infilling_3class);
@@ -90,25 +92,25 @@ public class ExtraData extends AppCompatActivity {
         tv_weathering_1class =(CheckedTextView) findViewById(R.id.Desc_class_tv_weathering_1class);
         tv_weathering_2class =(CheckedTextView) findViewById(R.id.Desc_class_tv_weathering_2class);
         tv_weathering_3class =(CheckedTextView) findViewById(R.id.Desc_class_tv_weathering_3class);
-        tv_weathering_4class = (CheckedTextView) findViewById(R.id.Desc_class_tv_weathering_4class);
+        tv_weathering_4class =(CheckedTextView) findViewById(R.id.Desc_class_tv_weathering_4class);
         tv_weathering_5class =(CheckedTextView) findViewById(R.id.Desc_class_tv_weathering_5class);
 
         if(id != -1) {
             persistence = extras.getInt("pers");
-            aperture = extras.getInt("aper");
-            roughness = extras.getInt("roug");
-            infilling = extras.getInt("infil");
-            weathering = extras.getInt("weat");
-            note = db.getDiscontinuity(id).getNote();
+            aperture    = extras.getInt("aper");
+            roughness   = extras.getInt("roug");
+            infilling   = extras.getInt("infil");
+            weathering  = extras.getInt("weat");
+            note        = db.getDiscontinuity(id).getNote();
             initTable(persistence,aperture,roughness,infilling,weathering, note);
-
-        }else {
-            azimut = Integer.parseInt(extras.getString("Azimute"));
-            dip_ = Integer.parseInt(extras.getString("Dip"));
-            latitude = Double.parseDouble(extras.getString("Latitude"));
-            longitude = Double.parseDouble(extras.getString("Longitude"));
+        }
+        else {
+            azimut      = Integer.parseInt(extras.getString("Azimute"));
+            dip_        = Integer.parseInt(extras.getString("Dip"));
+            latitude    = Double.parseDouble(extras.getString("Latitude"));
+            longitude   = Double.parseDouble(extras.getString("Longitude"));
             // atitudes e sessao
-            TextView tv = (TextView) findViewById(R.id.AtitudeDaDesco);
+            TextView tv  = (TextView) findViewById(R.id.AtitudeDaDesco);
             TextView tv2 = (TextView) findViewById(R.id.LocalizacaoDaDescont);
             TextView tv3 = (TextView) findViewById(R.id.extra_data_session);
 
@@ -203,7 +205,7 @@ public class ExtraData extends AppCompatActivity {
                     startActivity(dataTable);
                 }
                 else{
-                    db.insertDiscontinuity(azimut, dip_,latitude,longitude,persistence,aperture,roughness,infilling,weathering,editDescription.getText().toString(),NOTSENT,usermail,session);
+                    db.insertDiscontinuity(azimut, dip_,latitude,longitude,persistence,aperture,roughness,infilling,weathering,editDescription.getText().toString(),Utils.getCurrentDateTime(),NOTSENT,usermail,session);
                 }
                 finish();
             }

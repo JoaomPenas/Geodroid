@@ -23,10 +23,12 @@ import retrofit2.http.POST;
 
 public interface BussulaApi {
 
-    String BASE_URL ="https://sgeotest.herokuapp.com/";
-    //String BASE_URL ="http://10.0.2.2:3010";
+    //String BASE_URL ="https://sgeotest.herokuapp.com/";
+    //String BASE_URL ="http://10.0.2.2:3010";      // para usar com o emulador
     //String BASE_URL ="http://10.10.31.140:3010";
-    //String BASE_URL ="http://192.168.1.3:3010";
+    String BASE_URL ="http://192.168.1.111:3010"; //para usar com o dispositivo móvel
+
+
     @GET("api/users")
         //Call<DtoCatalog> getUserToken();
     Call<ResponseBody> getUser(@Header("x-access-token") String token);
@@ -58,8 +60,6 @@ public interface BussulaApi {
 
             // add logging as last interceptor
             httpClient.addInterceptor(logging);  // <-- this is the important line!
-
-
 
             if (service == null) {
                 Retrofit retrofit = new Retrofit.Builder()

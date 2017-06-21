@@ -2,18 +2,13 @@ package com.example.ps.geodroidapp.Utils;
 
 import com.example.ps.geodroidapp.Domain.DtoCatalog;
 
-/**
- * Created by joao on 29/05/17.
- */
-
 public class AuthenticateResponse {
 
     private  boolean success;
     private  String message;
     private  String token;
 
-    public AuthenticateResponse(boolean success, String message, String token,DtoCatalog  dto) {
-
+    public AuthenticateResponse(boolean success, String message, String token, DtoCatalog dto) {
         this.success = success;
         this.message = message;
         this.token = token;
@@ -26,6 +21,7 @@ public class AuthenticateResponse {
     public String getToken() {
         return token;
     }
+
     public boolean isSuccess() {
         return success;
     }
@@ -41,6 +37,5 @@ public class AuthenticateResponse {
     public void setToken(String token) {
         this.token = token;
     }
-
 
 }

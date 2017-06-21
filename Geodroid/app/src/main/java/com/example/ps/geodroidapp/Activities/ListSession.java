@@ -36,16 +36,15 @@ public class ListSession extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_session);
         db = SqlDataBase.getInstance(this);
-        Log.d("HPS", "3rd level - ListSession Activity oncreate");
 
-        userTextView = (TextView) findViewById(R.id.list_session_userName);
+        //userTextView = (TextView) findViewById(R.id.list_session_userName);
 
         Intent aux = getIntent();
         Bundle extras = aux.getExtras();
         if(extras!=null) {
             usermail = extras.getString("usermail");
             token = extras.getString("token");
-            userTextView.setText(usermail);
+            //userTextView.setText(usermail);
         }
 
         list = (ListView)findViewById(R.id.listview_list);

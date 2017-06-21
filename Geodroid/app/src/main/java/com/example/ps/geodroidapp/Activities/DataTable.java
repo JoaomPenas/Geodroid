@@ -27,10 +27,13 @@ public class DataTable extends AppCompatActivity {
     private TableRow row2;
     SqlDataBase mydb2;
     private Intent extraData;
+    private View tbrSelected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabela);
+
         mydb2 =  SqlDataBase.getInstance(getApplicationContext());
 
         tl = (TableLayout) findViewById(R.id.tabela);
@@ -44,9 +47,6 @@ public class DataTable extends AppCompatActivity {
         Toast.makeText(DataTable.this,session, Toast.LENGTH_SHORT).show();
 
         extraData = new Intent(this, com.example.ps.geodroidapp.Activities.ExtraData.class);
-
-
-
 
         for (int i = 0; i < serieDescontinuidades.size(); i++){
             row2 = (TableRow) getLayoutInflater().inflate(R.layout.tl_row, tl, false);
@@ -67,7 +67,6 @@ public class DataTable extends AppCompatActivity {
         registerForContextMenu(tbr);
     }
 
-    private View tbrSelected;
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -120,12 +119,13 @@ public class DataTable extends AppCompatActivity {
         if(v instanceof TableRow){
             TableRow tbr = (TableRow) v;
             if (tbr.getChildCount()>7) {
-                int id = Integer.parseInt(((TextView)tbr.getChildAt(0)).getText().toString());
-                int pers = Integer.parseInt(((TextView)tbr.getChildAt(3)).getText().toString());
-                int aper = Integer.parseInt(((TextView)tbr.getChildAt(4)).getText().toString());
-                int roug = Integer.parseInt(((TextView)tbr.getChildAt(5)).getText().toString());
-                int infil = Integer.parseInt(((TextView)tbr.getChildAt(6)).getText().toString());
-                int weat = Integer.parseInt(((TextView)tbr.getChildAt(7)).getText().toString());
+                int id      = Integer.parseInt(((TextView)tbr.getChildAt(0)).getText().toString());
+                int pers    = Integer.parseInt(((TextView)tbr.getChildAt(3)).getText().toString());
+                int aper    = Integer.parseInt(((TextView)tbr.getChildAt(4)).getText().toString());
+                int roug    = Integer.parseInt(((TextView)tbr.getChildAt(5)).getText().toString());
+                int infil   = Integer.parseInt(((TextView)tbr.getChildAt(6)).getText().toString());
+                int weat    = Integer.parseInt(((TextView)tbr.getChildAt(7)).getText().toString());
+
                 extraData.putExtra("Session",session);
                 extraData.putExtra("id",id);
                 extraData.putExtra("pers",pers);

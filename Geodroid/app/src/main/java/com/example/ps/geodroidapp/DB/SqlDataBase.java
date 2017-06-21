@@ -9,42 +9,45 @@ import android.util.Log;
 
 import com.example.ps.geodroidapp.Domain.Discontinuity;
 import com.example.ps.geodroidapp.Domain.Session;
-import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.Utils.Utils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SqlDataBase extends SQLiteOpenHelper {
 
     private static SqlDataBase sInstance;
 
+    /**
+     * Method following the Singleton pattern to retrieve allways the same SqlDataBase instance
+     * @param context
+     * @return SqlDataBase (unique instance)
+     */
     public static synchronized SqlDataBase getInstance(Context context) {
-
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-        // See this article for more information: http://bit.ly/6LRzfx
         if (sInstance == null) {
             sInstance = new SqlDataBase(context.getApplicationContext());
         }
         return sInstance;
     }
 
-
+    /**
+     * Private constructor (to prevent direct instantiation)
+     * Should be used getInstance() instead!
+     * @param context
+     */
     private SqlDataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        //init();
+        init();
     }
 
-    //Discontinuity TABLE
+    //DISCONTINUITY TABLE
     public static final String DISCONTINUITY_TABLE_NAME     = "discontinuity";
 
     public static final String DISCONTINUITY_ID             = "id";
     public static final String FK_DISCONTINUITY_ID_SESSION  = "idSession";
     public static final String FK_ID_USER                   = "idUser";
 
-    public static final String DIRECTION                    = "direction";      // Direção (entre 0 e 360)
-    public static final String DIP                          = "dip";            // Inclinação (Entre 0 e 90)
+    public static final String DIRECTION                    = "direction";      // (values between 0 - 359)
+    public static final String DIP                          = "dip";            // (values between 0 - 90)
     public static final String LATITUDE                     = "latitude";
     public static final String LONGITUDE                    = "longitude";
     public static final String PERSISTENCE                  = "persistence";
@@ -53,8 +56,8 @@ public class SqlDataBase extends SQLiteOpenHelper {
     public static final String INFLILLING                   = "infilling";
     public static final String WEATHERING                   = "weathering";
     public static final String NOTE                         = "description";
+    public static final String DATE                         = "datetime";
     public static final String SENT                         = "sent";
-
 
     //USER TABLE
     private static final String USER_TABLE_NAME             = "user";
@@ -67,11 +70,11 @@ public class SqlDataBase extends SQLiteOpenHelper {
     private static final String SESSION_TABLE_NAME          = "session";
     private static final String SESSION_ID_NAME             = "name";
 
-    //database
-    private static final String DATABASE_NAME           = "geo5.db";
-    private static final int DATABASE_VERSION           = 1;
+    //DATABASE
+    private static final String DATABASE_NAME               = "geo.db";
+    private static final int DATABASE_VERSION               = 1;
 
-    // create Discontinuity table
+    // create Discontinuity table String
     public static final String CREATE_DISCONTINUITY_TABLE = "CREATE TABLE "
             +DISCONTINUITY_TABLE_NAME       + " ("
             +DISCONTINUITY_ID               + " INTEGER, "
@@ -86,21 +89,23 @@ public class SqlDataBase extends SQLiteOpenHelper {
             +ROUGHNESS                      + " INTEGER, "
             +INFLILLING                     + " INTEGER, "
             +WEATHERING                     + " INTEGER, "
-            + NOTE                          + " TEXT, "
+            +NOTE                           + " TEXT, "
+            +DATE                           + " TEXT, "
             +SENT                           + " INTEGER,"
             +" PRIMARY KEY ("+ DISCONTINUITY_ID+", "+FK_DISCONTINUITY_ID_SESSION+", "+FK_ID_USER + "), "
             +" FOREIGN KEY ("+ FK_DISCONTINUITY_ID_SESSION +") REFERENCES "+SESSION_TABLE_NAME+" ("+ SESSION_ID_NAME +"),"
             +" FOREIGN KEY ("+ FK_ID_USER                  +") REFERENCES "+USER_TABLE_NAME   +" ("+ DISCONTINUITY_ID+") );";
 
 
-    //Create user table (OK)
+    //Create user table String
     private static final String CREATE_USER_TABLE = "CREATE TABLE "
         +USER_TABLE_NAME + " ("
         +USER_ID_EMAIL + " TEXT PRIMARY KEY, "
         +USER_PASS + " TEXT NOT NULL,"
         +USER_SALT + " BIGINT NOT NULL,"
         +USER_TOKEN_API + " TEXT );";
-    // create Session table
+
+    // create Session table String
     private static final String CREATE_SESSION_TABLE = "CREATE TABLE "
             +SESSION_TABLE_NAME + " ("
             +SESSION_ID_NAME + " TEXT PRIMARY KEY);";
@@ -108,19 +113,21 @@ public class SqlDataBase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // chamado pelo SQLite se a base de dados ainda nao existir...
-            db.execSQL(CREATE_USER_TABLE);
-            db.execSQL(CREATE_SESSION_TABLE);
-            db.execSQL(CREATE_DISCONTINUITY_TABLE);
+        // called by SQLite if the database doesn't exist yet...
+        db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_SESSION_TABLE);
+        db.execSQL(CREATE_DISCONTINUITY_TABLE);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // chamado se a versao da BD aumentar
+        // called by SQLite if the database version increase
     }
 
-    //TODO PARA EFEITO DE TESTES (PARA APAGAR)
+    /**
+     * TODO PARA EFEITO DE TESTES (PARA APAGAR NA VERSÃO FINAL)
+     */
     public void init(){
         SQLiteDatabase db = null;
         try {
@@ -133,19 +140,23 @@ public class SqlDataBase extends SQLiteOpenHelper {
             db.execSQL(CREATE_USER_TABLE);
             db.execSQL(CREATE_SESSION_TABLE);
             db.execSQL(CREATE_DISCONTINUITY_TABLE);
-
-            //db.execSQL(CREATE_DISCONTINUITY_TABLE);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             db.close();
         }
-
     }
 
-    //
-    // ------------------------------------------ Insert's ----------------------------------
-    //
+    /**
+     * Insert one User in database.
+     * @param userEmail - user name
+     * @param pass - user pass (hash from password+salt)
+     * @param salt - salt used to get the pass hash
+     * @param token - current token given by the Api, if exists
+     * @return - returns true if was well inserted in SQLiteDatabase or false if not
+     */
     public boolean insertUser(String userEmail, String pass,long salt,String token) {
         SQLiteDatabase db = null;
         try {
@@ -155,16 +166,24 @@ public class SqlDataBase extends SQLiteOpenHelper {
             values.put(USER_PASS, pass);
             values.put(USER_SALT,salt);
             values.put(USER_TOKEN_API,token);
+
             db.insert(USER_TABLE_NAME, null, values);
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.d("error",e.getMessage());
-        } finally {
+        }
+        finally {
             db.close();
         }
         return false;
     }
 
+    /**
+     * Insert one Session in database.
+     * @param name - Session name (session id in the database)
+     * @return - returns true if was well inserted in SQLiteDatabase or false if not
+     */
     public boolean insertSession(String name) {
         SQLiteDatabase db = null;
         try {
@@ -173,22 +192,59 @@ public class SqlDataBase extends SQLiteOpenHelper {
             values.put(SESSION_ID_NAME, name);
             db.insert(SESSION_TABLE_NAME, null, values);
             return true;
-        } catch (Exception e) {
-        } finally {
+        }
+        catch (Exception e) {
+        }
+        finally {
             db.close();
         }
         return false;
     }
 
-
+    /**
+     * Insert one Discontinuity in database.
+     * @param discontinuity - The Discontinuity to insert in SQLiteDatabase
+     * @return - returns true if was well inserted in SQLiteDatabase or false if not
+     */
     public boolean insertDiscontinuity(Discontinuity discontinuity) {
-        return insertDiscontinuity(discontinuity.getDirection(), discontinuity.getDip(),
-                discontinuity.getLatitude(), discontinuity.getLongitude(),discontinuity.getPersistence(), discontinuity.getAperture(),
-                discontinuity.getRoughness(),discontinuity.getInfilling(), discontinuity.getWeathreing(),discontinuity.getNote(),discontinuity.getSent(),discontinuity.getIdUser(),discontinuity.getIdSession() );
-
+        return insertDiscontinuity(
+                discontinuity.getDirection(),
+                discontinuity.getDip(),
+                discontinuity.getLatitude(),
+                discontinuity.getLongitude(),
+                discontinuity.getPersistence(),
+                discontinuity.getAperture(),
+                discontinuity.getRoughness(),
+                discontinuity.getInfilling(),
+                discontinuity.getWeathreing(),
+                discontinuity.getNote(),
+                discontinuity.getDatetime(),
+                discontinuity.getSent(),
+                discontinuity.getIdUser(),
+                discontinuity.getIdSession() );
     }
+
+    /**
+     * Insert one Discontinuity in database.
+     * @param direction - The direction of the Discontinuity
+     * @param dip - The dip of the Discontinuity
+     * @param latitude - the latitude of the Discontinuity (in degrees)
+     * @param longitude - the longitude of the Discontinuity (ib degrees)
+     * @param persistence - the persistence of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param aperture - the aperture of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param roughness - the roughness of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param infilling - the infilling of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param weathering - the weathering of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param note - an observation about the Discontinuity
+     * @param datetime - string with the date and time when the discontinuity was measured
+     * @param sent - integer indicating if the discountinuity was sent to server
+     * @param idUser - the id of the user responsible for the measure
+     * @param idSession - The id of the Session where it was measure the Discontinuity
+     * @return - returns true if was well inserted in SQLiteDatabase or false if not
+     *
+     */
     public boolean insertDiscontinuity(double direction, int dip, double latitude, double longitude, int persistence, int aperture, int roughness,
-                                       int infilling, int weathering,String note, int changed, String idUser,String idSession) {
+                                       int infilling, int weathering,String note, String datetime, int sent, String idUser,String idSession) {
         SQLiteDatabase db = null;
         SQLiteDatabase db2 = null;
         try {
@@ -218,7 +274,8 @@ public class SqlDataBase extends SQLiteOpenHelper {
             values.put(INFLILLING,infilling);
             values.put(WEATHERING,weathering);
             values.put(NOTE,note);
-            values.put(SENT,changed);
+            values.put(DATE, datetime);
+            values.put(SENT,sent);
 
             db.insert(DISCONTINUITY_TABLE_NAME, null, values);
             cursor.close();
@@ -230,34 +287,52 @@ public class SqlDataBase extends SQLiteOpenHelper {
         return false;
     }
 
+    /**
+     * Updates one Discontinuity in database. (Doesn't change the Date and Time field.)
+     * @param persistence - the persistence of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param aperture - the aperture of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param roughness - the roughness of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param infilling - the infilling of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param weathering - the weathering of the Discontinuity (values between 1 and 5; 0 if not available)
+     * @param note - an observation about the Discontinuity
+     * @param sent - information about if the Discontinuity was sent to server or not
+     * @return - returns true if was well inserted in SQLiteDatabase or false if not
+     *
+     */
     public boolean updateDiscontinuity(int id,int persistence, int aperture, int roughness,
-                                       int infilling, int weathering,String note, int changed) {
+                                       int infilling, int weathering,String note, int sent) {
         SQLiteDatabase db = null;
         try {
-
             ContentValues values = new ContentValues();
-           // Discontinuity discontinuity = getDiscontinuity(id);
             db = this.getWritableDatabase();
+
             values.put(PERSISTENCE,persistence);
             values.put(APERTURE,aperture);
             values.put(ROUGHNESS, roughness);
             values.put(INFLILLING,infilling);
             values.put(WEATHERING,weathering);
             values.put(NOTE,note);
-            values.put(SENT,changed);
+            // It is assumed that the date remains unchanged
+            values.put(SENT,sent);
 
             db.update(DISCONTINUITY_TABLE_NAME,values,DISCONTINUITY_ID+" = ?",new String[]{""+id});
             return true;
-        } catch (Exception e) {
-        } finally {
+        }
+        catch (Exception e) {
+        }
+        finally {
             db.close();
         }
         return false;
     }
 
-    //------------------------------------------ Getter's -------------------------------------------------------------
-
-    //--------------------------------------Discontinuity-------------------------------------------
+    /**
+     * Gets one Discontinuity in database from the id.
+     * (Because the id locally is unique we don't need more information to select the discountinuity)
+     * @param id - the id of the Discontinuity
+     * @return - returns the respective Discontinuity
+     *
+     */
     public Discontinuity getDiscontinuity(int id){
         SQLiteDatabase db = null;
         Discontinuity desc = new Discontinuity();
@@ -279,28 +354,31 @@ public class SqlDataBase extends SQLiteOpenHelper {
             desc.setRoughness   (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(ROUGHNESS))));
             desc.setInfilling   (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(INFLILLING))));
             desc.setWeathreing  (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(WEATHERING))));
-            desc.setNote        (cursor.getString(cursor.getColumnIndex(NOTE)));
+            desc.setNote                                (cursor.getString(cursor.getColumnIndex(NOTE)));
+            desc.setDatetime                            (cursor.getString(cursor.getColumnIndex(DATE)));
             desc.setSent        (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(SENT))));
             desc.setIdSession   (cursor.getString(cursor.getColumnIndex(FK_DISCONTINUITY_ID_SESSION)));
             desc.setIdUser      (cursor.getString(cursor.getColumnIndex(FK_ID_USER)));
-
-        }catch (Exception e){}
+        }
+        catch (Exception e){}
         finally {
             db.close();
         }
         return desc;
     }
 
-
-
-
-    public ArrayList<Discontinuity> getAllDiscontinuities(String serie){
+    /**
+     * Get's one list of Discontinuities from the session identification
+     * @param sessionId
+     * @return a list of session discontinuities
+     */
+    public ArrayList<Discontinuity> getAllDiscontinuities(String sessionId){
         ArrayList<Discontinuity> list = new ArrayList<>();
         Discontinuity desc;
         SQLiteDatabase db = null;
         try {
             db = this.getReadableDatabase();
-            Cursor cursor =  db.rawQuery("select * from "+DISCONTINUITY_TABLE_NAME+" WHERE "+FK_DISCONTINUITY_ID_SESSION+"=\""+serie+"\"", null);
+            Cursor cursor =  db.rawQuery("select * from "+DISCONTINUITY_TABLE_NAME+" WHERE "+FK_DISCONTINUITY_ID_SESSION+"=\""+sessionId+"\"", null);
             cursor.moveToFirst();
 
             while(cursor.isAfterLast() == false){
@@ -316,6 +394,8 @@ public class SqlDataBase extends SQLiteOpenHelper {
                 desc.setRoughness   (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(ROUGHNESS))));
                 desc.setInfilling   (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(INFLILLING))));
                 desc.setWeathreing  (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(WEATHERING))));
+                desc.setNote                                (cursor.getString(cursor.getColumnIndex(NOTE)));
+                desc.setDatetime                            (cursor.getString(cursor.getColumnIndex(DATE)));
                 desc.setSent        (Integer.parseInt       (cursor.getString(cursor.getColumnIndex(SENT))));
                 desc.setIdSession                           (cursor.getString(cursor.getColumnIndex(FK_DISCONTINUITY_ID_SESSION)));
                 desc.setIdUser                              (cursor.getString(cursor.getColumnIndex(FK_ID_USER)));
@@ -324,21 +404,23 @@ public class SqlDataBase extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
             cursor.close();
-        }catch(Exception e) {
-        }finally {
+        }
+        catch(Exception e) {}
+        finally {
             db.close();
         }
         return list;
     }
+
     /**
-     * Verifica se o user existe
-     * @param email
-     * @param pass
+     * Verifies if the user exists in database
+     * @param email - the identification of the user
+     * @param pass - password of the user (without salt)
      * @return
      */
     public boolean IsUserAvailable(String email, String pass) {
         SQLiteDatabase db = this.getReadableDatabase();
-        //Cursor cursor = db.rawQuery("select * from user where "+USER_ID_EMAIL+" =\"" + email + "\" and "+USER_PASS+" =\"" + pass + "\"" , null);
+
         Cursor cursor = db.rawQuery("select * from user where "+USER_ID_EMAIL+" =\"" + email+"\"", null);
         cursor.moveToFirst();
         if (cursor.isFirst()) {
@@ -346,14 +428,15 @@ public class SqlDataBase extends SQLiteOpenHelper {
             long salt = Long.parseLong(cursor.getString(cursor.getColumnIndex(USER_SALT)));
             pass += salt;
             return Utils.verifyPassword(hash,pass);
-            //Log.d("HS", cursor.getString(cursor.getColumnIndex(USER_ID_EMAIL)));
-            //return true;
         }
         else
         return false;
     }
-    //--------------------------------------Session's-------------------------------------------
 
+    /**
+     * Gets from database the list of the existing sessions
+     * @return the list of the existing sessions
+     */
     public ArrayList<Session> getAllSessions(){
         ArrayList<Session> list = new ArrayList<>();
         Session session;
@@ -361,23 +444,28 @@ public class SqlDataBase extends SQLiteOpenHelper {
         try {
             db = this.getReadableDatabase();
             Cursor cursor =  db.rawQuery("select * from "+SESSION_TABLE_NAME, null);
-
             cursor.moveToFirst();
             while(cursor.isAfterLast() == false){
                 session = new Session();
-
                 session.setName(cursor.getString(cursor.getColumnIndex(SESSION_ID_NAME)));
-
                 list.add(session);
                 cursor.moveToNext();
             }
             cursor.close();
-        }catch(Exception e) {
-        }finally {
+        }
+        catch(Exception e) {
+        }
+        finally {
             db.close();
         }
         return list;
     }
+
+    /**
+     * Gets from database the list of the existing sessions of a user
+     * @param usermail
+     * @return the list of the existing sessions of a user
+     */
     public ArrayList<Session> getUserSessions(String usermail){
         ArrayList<Session> list = new ArrayList<>();
         Session session;
@@ -385,27 +473,27 @@ public class SqlDataBase extends SQLiteOpenHelper {
         try {
             db = this.getReadableDatabase();
             Cursor cursor =  db.rawQuery("select * from "+SESSION_TABLE_NAME +"where " +SESSION_ID_NAME+ " =\"" + usermail+"\"", null);
-
             cursor.moveToFirst();
             while(cursor.isAfterLast() == false){
                 session = new Session();
-
                 session.setName(cursor.getString(cursor.getColumnIndex(SESSION_ID_NAME)));
-
                 list.add(session);
                 cursor.moveToNext();
             }
             cursor.close();
-        }catch(Exception e) {
-        }finally {
+        }
+        catch(Exception e) {
+        }
+        finally {
             db.close();
         }
         return list;
     }
 
     /**
+     * Get's one list with the discontinuities that doesn't were sent to server (or with changes)
      * @param sessionId
-     * @return um ArrayList<Discontinuity> com as descontinuidades que não estão no servidor
+     * @return one list with the discontinuities that are not, or are not update, in the server
      */
     public ArrayList<Discontinuity> getDiscontinuitysNotUploaded(String sessionId) {
         ArrayList<Discontinuity> list = new ArrayList<>();
@@ -417,9 +505,9 @@ public class SqlDataBase extends SQLiteOpenHelper {
     }
 
     /**
-     * Altera a flag Sent para 1 que indica que a discontinuidade já foi enviada
+     * Chages the Sent flag to 1 to inform that the Discontinuity was sent to server
      * @param list
-     * @return
+     * @return bolean (true if no exceptions)
      */
     public boolean setAllSentDiscontinuity(ArrayList<Discontinuity> list) {
         SQLiteDatabase db = null;
@@ -431,16 +519,17 @@ public class SqlDataBase extends SQLiteOpenHelper {
                 db.update(DISCONTINUITY_TABLE_NAME,values,DISCONTINUITY_ID+" = ?",new String[]{""+disc.getId()});
             }
             return true;
-        } catch (Exception e) {
-        } finally {
+        }
+        catch (Exception e) {}
+        finally {
             db.close();
         }
         return false;
     }
 
     /**
-     * Apaga a Discontinuidade do dispositivo
-     * @param discontinuityId
+     * Deletes one discontinuity from the database
+     * @param discontinuityId - the discontinuity identification
      */
     public boolean deleteDiscontinuity(int discontinuityId) {
         SQLiteDatabase db = null;
@@ -448,16 +537,18 @@ public class SqlDataBase extends SQLiteOpenHelper {
             db = this.getWritableDatabase();
             db.delete(DISCONTINUITY_TABLE_NAME,DISCONTINUITY_ID+"= ?",new String[]{""+discontinuityId});
             return true;
-        } catch (Exception e) {
-        } finally {
+        }
+        catch (Exception e) {}
+        finally {
             db.close();
         }
         return false;
     }
 
     /**
-     * Apaga as Discontinuidades de uma determinada sessão de um determinado user no dispositivo
-     * @param sessionName
+     * Delete the discontinuities of one session and user from the database
+     * @param sessionName - the session identifier
+     * @param user - the user identifier
      */
     public boolean deleteSessionDiscontinuity(String sessionName, String user) {
         SQLiteDatabase db = null;
@@ -465,14 +556,21 @@ public class SqlDataBase extends SQLiteOpenHelper {
             db = this.getWritableDatabase();
             db.delete(DISCONTINUITY_TABLE_NAME,FK_DISCONTINUITY_ID_SESSION+"= ? and "+FK_ID_USER+"=?",new String[]{""+sessionName,""+user});
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String ee = e.toString();
-        } finally {
+        }
+        finally {
             db.close();
         }
         return false;
     }
 
+    /**
+     * Gets the token of one user
+     * @param usermail - user identifier
+     * @return the token string
+     */
     public String getUserToken(String usermail) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from user where "+USER_ID_EMAIL+" =\"" + usermail+"\"", null);

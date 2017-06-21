@@ -1,11 +1,6 @@
 package com.example.ps.geodroidapp.Domain;
 
 import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Created by ps on 03/04/17.
- */
 
 public class DtoDiscontinuity {
 

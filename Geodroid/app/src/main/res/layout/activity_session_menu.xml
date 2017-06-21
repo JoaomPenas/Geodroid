@@ -26,14 +26,15 @@
         android:id="@+id/session_menu_tv_session_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/imageButton_upload"
+        android:layout_alignTop="@+id/imageButton_share"
+        android:layout_marginEnd="10dp"
         android:layout_weight="1"
         android:text="TextView"
-        android:textColor="@color/white"
+        android:textAlignment="center"
         android:textAllCaps="false"
-        android:textSize="24sp"
-        android:layout_marginEnd="10dp"
-        android:layout_alignTop="@+id/imageButton_share"
-        android:layout_alignEnd="@+id/imageButton_upload" />
+        android:textColor="@color/white"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/session_menu_button_new_regist"
@@ -101,18 +102,6 @@
         android:layout_marginBottom="25dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sessionMenu_sessionName"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginEnd="13dp"
-        android:layout_alignBottom="@+id/session_menu_tv_session_name"
-        android:layout_toStartOf="@+id/session_menu_tv_session_name" />
 
 
 </RelativeLayout>

@@ -1,11 +1,8 @@
 package com.example.ps.geodroidapp.Activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,18 +14,13 @@ import android.widget.Toast;
 import com.example.ps.geodroidapp.BussulaApi;
 import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.Domain.Discontinuity;
-import com.example.ps.geodroidapp.Domain.DtoCatalog;
 import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
 import com.example.ps.geodroidapp.Utils.Utils;
-import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +33,6 @@ public class Login extends AppCompatActivity {
     private Button enterButton;
     private SqlDataBase db;
     private Bundle extras;
-    private final BussulaApi service = BussulaApi.Factory.getInstance();
     private AuthenticateResponse authenticateResponse;
 
     @Override
@@ -50,29 +41,22 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         db = SqlDataBase.getInstance(this);
 
-        Log.d("HPS", "1st level Login Activity oncreate");
-        // POPULATE DATABASE
-        db.insertSession("Arrabida");
-        db.insertSession("Foz Coa");
-        db.insertDiscontinuity(new Discontinuity(10,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.52,-8.99, 2,4, 1, 2, 2,"",0,"w@mail.com", "Arrabida"));
-
-        Toast.makeText(Login.this,"Inserted 1 discontinuitie in SqliteDB \n(3 in Arrabida and 3 in Foz Coa)" , Toast.LENGTH_SHORT).show();
+        PopulateDatabase();
 
         mainActivityStartIntent = new Intent(this, MainActivityStart.class);
-        sessionMenu = new Intent(this, SessionMenu.class);
-        email = (EditText) findViewById(R.id.intro_et_email);
-        pass = (EditText) findViewById(R.id.intro_et_password);
-        enterButton = (Button) findViewById(R.id.intro_button_enter);
+        sessionMenu             = new Intent(this, SessionMenu.class);
+
+        email                   = (EditText) findViewById(R.id.intro_et_email);
+        pass                    = (EditText) findViewById(R.id.intro_et_password);
+        enterButton             = (Button)  findViewById(R.id.intro_button_enter);
 
         Intent aux = getIntent();
         extras = aux.getExtras();
 
-
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               final ProgressDialog progressDialog = new ProgressDialog(Login.this,
-                        DialogInterface.BUTTON_NEUTRAL);
+                final ProgressDialog progressDialog = new ProgressDialog(Login.this, DialogInterface.BUTTON_NEUTRAL);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Authenticating...");
                 progressDialog.show();
@@ -81,8 +65,8 @@ public class Login extends AppCompatActivity {
                         new Runnable() {
                             public void run() {
                                 if (db.IsUserAvailable(email.getText().toString(), pass.getText().toString()) &&  extras == null){
-                                    mainActivityStartIntent.putExtra("usermail",email.getText().toString());
-                                    Toast.makeText(Login.this,"Wellcome!" + email.getText().toString(), Toast.LENGTH_LONG).show();
+                                    mainActivityStartIntent.putExtra("usermail", email.getText().toString());
+                                    Toast.makeText(Login.this,"Wellcome " + email.getText().toString()+"!", Toast.LENGTH_LONG).show();
                                     startActivity(mainActivityStartIntent);
                                     //finish();
                                 }
@@ -97,15 +81,33 @@ public class Login extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * Populates the database (FOR DEMONSTRATION PORPOSE ONLY!)
+     * TODO: APAGAR NA VERSÃO FINAL
+     */
+    private void PopulateDatabase() {
+        db.insertSession("Arrabida");
+        db.insertSession("Foz Coa");
+        db.insertDiscontinuity(new Discontinuity(10,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.52,-8.99, 2,4, 1, 2, 2,"", Utils.getCurrentDateTime(),0,"w@mail.com", "Arrabida"));
+
+        Toast.makeText(Login.this,"Inserted 1 discontinuity in SqliteDB \n(in Arrabida session)", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Get's a token from Api, and
+     * @param user
+     */
     public void requestApiToken(User user){
-        BussulaApi servicee = BussulaApi.Factory.getInstance();
-        Call<AuthenticateResponse> requestCatalog = servicee.postAuthenticate(user);
+        BussulaApi service = BussulaApi.Factory.getInstance();
+        Call<AuthenticateResponse> requestCatalog = service.postAuthenticate(user);
         requestCatalog.enqueue(new Callback<AuthenticateResponse>() {
             @Override
             public void onResponse(Call<AuthenticateResponse> call, Response<AuthenticateResponse> response) {
                 Log.d("JJJ",response.message());
                 authenticateResponse = response.body();
                 if(authenticateResponse.isSuccess()){
+                    Toast.makeText(Login.this, "Authenticated!", Toast.LENGTH_SHORT).show();
                     String token = authenticateResponse.getToken();
                     if(extras != null){
                         sessionMenu.putExtra("usermail", email.getText().toString());
@@ -113,8 +115,8 @@ public class Login extends AppCompatActivity {
                         sessionMenu.putExtra("SessionName", extras.getString("SessionName"));//authenticateResponse.getToken());
                         startActivity(sessionMenu);
                         finish();
-                    }else {
-                        Toast.makeText(Login.this, "Updated internal DB from Remote DB!\nAvailable users: \n", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
                         long randomSalt = new Random().nextLong();
                         String hashPass = Utils.createPassHash(pass.getText().toString(),randomSalt);
                         db.insertUser(email.getText().toString(),hashPass,randomSalt,token);
@@ -124,7 +126,7 @@ public class Login extends AppCompatActivity {
                     }
                 }
                 else{
-                    Toast.makeText(Login.this,"Sorry try again...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Login.this,"Not authenticated...", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -138,7 +140,4 @@ public class Login extends AppCompatActivity {
             }
         });
     }
-
-
-
 }
