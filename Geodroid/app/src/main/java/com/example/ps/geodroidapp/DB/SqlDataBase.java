@@ -36,7 +36,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
      */
     private SqlDataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        init();
+        //init();   // TODO LINHA PARA EFEITO DE TESTES (REMOVE E CRIA SEMPRE AS TABELAS). PARA APAGAR NA VERSÃO FINAL
     }
 
     //DISCONTINUITY TABLE
@@ -110,6 +110,13 @@ public class SqlDataBase extends SQLiteOpenHelper {
             +SESSION_TABLE_NAME + " ("
             +SESSION_ID_NAME + " TEXT PRIMARY KEY);";
 
+    // create discontinuityMaxId table string
+    // discontinuityMaxId TABLE
+    private static final String DISCMAXID_TABLE_NAME          = "discontinuityMaxId";
+    private static final String DISCMAXID_CURRMAX             = "currentMax";
+    private static final String CREATE_CURRMAXID_TABLE=  "CREATE TABLE "
+            +DISCMAXID_TABLE_NAME + " ("
+            +DISCMAXID_CURRMAX + " integer);";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -117,6 +124,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_SESSION_TABLE);
         db.execSQL(CREATE_DISCONTINUITY_TABLE);
+        db.execSQL(CREATE_CURRMAXID_TABLE);
 
     }
 
@@ -136,10 +144,12 @@ public class SqlDataBase extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + SESSION_TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + DISCONTINUITY_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + DISCMAXID_TABLE_NAME);
 
             db.execSQL(CREATE_USER_TABLE);
             db.execSQL(CREATE_SESSION_TABLE);
             db.execSQL(CREATE_DISCONTINUITY_TABLE);
+            db.execSQL(CREATE_CURRMAXID_TABLE);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -246,22 +256,12 @@ public class SqlDataBase extends SQLiteOpenHelper {
     public boolean insertDiscontinuity(double direction, int dip, double latitude, double longitude, int persistence, int aperture, int roughness,
                                        int infilling, int weathering,String note, String datetime, int sent, String idUser,String idSession) {
         SQLiteDatabase db = null;
-        SQLiteDatabase db2 = null;
+
         try {
             db = this.getWritableDatabase();
-            db2 = this.getReadableDatabase();
             ContentValues values = new ContentValues();
 
-            // CALCULATE NEXT ID:
-            String queryString = "SELECT MAX("+ DISCONTINUITY_ID +") AS MAX FROM "+DISCONTINUITY_TABLE_NAME;
-            Cursor cursor =  db2.rawQuery(queryString, null);
-            int calculatedId=1;
-            if (cursor!=null) {
-                cursor.moveToFirst();
-                calculatedId = (cursor.getInt(cursor.getColumnIndex("MAX")))+1;
-            }
-
-            values.put(DISCONTINUITY_ID, calculatedId);
+            values.put(DISCONTINUITY_ID, getNextDiscontinuityId(db));
             values.put(FK_DISCONTINUITY_ID_SESSION,idSession);
             values.put(FK_ID_USER,idUser);
             values.put(DIRECTION, direction);
@@ -278,13 +278,49 @@ public class SqlDataBase extends SQLiteOpenHelper {
             values.put(SENT,sent);
 
             db.insert(DISCONTINUITY_TABLE_NAME, null, values);
-            cursor.close();
             return true;
-        } catch (Exception e) {
-        } finally {
+        }
+        catch (Exception e) {}
+        finally {
             db.close();
         }
         return false;
+    }
+
+    /**
+     * Private method - get's the next Discountinuity Identifier (initialize or updates the database counter)
+     * @param db - database used by the caller method
+     * @return the next discountinuityId to be used in an new discontinuity insertion
+     */
+    private int getNextDiscontinuityId(SQLiteDatabase db){
+        ContentValues values = new ContentValues();
+        try {
+            String queryString = "select "+DISCMAXID_CURRMAX+" from "+DISCMAXID_TABLE_NAME;
+            Cursor cursor =  db.rawQuery(queryString, null);
+
+            if (cursor!=null) {
+                if (cursor.moveToFirst() == true) {
+                    // increases the DB Counter by one and returns that same value
+                    int currentId = cursor.getInt(0);
+                    int nextId=currentId+1;
+                    values.put (DISCMAXID_CURRMAX, nextId);
+                    db.update(DISCMAXID_TABLE_NAME,values,DISCMAXID_CURRMAX+" = ?",new String[]{""+currentId});
+                    cursor.close();
+                    return nextId;
+                }
+                else {
+                    // initializes the DB counter
+                    int initialValue =1;
+                    values.put (DISCMAXID_CURRMAX, initialValue);
+                    db.insert(DISCMAXID_TABLE_NAME,DISCMAXID_CURRMAX,values);
+                    cursor.close();
+                    return initialValue;
+                }
+            }
+        }
+        catch (Exception e){
+        }
+        return -1;
     }
 
     /**

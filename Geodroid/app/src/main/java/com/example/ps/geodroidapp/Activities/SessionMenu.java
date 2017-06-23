@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -44,7 +43,7 @@ public class SessionMenu extends AppCompatActivity {
     private Intent dataTableIntent;
     private Intent dataMapIntent;
     private Intent statisticsIntent;
-    private Intent loginAct;
+    private Intent loginActIntent;
     private final BussulaApi service = BussulaApi.Factory.getInstance();
     private SqlDataBase db;
 
@@ -53,7 +52,6 @@ public class SessionMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_menu);
         db = SqlDataBase.getInstance(this);
-
 
         sessionName         = (TextView) findViewById(R.id.session_menu_tv_session_name);
         newRegistButton     = (Button)findViewById(R.id.session_menu_button_new_regist);
@@ -67,7 +65,7 @@ public class SessionMenu extends AppCompatActivity {
         compassIntent    = new Intent(this, Compass.class);
         dataMapIntent    = new Intent(this, DataMap.class);
         statisticsIntent = new Intent(this, StatisticTable.class);
-        loginAct         = new Intent(this, Login.class);
+        loginActIntent = new Intent(this, Login.class);
 
         Intent aux = getIntent();
         Bundle extras = aux.getExtras();
@@ -76,17 +74,17 @@ public class SessionMenu extends AppCompatActivity {
             usermail=extras.getString("usermail");
             token = extras.getString("token");
             sessionName.setText(session);
-
         }
-        compassIntent.putExtra("Session", session);
-        compassIntent.putExtra("usermail",usermail);
-        statisticsIntent.putExtra("Session", session);
+
         newRegistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                compassIntent.putExtra("Session", session);
+                compassIntent.putExtra("usermail",usermail);
                 startActivity(compassIntent);
             }
         });
+
         dataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,12 +92,15 @@ public class SessionMenu extends AppCompatActivity {
                 startActivity(dataTableIntent);
             }
         });
+
         statisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                statisticsIntent.putExtra("Session", session);
                 startActivity(statisticsIntent);
             }
         });
+
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,13 +121,12 @@ public class SessionMenu extends AppCompatActivity {
                         .setStream(Uri.fromFile(f))
                         .setText("teste")
                         .getIntent();
-
                 if (emailIntent.resolveActivity(getPackageManager()) != null) {
                      startActivity(emailIntent);
                 }
-
             }
         });
+
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,18 +139,17 @@ public class SessionMenu extends AppCompatActivity {
                 postDiscontinuity(token,dtoDiscontinuity,buttonUpload,list);
             }
         });
-
     }
 
     /**
-     * Upload Discontinuity if token is fine
+     * Private method to upload the discontinuities to server
      * @param token to validate on API
-     * @param dtoDiscontinuity Discontinuity to upload
-     * @param buttonUpload button to set visible or invisible
+     * @param dtoDiscontinuity dto with the discontinuities to upload to server
+     * @param buttonUpload button to set invisible if the response is sucessfull
      * @param list to set sent on device data base
      */
     private void postDiscontinuity(String token, DtoDiscontinuity dtoDiscontinuity,final View buttonUpload, final ArrayList <Discontinuity> list){
-        Log.d("TTTT",token);
+
         Call<ResponseBody> requestCatalogg = service.postDiscontinuities(token,dtoDiscontinuity);
         requestCatalogg.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -164,28 +163,29 @@ public class SessionMenu extends AppCompatActivity {
                 else{
                     try {
                         AuthenticateResponse authenticate = gson.fromJson(response.errorBody().string(),AuthenticateResponse.class);
-                        loginAct.putExtra("SessionName",session);
-                        startActivity(loginAct);
+                        loginActIntent.putExtra("SessionName",session);
+                        startActivity(loginActIntent);
                         finish();
                         //Adicionar campo ao erro da mensagem na API para saber se o erro foi do token não estar válido; se foi erro da password...
                         Toast.makeText(SessionMenu.this,response.message()+authenticate.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(SessionMenu.this, "Error:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if(!Utils.isOnline(getApplicationContext())) {
-                    Toast.makeText(SessionMenu.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SessionMenu.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(SessionMenu.this, "Cannot update users from Database...(requestGetAllUsers)" + t.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(SessionMenu.this, "Not upload! Please try again later..." + t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -194,6 +194,4 @@ public class SessionMenu extends AppCompatActivity {
         }else
             uploadButton.setVisibility(View.INVISIBLE);
     }
-
-
 }

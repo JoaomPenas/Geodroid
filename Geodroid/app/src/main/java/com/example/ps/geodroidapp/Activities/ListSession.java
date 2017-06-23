@@ -23,8 +23,7 @@ import java.util.List;
 
 public class ListSession extends AppCompatActivity {
 
-    String usermail,token="";
-    private TextView userTextView;
+    String usermail,token="", sessionName;
     private ListView list;
     private ArrayAdapter<String> adapter;
     private Intent sessionAct;
@@ -37,14 +36,11 @@ public class ListSession extends AppCompatActivity {
         setContentView(R.layout.activity_list_session);
         db = SqlDataBase.getInstance(this);
 
-        //userTextView = (TextView) findViewById(R.id.list_session_userName);
-
         Intent aux = getIntent();
         Bundle extras = aux.getExtras();
         if(extras!=null) {
             usermail = extras.getString("usermail");
             token = extras.getString("token");
-            //userTextView.setText(usermail);
         }
 
         list = (ListView)findViewById(R.id.listview_list);
@@ -72,16 +68,14 @@ public class ListSession extends AppCompatActivity {
             }
 
         });
-
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_session, menu);
     }
-
-    String sessionName;
 
     /**
      * to delete session when long press
