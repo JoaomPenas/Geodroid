@@ -15,6 +15,8 @@ import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.Utils;
 
+import java.text.DecimalFormat;
+
 public class ExtraData extends AppCompatActivity {
 
     SqlDataBase db;
@@ -113,9 +115,10 @@ public class ExtraData extends AppCompatActivity {
             TextView tv  = (TextView) findViewById(R.id.AtitudeDaDesco);
             TextView tv2 = (TextView) findViewById(R.id.LocalizacaoDaDescont);
             TextView tv3 = (TextView) findViewById(R.id.extra_data_session);
-
+            DecimalFormat df = new DecimalFormat("#.0000");
             tv.setText("Raw atitude: " + azimut + ", " + dip_ + "\nNormalized atitude: " + Utils.getNormaliedAtitudeFromRawAtitude(azimut, dip_));
-            tv2.setText("Localization: " + latitude + "," + longitude);
+            if (latitude != 0 && longitude!=0) tv2.setText("Localization: " + df.format(latitude) + "," + df.format(longitude));
+            else tv2.setText("(No localization)");
             tv3.setText("user:" + usermail + " / Session: " + session);
         }
 

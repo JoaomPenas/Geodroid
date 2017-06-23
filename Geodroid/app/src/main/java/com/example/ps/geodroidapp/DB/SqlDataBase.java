@@ -114,7 +114,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
     // discontinuityMaxId TABLE
     private static final String DISCMAXID_TABLE_NAME          = "discontinuityMaxId";
     private static final String DISCMAXID_CURRMAX             = "currentMax";
-    private static final String CREATE_CURRMAXID_TABLE=  "CREATE TABLE "
+    private static final String CREATE_CURRMAXID_TABLE =  "CREATE TABLE "
             +DISCMAXID_TABLE_NAME + " ("
             +DISCMAXID_CURRMAX + " integer);";
 
@@ -434,7 +434,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
     public boolean IsUserAvailable(String email, String pass) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("select * from user where "+USER_ID_EMAIL+" =\"" + email+"\"", null);
+        Cursor cursor = db.rawQuery("select * from user where "+USER_ID_EMAIL+" = ?", new String[]{email});
         cursor.moveToFirst();
         if (cursor.isFirst()) {
             String hash = cursor.getString(cursor.getColumnIndex(USER_PASS));
@@ -479,13 +479,14 @@ public class SqlDataBase extends SQLiteOpenHelper {
      * @param usermail
      * @return the list of the existing sessions of a user
      */
+    /* NOT USED...TO DELETE...
     public ArrayList<Session> getUserSessions(String usermail){
         ArrayList<Session> list = new ArrayList<>();
         Session session;
         SQLiteDatabase db = null;
         try {
             db = this.getReadableDatabase();
-            Cursor cursor =  db.rawQuery("select * from "+SESSION_TABLE_NAME +"where " +SESSION_ID_NAME+ " =\"" + usermail+"\"", null);
+            Cursor cursor =  db.rawQuery("select * from "+SESSION_TABLE_NAME +" where " +SESSION_ID_NAME+ " =?", new String[]{usermail});
             cursor.moveToFirst();
             while(cursor.isAfterLast() == false){
                 session = new Session();
@@ -502,6 +503,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
         }
         return list;
     }
+    */
 
     /**
      * Get's one list with the discontinuities that doesn't were sent to server (or with changes)

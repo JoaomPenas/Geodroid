@@ -23,8 +23,8 @@ import retrofit2.http.POST;
 
 public interface BussulaApi {
 
-    //String BASE_URL ="https://sgeotest.herokuapp.com/";
-    String BASE_URL ="http://10.0.2.2:3010";      // para usar com o emulador
+    String BASE_URL ="https://sgeotest.herokuapp.com/";
+    //String BASE_URL ="http://10.0.2.2:3010";      // para usar com o emulador
     //String BASE_URL ="http://10.10.31.140:3010";
     //String BASE_URL ="http://192.168.1.111:3010"; //para usar com o dispositivo móvel
 

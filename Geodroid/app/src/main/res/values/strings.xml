@@ -2,7 +2,7 @@
     <string name="app_name">GeoDroid</string>
     <string name="mainActivityStart_createSession">Create Session</string>
     <string name="mainActivityStart_existingSession">Existing Session</string>
-    <string name="listViewSessionName">Sessions</string>
+    <string name="listViewSessionName">Available Sessions</string>
     <string name="createSession_name">Name</string>
     <string name="sessionMenu_sessionName">Session:</string>
     <string name="sessionMenu_newRegistration">New Regist</string>

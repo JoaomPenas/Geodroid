@@ -215,7 +215,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Very rough"
+                    android:text="Very"
                     android:textAlignment="center"
                     android:textSize="14dp" />
 
@@ -237,7 +237,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Slyghty \nrough"
+                    android:text="Slyghty"
                     android:textAlignment="center"
                     android:textSize="14dp" />
 
@@ -298,7 +298,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Hard Filling &lt;5mm"
+                    android:text="Hard Fill &lt;5mm"
                     android:textAlignment="center"
                     android:textSize="14dp" />
 
@@ -309,7 +309,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Hard Filling &gt;5mm"
+                    android:text="Hard Fill &gt;5mm"
                     android:textAlignment="center"
                     android:textSize="14dp" />
 
@@ -320,7 +320,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Soft Filling &lt;5mm"
+                    android:text="Soft Fill &lt;5mm"
                     android:textAlignment="center"
                     android:textSize="14dp" />
 
@@ -331,7 +331,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Soft Filling &gt;5mm"
+                    android:text="Soft Fill &gt;5mm"
                     android:textAlignment="center"
                     android:textSize="14dp" />
             </TableRow>
@@ -370,7 +370,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Slighty\nweathered"
+                    android:text="Slighty"
                     android:textAlignment="center"
                     android:textSize="14dp" />
 
@@ -381,7 +381,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Moderate\nweathered"
+                    android:text="Moderate"
                     android:textAlignment="center"
                     android:textSize="14dp" />
 
@@ -392,7 +392,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Highly\nweathered"
+                    android:text="Highly"
                     android:textAlignment="center"
                     android:textSize="14dp" />
 
