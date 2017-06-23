@@ -3,10 +3,8 @@ package com.example.ps.geodroidapp.Activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +12,6 @@ import android.widget.Toast;
 
 import com.example.ps.geodroidapp.BussulaApi;
 import com.example.ps.geodroidapp.DB.SqlDataBase;
-import com.example.ps.geodroidapp.Domain.Discontinuity;
 import com.example.ps.geodroidapp.Domain.User;
 import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.AuthenticateResponse;
@@ -95,8 +92,14 @@ public class Login extends AppCompatActivity {
     private void PopulateDatabase() {
         db.insertSession("Arrabida");
         db.insertSession("Foz Coa");
-        db.insertDiscontinuity(new Discontinuity(10,(int)(Math.random()*(360)),(int)(Math.random()*(90)),38.52,-8.99, 2,4, 1, 2, 2,"", Utils.getCurrentDateTime(),0,"w@mail.com", "Arrabida"));
-        Toast.makeText(Login.this,"Inserted 1 discontinuity in SqliteDB \n(in Arrabida session)", Toast.LENGTH_SHORT).show();
+        db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"w@mail.com", "Arrabida");
+        Toast.makeText(Login.this,"Inserted 1 new discontinuity in Arrabida session!", Toast.LENGTH_SHORT).show();
+    }
+    private double RandRange(double Low, double High) {
+        return Math.random()*(High-Low) + Low;
+    }
+    private int RandInt(int max) {
+        return (int)Math.round(Math.random()*(max));
     }
 
     /**
@@ -132,6 +135,7 @@ public class Login extends AppCompatActivity {
                         mainActivityStartIntent.putExtra("usermail", userEmail);
                         mainActivityStartIntent.putExtra("token", token);
                         startActivity(mainActivityStartIntent);
+                        finish();
                     }
                 }
                 else{

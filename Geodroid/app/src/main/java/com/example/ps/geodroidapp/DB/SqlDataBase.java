@@ -213,29 +213,6 @@ public class SqlDataBase extends SQLiteOpenHelper {
 
     /**
      * Insert one Discontinuity in database.
-     * @param discontinuity - The Discontinuity to insert in SQLiteDatabase
-     * @return - returns true if was well inserted in SQLiteDatabase or false if not
-     */
-    public boolean insertDiscontinuity(Discontinuity discontinuity) {
-        return insertDiscontinuity(
-                discontinuity.getDirection(),
-                discontinuity.getDip(),
-                discontinuity.getLatitude(),
-                discontinuity.getLongitude(),
-                discontinuity.getPersistence(),
-                discontinuity.getAperture(),
-                discontinuity.getRoughness(),
-                discontinuity.getInfilling(),
-                discontinuity.getWeathreing(),
-                discontinuity.getNote(),
-                discontinuity.getDatetime(),
-                discontinuity.getSent(),
-                discontinuity.getIdUser(),
-                discontinuity.getIdSession() );
-    }
-
-    /**
-     * Insert one Discontinuity in database.
      * @param direction - The direction of the Discontinuity
      * @param dip - The dip of the Discontinuity
      * @param latitude - the latitude of the Discontinuity (in degrees)
