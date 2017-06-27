@@ -1,11 +1,17 @@
 package com.example.ps.geodroidapp.DB;
 
+
+import android.app.FragmentManager;
+import android.support.v4.app.DialogFragment ;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v4.app.FragmentActivity;
+
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.ps.geodroidapp.Domain.Discontinuity;
 import com.example.ps.geodroidapp.Domain.Session;
@@ -426,15 +432,15 @@ public class SqlDataBase extends SQLiteOpenHelper {
     }
 
     /**
-     * Verifies if the user exists in database
+     * Verifies if the user exists in database and if the password is valid
      * @param email - the identification of the user
      * @param pass - password of the user (without salt)
      * @return
      */
-    public boolean IsUserAvailable(String email, String pass) {
+    public boolean isUserAvailable(String email, String pass) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("select * from user where "+USER_ID_EMAIL+" = ?", new String[]{email});
+        Cursor cursor = db.rawQuery("select * from "+USER_TABLE_NAME+" where "+USER_ID_EMAIL+" = ?", new String[]{email});
         cursor.moveToFirst();
         if (cursor.isFirst()) {
             String hash = cursor.getString(cursor.getColumnIndex(USER_PASS));
@@ -443,8 +449,9 @@ public class SqlDataBase extends SQLiteOpenHelper {
             return Utils.verifyPassword(hash,pass);
         }
         else
-        return false;
+            return false;
     }
+
 
     /**
      * Gets from database the list of the existing sessions
@@ -512,9 +519,9 @@ public class SqlDataBase extends SQLiteOpenHelper {
      */
     public ArrayList<Discontinuity> getDiscontinuitysNotUploaded(String sessionId) {
         ArrayList<Discontinuity> list = new ArrayList<>();
-        for (Discontinuity dicont: getAllDiscontinuities(sessionId)) {
-            if(dicont.getSent() == 0)
-                list.add(dicont);
+        for (Discontinuity discont: getAllDiscontinuities(sessionId)) {
+            if(discont.getSent() == 0)
+                list.add(discont);
         }
         return list;
     }
@@ -565,15 +572,24 @@ public class SqlDataBase extends SQLiteOpenHelper {
      * @param sessionName - the session identifier
      * @param user - the user identifier
      */
-    public boolean deleteSessionDiscontinuity(String sessionName, String user) {
+    public boolean deleteSessionDiscontinuity(Context context, String sessionName, String user) {
         SQLiteDatabase db = null;
         try {
             db = this.getWritableDatabase();
             db.delete(DISCONTINUITY_TABLE_NAME,FK_DISCONTINUITY_ID_SESSION+"= ? and "+FK_ID_USER+"=?",new String[]{""+sessionName,""+user});
+            Cursor cursor = db.rawQuery("select * from "+DISCONTINUITY_TABLE_NAME+" where "+FK_DISCONTINUITY_ID_SESSION+" = ?", new String[]{sessionName});
+            cursor.moveToFirst();
+            if (!cursor.isFirst()) {
+                db.delete(SESSION_TABLE_NAME, SESSION_ID_NAME + " = ?", new String[]{"" + sessionName});
+                Toast.makeText(context,"Removed discontinuities and "+sessionName+" session from database!", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(context,"Deleted discontinuities of the "+sessionName+", but not the session because other users still have discontinuities in that session!", Toast.LENGTH_LONG).show();
+            }
+            cursor.close();
             return true;
         }
         catch (Exception e) {
-            String ee = e.toString();
         }
         finally {
             db.close();

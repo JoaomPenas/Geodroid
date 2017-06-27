@@ -6,6 +6,8 @@ import com.example.ps.geodroidapp.R;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -95,7 +97,7 @@ public class ListSession extends AppCompatActivity {
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    db.deleteSessionDiscontinuity(sessionName,usermail);
+                                    db.deleteSessionDiscontinuity(getApplicationContext(),sessionName,usermail);
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -106,6 +108,8 @@ public class ListSession extends AppCompatActivity {
                             });
                     AlertDialog alert = builder.create();
                     alert.show();
+                } else{
+                    db.deleteSessionDiscontinuity(getApplicationContext(), sessionName,usermail);
                 }
                 return true;
             default:

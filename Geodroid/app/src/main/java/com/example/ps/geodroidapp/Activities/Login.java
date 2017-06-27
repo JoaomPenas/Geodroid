@@ -68,7 +68,7 @@ public class Login extends AppCompatActivity {
                                 String userEmail = email.getText().toString();
                                 String userPass = pass.getText().toString();
 
-                                if ( db.IsUserAvailable(userEmail, userPass) &&  !haveSession[0]){
+                                if ( db.isUserAvailable(userEmail, userPass) &&  !haveSession[0]){
                                     mainActivityStartIntent.putExtra("usermail", userEmail);
                                     Toast.makeText(Login.this,"Wellcome again " + userEmail+"!", Toast.LENGTH_LONG).show();
                                     startActivity(mainActivityStartIntent);
@@ -93,7 +93,9 @@ public class Login extends AppCompatActivity {
         db.insertSession("Arrabida");
         db.insertSession("Foz Coa");
         db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"w@mail.com", "Arrabida");
-        Toast.makeText(Login.this,"Inserted 1 new discontinuity in Arrabida session!", Toast.LENGTH_SHORT).show();
+        db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"z@mail.com", "Arrabida");
+        db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"w@mail.com", "Foz Coa");
+        Toast.makeText(Login.this,"Inserted 3 new discontinuities: 2 in Arrabida (2 diferent users) and 1 in Foz Coa!", Toast.LENGTH_SHORT).show();
     }
     private double RandRange(double Low, double High) {
         return Math.random()*(High-Low) + Low;
