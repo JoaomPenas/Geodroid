@@ -3,6 +3,7 @@ import com.example.ps.geodroidapp.DB.SqlDataBase;
 import com.example.ps.geodroidapp.Domain.Session;
 import com.example.ps.geodroidapp.R;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListSession extends AppCompatActivity {
-
+    Context context = this;
     String usermail,token="", sessionName;
     private ListView list;
     private ArrayAdapter<String> adapter;
@@ -97,7 +98,7 @@ public class ListSession extends AppCompatActivity {
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    db.deleteSessionDiscontinuity(getApplicationContext(),sessionName,usermail);
+                                    db.deleteSessionDiscontinuity(context,sessionName,usermail);
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -109,7 +110,7 @@ public class ListSession extends AppCompatActivity {
                     AlertDialog alert = builder.create();
                     alert.show();
                 } else{
-                    db.deleteSessionDiscontinuity(getApplicationContext(), sessionName,usermail);
+                    db.deleteSessionDiscontinuity(context, sessionName,usermail);
                 }
                 return true;
             default:

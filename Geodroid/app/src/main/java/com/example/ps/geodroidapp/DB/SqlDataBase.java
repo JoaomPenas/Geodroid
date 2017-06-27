@@ -1,7 +1,9 @@
 package com.example.ps.geodroidapp.DB;
 
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment ;
 import android.content.ContentValues;
 import android.content.Context;
@@ -576,22 +578,39 @@ public class SqlDataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = null;
         try {
             db = this.getWritableDatabase();
+            //db.beginTransaction();
             db.delete(DISCONTINUITY_TABLE_NAME,FK_DISCONTINUITY_ID_SESSION+"= ? and "+FK_ID_USER+"=?",new String[]{""+sessionName,""+user});
             Cursor cursor = db.rawQuery("select * from "+DISCONTINUITY_TABLE_NAME+" where "+FK_DISCONTINUITY_ID_SESSION+" = ?", new String[]{sessionName});
             cursor.moveToFirst();
+            AlertDialog.Builder ab = new AlertDialog.Builder(context);
+            ab.setTitle("Information");
             if (!cursor.isFirst()) {
                 db.delete(SESSION_TABLE_NAME, SESSION_ID_NAME + " = ?", new String[]{"" + sessionName});
-                Toast.makeText(context,"Removed discontinuities and "+sessionName+" session from database!", Toast.LENGTH_LONG).show();
+                ab.setMessage("Removed discontinuities and "+sessionName+" session from database!")
+                        //.setCancelable(false)
+                        .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                            }
+                        });
             }
             else {
-                Toast.makeText(context,"Deleted discontinuities of the "+sessionName+", but not the session because other users still have discontinuities in that session!", Toast.LENGTH_LONG).show();
+                ab.setMessage("Deleted discontinuities of the "+sessionName+" session, but not the session itself, because other users still have discontinuities in that session!")
+                  //.setCancelable(false)
+                  .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                            }
+                        });
             }
+            //db.setTransactionSuccessful();
+            AlertDialog alertDialog =ab.create();
+            alertDialog.show();
             cursor.close();
             return true;
         }
         catch (Exception e) {
         }
         finally {
+            //db.endTransaction();
             db.close();
         }
         return false;
