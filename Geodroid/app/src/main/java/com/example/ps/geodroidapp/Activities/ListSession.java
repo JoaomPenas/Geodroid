@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class ListSession extends AppCompatActivity {
     String usermail,token="", sessionName;
     private ListView list;
     private ArrayAdapter<String> adapter;
+    private Button help;
     private Intent sessionAct;
     private SqlDataBase db;
     SqlDataBase dataBase;
@@ -47,6 +49,7 @@ public class ListSession extends AppCompatActivity {
         }
 
         list = (ListView)findViewById(R.id.listview_list);
+        help = (Button)findViewById(R.id.btn_session_help);
         dataBase =SqlDataBase.getInstance(getApplicationContext());
 
         ArrayList<Session> sessions = dataBase.getAllSessions();
@@ -70,6 +73,21 @@ public class ListSession extends AppCompatActivity {
                 startActivity(sessionAct);
             }
 
+        });
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.app.AlertDialog.Builder ab = new android.app.AlertDialog.Builder(context);
+                ab.setTitle(R.string.listSession_help);
+                ab.setMessage(R.string.listSessionHelpMessage)
+
+                        .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                            }
+                        });
+                android.app.AlertDialog alertDialog =ab.create();
+                alertDialog.show();
+            }
         });
     }
 

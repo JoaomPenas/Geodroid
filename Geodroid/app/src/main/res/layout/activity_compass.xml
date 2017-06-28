@@ -99,7 +99,7 @@
             android:layout_above="@+id/Coordenadas"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="Adquire" />
+            android:text="@string/compass_btn_adquire" />
 
     </LinearLayout>
 

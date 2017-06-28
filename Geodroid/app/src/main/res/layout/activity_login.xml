@@ -14,7 +14,7 @@
         android:layout_height="45dp"
         android:layout_marginTop="44dp"
         android:background="@drawable/button_background"
-        android:text="Enter"
+        android:text="@string/login_sign_in"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="148dp"
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.53"
-                android:text="Pass"
+                android:text="Password"
                 android:textColor="@color/common_google_signin_btn_text_dark_default"
                 android:textStyle="bold" />
 

@@ -116,10 +116,10 @@ public class ExtraData extends AppCompatActivity {
             TextView tv2 = (TextView) findViewById(R.id.LocalizacaoDaDescont);
             TextView tv3 = (TextView) findViewById(R.id.extra_data_session);
             DecimalFormat df = new DecimalFormat("#.0000");
-            tv.setText("Raw atitude: " + azimut + ", " + dip_ + "\nNormalized atitude: " + Utils.getNormaliedAtitudeFromRawAtitude(azimut, dip_));
-            if (latitude != 0 && longitude!=0) tv2.setText("Localization: " + df.format(latitude) + "," + df.format(longitude));
-            else tv2.setText("(No localization)");
-            tv3.setText("user:" + usermail + " / Session: " + session);
+            tv.setText("(" + azimut + ", " + dip_ + ") / (" + Utils.getNormaliedAtitudeFromRawAtitude(azimut, dip_)+")");
+            if (latitude != 0 && longitude!=0) tv2.setText(com.example.ps.geodroidapp.Activities.ExtraData.this.getString(R.string.extradata_localization) + df.format(latitude) + "," + df.format(longitude));
+            else tv2.setText(R.string.extradata_no_localization);
+            tv3.setText("User:" + usermail + "  "+com.example.ps.geodroidapp.Activities.ExtraData.this.getString(R.string.extradata_session) + session);
         }
 
 

@@ -95,7 +95,7 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         if (extras!=null){
             session = extras.getString("Session");
             usermail = extras.getString("usermail");
-            tv_session.setText("User:"+usermail+"\nSession:" + session);
+            tv_session.setText("User:"+usermail+"\n"+this.getString(R.string.compass_session) + session);
         }
         intentForParamsExtraActivity.putExtra("Session", session);
         intentForParamsExtraActivity.putExtra("usermail",usermail);
@@ -147,7 +147,7 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Compass.this, "Azim:" + azimuth + " roll:" + roll + "\nLat:" + latitude + " Long:" + longitude, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Compass.this, "Azim:" + azimuth + " roll:" + roll + "\nLat:" + latitude + " Long:" + longitude, Toast.LENGTH_SHORT).show();
                 intentForParamsExtraActivity.putExtra("Azimute", ""+ handRigthAzimuth);
                 intentForParamsExtraActivity.putExtra("Dip", ""+ dip);
                 intentForParamsExtraActivity.putExtra("Latitude", ""+ latitude);
@@ -155,14 +155,14 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
 
                 if(latitude == 0 || longitude == 0 ){
                     AlertDialog.Builder builder = new AlertDialog.Builder(Compass.this);
-                    builder.setMessage("Location is not available, do you want proceed?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    builder.setMessage(R.string.compass_msg_loction_not_available)
+                            .setPositiveButton(R.string.compass_positive_btn, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     startActivity(intentForParamsExtraActivity);
                                 }
                             })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(R.string.compass_negative_btn, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -206,7 +206,7 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
         }else{
-            Toast.makeText(this, "Compass not suported in this device!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Compass.this.getString(R.string.compass_compass_not_suported), Toast.LENGTH_SHORT).show();
         }
     }
 

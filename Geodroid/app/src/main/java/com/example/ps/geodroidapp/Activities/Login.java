@@ -59,7 +59,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 final ProgressDialog progressDialog = new ProgressDialog(Login.this, DialogInterface.BUTTON_NEUTRAL);
                 progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Authenticating...");
+                progressDialog.setMessage(Login.this.getString(R.string.login_authenticating));
                 progressDialog.show();
 
                 new android.os.Handler().postDelayed(
@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity {
 
                                 if ( db.isUserAvailable(userEmail, userPass) &&  !haveSession[0]){
                                     mainActivityStartIntent.putExtra("usermail", userEmail);
-                                    Toast.makeText(Login.this,"Wellcome again " + userEmail+"!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Login.this,Login.this.getString(R.string.login_wellcome) +" "+ userEmail+"!", Toast.LENGTH_LONG).show();
                                     startActivity(mainActivityStartIntent);
                                     finish();
                                 }
@@ -122,7 +122,7 @@ public class Login extends AppCompatActivity {
                     String userEmail = email.getText().toString();
 
                     if(extras != null){
-                        Toast.makeText(Login.this,"Authenticated!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Login.this,Login.this.getString(R.string.login_authenticated), Toast.LENGTH_LONG).show();
                         sessionMenu.putExtra("usermail", userEmail);
                         sessionMenu.putExtra("token", token);
                         sessionMenu.putExtra("SessionName", extras.getString("SessionName"));
@@ -130,7 +130,7 @@ public class Login extends AppCompatActivity {
                         finish();
                     }
                     else {
-                        Toast.makeText(Login.this,"Wellcome to Geodroid!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Login.this,Login.this.getString(R.string.login_wellcome_to_geodroid), Toast.LENGTH_LONG).show();
                         long randomSalt = new Random().nextLong();
                         String hashPass = Utils.createPassHash(pass.getText().toString(),randomSalt);
                         db.insertUser(userEmail,hashPass,randomSalt,token);
