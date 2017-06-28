@@ -42,7 +42,7 @@
     <string name="google_maps_key" translatable="false"></string>
     <string name="extradata_classification">Classificação</string>
     <string name="extradata_roughness_very">Alta</string>
-    <string name="extradata_rougness_rough">Rugosa</string>
+    <string name="extradata_rougness_rough">Rugososa</string>
     <string name="extradata_roughness_slighty">Leve</string>
     <string name="extradata_roughness_smooth">Suave</string>
     <string name="extradata_roughness_slickensided">Polida</string>
