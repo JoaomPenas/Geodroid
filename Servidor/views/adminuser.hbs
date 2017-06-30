@@ -36,13 +36,14 @@
                             <div class="text-center">
                                 <div id="wrongMail" name="wrongMail" style="display:none;" class="alert alert-danger"><b>Wrong email!</b> Please try again...</div>
                                 <div id="insucess" name="insucess" style="display:none;" class="alert alert-danger"><b>Error!</b> Please try again...</div>
+                                <div id="existinguser" name="existinguser" style="display:none;" class="alert alert-danger">User already exists!</div>
                                 <div id="sucess" name="sucess" style="display:none;" class="alert alert-success" align="center"><b>Inserted!</b></div>
                             </div>
-                          
-                            <input class="form-control" name="username" id="username" placeholder="User mail" autofocus="" type="text">
-                       <!-- <input class="form-control" name="password" id="password" placeholder="Password" type="password">   -->
+                            <input class="form-control" name="username" id="username" placeholder="Username" type="text">
+                            <input class="form-control" name="usermail" id="usermail" placeholder="User mail" autofocus="" type="email">
+                       
       
-                            <a id ="xpto" class="btn btn-lg btn-primary btn-block" onclick='addUser()' style="color:white">Insert</a>
+                            <a id ="xpto" class="btn btn-lg btn-primary btn-block" onclick='addUser()' style="color:white">Send email</a>
                           </form>
                         </div>
 

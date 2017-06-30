@@ -93,13 +93,13 @@ module.exports = function(app,passport,model) {
 	 * Administration area / Insert's a new user in database
 	 */
    router.post('/admin/adduser',  isAdminLoggedIn, function (req,rsp,next){   
-	   model.createUserGeneratingPassword(req.body.username,  function (err, message){
+	   model.createUserGeneratingPassword(req.body.username, req.body.usermail,  function (err, message){
 		   if (!err){
-				console.log(message+"created!");
 			   	rsp.sendStatus(201);
 		   }
 		   else{
-			   rsp.sendStatus(500);
+			   rsp.status(500);
+			   rsp.send(err);
 		   }
 		});
    });
@@ -123,7 +123,6 @@ module.exports = function(app,passport,model) {
 	  * Administration area / route to delete a user
 	  */
 	 router.delete('/admin/deleteuser/:idUser', isAdminLoggedIn, function (req,rsp,next){
-	 //router.post('/admin/delete/user/:idUser', isAdminLoggedIn, function (req,rsp,next){
 		model.deleteUser(req.params.idUser, function (err, message){
 			if (err){
 				rsp.status(404);

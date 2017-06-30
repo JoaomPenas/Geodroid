@@ -43,71 +43,67 @@ module.exports=function(_dal){
     /**
     * Função para criação de um novo utilizador
     * (Usada pelo api-controler)
-    * @param {string} email - O email do ustilizador  
-    * @param {string} password - A password do ustilizador  
+    * @param {string} email - O email do utilizador  
+    * @param {string} password - A password do utilizador  
     * @param {function} cb - função de callback
     */
     function CreateUser(email, password, cb){
-        if (email=="") {cb("invalid email");}
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!re.test(email)) {cb("Invalid email!");}
         else{
             var user=new User(email, password);
             dal.postUser (user, cb);
         }
     }
+
     /**
     * Função usada na área de administração, para criação de um novo utilizador
-    * (Usada web-controler)
-    * @param {string} email - O email do ustilizador   
+    * (Usada pelo web-controler)
+    * @param {string} email - O email do utilizador (previamente validado)
     * @param {function} cb - função de callback
     */
-    function CreateUserGeneratingPassword(email, cb){
-        if (email=="") {
-            cb("invalid email");
-        }
-        else{
+    function CreateUserGeneratingPassword(username, email, cb){
             
-            var password = generator.generate({
-                            length: 10,
-                            numbers: true
-                        }); 
-            console.log(password);
+        var password = generator.generate({
+                        length: 10,
+                        numbers: true
+                    }); 
 
-            var user=new User(email, password);
-            
-            dal.postUser (user, function (err){
-                if (!err){
-                    let msg ="Wellcome to Geodroid System. Your password is "+password;
-                    let emailSubject ='Geodroid Invitation'
-                    let fromEmail = config.geodroidEmail;
-                    let fromEmailPass = config.geodroidEmailPassword;
+        var user=new User(email, password);
+        
+        dal.postUser (user, function (err){
+            if (!err){
+                let emailSubject ='Geodroid Invitation'
+                let msg =username+ " wellcome to Geodroid System! Your password is "+password;
+                let fromEmail = config.geodroidEmail;
+                let fromEmailPass = config.geodroidEmailPassword;
 
-                    var transporter = nodemailer.createTransport({
-                            service: 'gmail',
-                            auth: {
+                var transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
                                 user: fromEmail,
                                 pass: fromEmailPass
                             }
-                        });
+                    });
 
-                    var mailOptions = {
-                    from: fromEmail,
-                    to: email,
-                    subject: emailSubject,
-                    text: msg
+                var mailOptions = {
+                        from: fromEmail,
+                        to: email,
+                        subject: emailSubject,
+                        text: msg
                     };
 
-                    transporter.sendMail(mailOptions, function(error, info){
-                            if (error) {
-                                cb(error);
-                            } else cb();
-                            ;
-                        });
-                }
-                else {
-                    cb(err);
-                }
-            });
-        }
+                transporter.sendMail(mailOptions, function(error, info){
+                        if (error) {
+                            cb(error);
+                        } else cb();
+                        ;
+                    });
+            }
+            else {
+                cb(err);
+            }
+        });
     }
     
     /**
