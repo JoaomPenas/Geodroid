@@ -6,6 +6,7 @@ const json2csv = require('json2csv');
 let dateFormat = require('dateformat');
 var generator = require('generate-password');
 var nodemailer = require('nodemailer');
+const config  	= require('./../setup');
 
 function User(email, password){
     this.email=email;
@@ -60,7 +61,6 @@ module.exports=function(_dal){
     * @param {function} cb - função de callback
     */
     function CreateUserGeneratingPassword(email, cb){
-        console.log("Entered in CreateUserGenerationgPassword. The email to invite is: " +email);
         if (email=="") {
             cb("invalid email");
         }
@@ -73,57 +73,41 @@ module.exports=function(_dal){
             console.log(password);
 
             var user=new User(email, password);
-            let msg ="Wellcome to Geodroid System. Your password is "+password;
-            let emailSubject ='Geodroid Invitation'
-            let fromEmail = 'geodroidmail@gmail.com';
-            let fromEmailPass ='ls@isel#123';
+            
+            dal.postUser (user, function (err){
+                if (!err){
+                    let msg ="Wellcome to Geodroid System. Your password is "+password;
+                    let emailSubject ='Geodroid Invitation'
+                    let fromEmail = config.geodroidEmail;
+                    let fromEmailPass = config.geodroidEmailPassword;
 
-            var transporter = nodemailer.createTransport({
-                                    service: 'gmail',
-                                    auth: {
-                                        user: fromEmail,
-                                        pass: fromEmailPass
-                                    }
-                                });
+                    var transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: fromEmail,
+                                pass: fromEmailPass
+                            }
+                        });
 
-            var mailOptions = {
-                                from: fromEmail,
-                                to: email,
-                                subject: emailSubject,
-                                text: msg
-                            };
+                    var mailOptions = {
+                    from: fromEmail,
+                    to: email,
+                    subject: emailSubject,
+                    text: msg
+                    };
 
-            transporter.sendMail(mailOptions, function(error, info){
-                    if (error) {
-                        cb(error);
-                    } else {
-                        dal.postUser (user, cb);
-                    }
-                });
-        }
-    }
-
-    function EmailUser (fromEmail, toEmail, emailSubject, msg){
-        var transporter = nodemailer.createTransport({
-                                service: 'gmail',
-                                auth: {
-                                    user: fromEmail,
-                                    pass: 'yourpassword'
-                                }
-                            });
-        var mailOptions = {
-                            from: fromEmail,
-                            to: toEmail,
-                            subject: emailSubject,
-                            text: msg
-                        };
-        transporter.sendMail(mailOptions, function(error, info){
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log('Email sent: ' + info.response);
+                    transporter.sendMail(mailOptions, function(error, info){
+                            if (error) {
+                                cb(error);
+                            } else cb();
+                            ;
+                        });
+                }
+                else {
+                    cb(err);
                 }
             });
+        }
     }
     
     /**
