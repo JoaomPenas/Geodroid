@@ -31,20 +31,18 @@
                         <div class="modal-body">
                           <!-- <form action = "/admin/adduser" enctype ="application/x-www-form-urlencoded" method= "POST" class="form-signin">  -->
                           <form class="form-login"> 
-                            <h2 class="form-signin-heading">Create a New user</h2>
+                            <h2 class="form-signin-heading">Insert a new user</h2>
 
                             <div class="text-center">
-                                <div id="wrongCred" name="wrongCred" style="display:none;" class="alert alert-danger"><b>Wrong credentials!</b> Please try again...</div>
+                                <div id="wrongMail" name="wrongMail" style="display:none;" class="alert alert-danger"><b>Wrong email!</b> Please try again...</div>
                                 <div id="insucess" name="insucess" style="display:none;" class="alert alert-danger"><b>Error!</b> Please try again...</div>
                                 <div id="sucess" name="sucess" style="display:none;" class="alert alert-success" align="center"><b>Inserted!</b></div>
                             </div>
                           
                             <input class="form-control" name="username" id="username" placeholder="User mail" autofocus="" type="text">
-                            <input class="form-control" name="password" id="password" placeholder="Password" type="password">
-                            
-                            <!-- <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>       -->
-                            <!-- <button class="btn btn-lg btn-primary btn-block" onclick='addUser()'>Create</button> -->
-                            <a id ="xpto" class="btn btn-lg btn-primary btn-block" onclick='addUser()' style="color:white">Create</a>
+                       <!-- <input class="form-control" name="password" id="password" placeholder="Password" type="password">   -->
+      
+                            <a id ="xpto" class="btn btn-lg btn-primary btn-block" onclick='addUser()' style="color:white">Insert</a>
                           </form>
                         </div>
 
@@ -62,7 +60,7 @@
 
 <script src="../../javascripts/addUser.js"></script>
 <script >
-    document.getElementById("password").onkeypress=function(e){
+    document.getElementById("username").onkeypress=function(e){
         if(e.keyCode==13){
             document.getElementById("xpto").click();
         }

@@ -1,10 +1,10 @@
 
 function addUser() { 
-
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let user = $("#username").val();
-    let password = $("#password").val();
-    if (user ==="" || password===""){
-        $("#wrongCred").show();
+    
+    if (!re.test(user)){
+        $("#wrongMail").show();
         setTimeout(function() { $("#wrongCred").hide();window.location.replace("/admin/user"); }, 1000);
         
         
@@ -26,7 +26,7 @@ function addUser() {
 
         xhttp.open("POST", "/admin/adduser", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("username=" + user + "&password=" + password);
+        xhttp.send("username=" + user);
     }
      
 }

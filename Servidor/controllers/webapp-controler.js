@@ -93,7 +93,7 @@ module.exports = function(app,passport,model) {
 	 * Administration area / Insert's a new user in database
 	 */
    router.post('/admin/adduser',  isAdminLoggedIn, function (req,rsp,next){   
-	   model.createUser(req.body.username, req.body.password, function (err, message){
+	   model.createUserGeneratingPassword(req.body.username,  function (err, message){
 		   if (!err){
 				console.log(message+"created!");
 			   	rsp.sendStatus(201);

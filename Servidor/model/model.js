@@ -4,6 +4,8 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 const json2csv = require('json2csv');
 let dateFormat = require('dateformat');
+var generator = require('generate-password');
+var nodemailer = require('nodemailer');
 
 function User(email, password){
     this.email=email;
@@ -38,8 +40,8 @@ module.exports=function(_dal){
     }
 
     /**
-    * Função usada na área de administração, para criação de um novo utilizador
-    * (Usada pelo api-controler e web-controler)
+    * Função para criação de um novo utilizador
+    * (Usada pelo api-controler)
     * @param {string} email - O email do ustilizador  
     * @param {string} password - A password do ustilizador  
     * @param {function} cb - função de callback
@@ -50,6 +52,78 @@ module.exports=function(_dal){
             var user=new User(email, password);
             dal.postUser (user, cb);
         }
+    }
+    /**
+    * Função usada na área de administração, para criação de um novo utilizador
+    * (Usada web-controler)
+    * @param {string} email - O email do ustilizador   
+    * @param {function} cb - função de callback
+    */
+    function CreateUserGeneratingPassword(email, cb){
+        console.log("Entered in CreateUserGenerationgPassword. The email to invite is: " +email);
+        if (email=="") {
+            cb("invalid email");
+        }
+        else{
+            
+            var password = generator.generate({
+                            length: 10,
+                            numbers: true
+                        }); 
+            console.log(password);
+
+            var user=new User(email, password);
+            let msg ="Wellcome to Geodroid System. Your password is "+password;
+            let emailSubject ='Geodroid Invitation'
+            let fromEmail = 'geodroidmail@gmail.com';
+            let fromEmailPass ='ls@isel#123';
+
+            var transporter = nodemailer.createTransport({
+                                    service: 'gmail',
+                                    auth: {
+                                        user: fromEmail,
+                                        pass: fromEmailPass
+                                    }
+                                });
+
+            var mailOptions = {
+                                from: fromEmail,
+                                to: email,
+                                subject: emailSubject,
+                                text: msg
+                            };
+
+            transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                        cb(error);
+                    } else {
+                        dal.postUser (user, cb);
+                    }
+                });
+        }
+    }
+
+    function EmailUser (fromEmail, toEmail, emailSubject, msg){
+        var transporter = nodemailer.createTransport({
+                                service: 'gmail',
+                                auth: {
+                                    user: fromEmail,
+                                    pass: 'yourpassword'
+                                }
+                            });
+        var mailOptions = {
+                            from: fromEmail,
+                            to: toEmail,
+                            subject: emailSubject,
+                            text: msg
+                        };
+        transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
     }
     
     /**
@@ -394,6 +468,7 @@ module.exports=function(_dal){
     return {
         getDiscontinuitiesFromOneSessionOrUserCsv :GetDiscontinuitiesFromOneSessionOrUserCsv,
 		createUser                          :CreateUser,
+        createUserGeneratingPassword        :CreateUserGeneratingPassword,
         getUser                             :GetUser,
         deleteUser                          :DeleteUser,
         getAllUsers                         :GetAllUsers,
