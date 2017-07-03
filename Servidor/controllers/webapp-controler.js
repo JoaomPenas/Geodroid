@@ -26,12 +26,6 @@ module.exports = function(app,passport,model) {
     router.get('/csvuserdiscontinuities/:idUser', isLoggedIn,function (req,rsp,next){
 		model.getDiscontinuitiesFromOneSessionOrUserCsv ("user",req.params.idUser, (err, res)=>{
 			if (!err){
-				//TODO : random name
-				/*
-				fs.writeFile("./public/csv/MyFile.csv", res, (err)=>{
-					rsp.redirect ("/MyFile.csv");
-				});
-				  */ 
 				rsp
 				 .set('Content-Disposition','attachment;filename=Dicontinuities.csv')
 				 .status(200)
@@ -195,7 +189,7 @@ module.exports = function(app,passport,model) {
 	router.get('/gmaps', isLoggedIn, function (req,rsp,next){
 		model.getAllDiscontinuities(null,function (err,res){
 			if (!err){
-				res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;};
+				res.userIsAdmin = function (){ if (req.user.email =="admin") return true;return false;};
 				res.numDiscont=res.discontinuities.length;
 				rsp.status(200);
 				rsp.render ('maps', res);
@@ -215,12 +209,12 @@ module.exports = function(app,passport,model) {
 			if(!err){
 				// console.log(res)								
 				// { summary: [ RowDataPacket { NumUsers: 1, NumSessions: 3, NumDiscontinuities: 23 } ] }
-				res.userIsAdmin = function (){ if (req.user.username =="admin") return true; return false;}
+				res.userIsAdmin = function (){ if (req.user.email =="admin") return true; return false;}
 				rsp.status(200);
 				rsp.render ('dashboard',res);
 			} else{
 				rsp.status(500);
-				rsp.render ('users',{message:err})
+				rsp.render ('error',{message:err})
 			} 
 		});
 	 });
@@ -231,7 +225,7 @@ module.exports = function(app,passport,model) {
 	 router.get('/users', isLoggedIn, function (req,rsp,next){	
 		model.getAllUsersResumedInformation(null,function(err,res){
 			if(!err){
-				res.userIsAdmin = function (){ if (req.user.username =="admin") return true; return false;}
+				res.userIsAdmin = function (){ if (req.user.email =="admin") return true; return false;}
 				rsp.status(200);
 				rsp.render ('users',res);
 			}else{
@@ -252,7 +246,7 @@ module.exports = function(app,passport,model) {
 				else{
 					model.getPagedDiscontinuitiesOfOneUser(null, req.params.idUser, userPage, numPerPage, function (err,res){
 						if (!err){
-							res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
+							res.userIsAdmin = function (){ if (req.user.email =="admin") return true;return false;}
 							res.page=userPage;
 							res.maxPages=numPages-1;
 							showObject(res);
@@ -279,7 +273,7 @@ module.exports = function(app,passport,model) {
 				else {
 					model.getPagedDiscontinuitiesOfOneSession(null, req.params.idSession, userPage, numPerPage, function (err,res){
 						if (!err){
-							res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
+							res.userIsAdmin = function (){ if (req.user.email =="admin") return true;return false;}
 							res.page=userPage;
 							res.maxPages=numPages-1;
 							showObject(res);
@@ -303,7 +297,7 @@ module.exports = function(app,passport,model) {
 	 router.get('/contributors', isLoggedIn, function (req,rsp,next){
 		model.getAllUsersResumedInformation(null,function(err,res){
 			if(!err){
-				res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
+				res.userIsAdmin = function (){ if (req.user.email =="admin") return true;return false;}
 				rsp.status(200);
 				rsp.render ('contributors',res);
 			}else{
@@ -321,7 +315,7 @@ module.exports = function(app,passport,model) {
 	 router.get('/sessions', isLoggedIn, function (req,rsp,next){	
     	model.getAllSessionsResumedInformation(null, function (err,res){
 			if (!err){
-				res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
+				res.userIsAdmin = function (){ if (req.user.email =="admin") return true;return false;}
 				rsp.status(200);
 				rsp.render ('sessions',res);
 			}
@@ -347,7 +341,7 @@ module.exports = function(app,passport,model) {
 					else{
 						model.getPagedDiscontinuities(null,userPage,numPerPage, function (err,res){
 							if (!err){
-								res.userIsAdmin = function (){ if (req.user.username =="admin") return true;return false;}
+								res.userIsAdmin = function (){ if (req.user.email =="admin") return true;return false;}
 								res.page=userPage;
 								res.maxPages=numPages-1;
 								rsp.status(200);
@@ -395,7 +389,7 @@ function isLoggedIn(req, res, next) {
  */
 function isAdminLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on 
-    if (req.isAuthenticated()&& req.user.username === 'admin')
+    if (req.isAuthenticated()&& req.user.email === 'admin')
         return next();
     // if he are not redirect him to the home page
     res.status(401);

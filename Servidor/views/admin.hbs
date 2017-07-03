@@ -10,13 +10,13 @@
           <section class="row text-center placeholders">
             <div class="col-4 col-sm-4 placeholder">
               <a href="admin/user">
-                <img  src="images/Users.JPG" width="200" height="200" class="img-fluid rounded-circle" alt="user thumbnail">
+                <img  src="images/Users.JPG" width="250" height="250" class="img-fluid rounded-circle" alt="user thumbnail">
               </a>
               <h4 >Manage Users</h4>
             </div>
             <div class="col-4 col-sm-4 placeholder">
               <a href="admin/deletesession">
-              <img src="images/Session.JPG" width="200" height="200" class="img-fluid rounded-circle" alt="session thumbnail">
+              <img src="images/Session.JPG" width="250" height="250" class="img-fluid rounded-circle" alt="session thumbnail">
               </a>
               <h4>Delete Session</h4>
             </div>
@@ -27,7 +27,7 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Contributors</th>
+                  <th>Users</th>
                   <th>Sessions</th>
                   <th>Measures</th>
                 </tr>
@@ -36,7 +36,7 @@
               <tbody>
                 {{#each summary}}
                 <tr>
-                  <td><a href="/contributors">{{NumUsers}}</a></td>
+                  <td><a href="/users">{{NumUsers}}</a></td>
                   <td><a href="/sessions">{{NumSessions}}</a></td>
                   <td><a href="/discontinuities">{{NumDiscontinuities}}</a></td>
                 </tr>

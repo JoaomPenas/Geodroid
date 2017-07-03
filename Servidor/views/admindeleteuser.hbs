@@ -28,6 +28,7 @@
               <thead>
                 <tr>
                   <th>User</th>
+                  <th>Email</th>
                   <th>Num. of Sessions</th>
                   <th>Num. of Discontinuities</th>
                   <th>Action</th>
@@ -38,13 +39,14 @@
                 {{#each users}}
                  
                   <tr>
-                    <td>{{user}}</td>
+                    <td>{{username}}</td>
+                    <td>{{usermail}}</td>
                     <td>{{sessoes}}</td>
                     <td>{{discont}}</td>
                     <td>
                   <!--      <form action ="/admin/delete/user/{{user}}" method="POST" enctype ="application/x-www-form-urlencoded">    -->
                     <!-- Trigger the modal with a button -->
-                    <button class="btn btn-danger" onclick ='deleteUser("{{user}}")' data-toggle="modal" data-target="#loginModal">Delete</button>
+                    <button class="btn btn-danger" onclick ='deleteUser("{{usermail}}")' data-toggle="modal" data-target="#loginModal">Delete</button>
                       
                     </td>
                   </tr>

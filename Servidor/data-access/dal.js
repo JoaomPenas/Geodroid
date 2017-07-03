@@ -32,6 +32,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	function DeleteUser(user, cb){
 		var connection = getConnection(hostP, userP, passwordP, databaseP);
     	connection.connect();
+		console.log("TEST!!! "+user);
 		if (user!='admin'){
 			var str='START TRANSACTION;'+
 					'delete from Discontinuity where idUser=?;'+
@@ -79,8 +80,9 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	/**
 	 * Permite ir buscar à BD as credenciais de utilizador a partir da sua designação
 	 * Se existir passa à função de callback um objecto semelhante ao seguinte exemplo:
-	 * {  username: 'x@mail.com',	
-	 *    password: 'F1mZmpiuwK6b83ODjaS9r/1x7uWC+oSfrwd/eg4qxW0=',
+	 * {  user:'José',
+	 *    email: 'x@mail.com',	
+	 *    passhash: 'F1mZmpiuwK6b83ODjaS9r/1x7uWC+oSfrwd/eg4qxW0=',
 	 *    salt: 316795907876104200
 	 * }
 	 * @param {string} email - o email do utilizador
@@ -93,10 +95,14 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 			if(err){ cb(err);}
 			else{
 				if (rows[0]){ // A primeira row porque como o email é primary key  apenas existe uma row
-					 user = {username: rows[0].email, password: rows[0].pass,salt: rows[0].salt}
+					 user = {
+						 name: rows[0].name,
+						 email: rows[0].email, 
+						 passhash: rows[0].pass,
+						 salt: rows[0].salt}
 				}
 				else {
-					user = {username: null,	password: null, salt: null }
+					user = {name:null, email: null,	passhash: null, salt: null }
 				}
 				cb(null,user);	
 			}
@@ -106,11 +112,11 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 	
 	/**
 	 * Função para inserir na base de dados um novo utilizador
-	 * @param {Object} user - The user to post e.g. {email: 'admin', password: '567'}
+	 * @param {Object} user - The user to post e.g. {name:'José', email: 'jose@mail.com', password: '567'}
 	 */
 	function PostUser(user, cb){
 		GetUser(user.email, function(err, getteduser){  // e.g. getteduser { username: 'xxx', password: 'YMWLb+JeNk5XJSvNWx6ztzIPDWBfbTuv9gjmOJnVbiU=', salt: 5486517349989782000 }
-			if (getteduser.username != null) {
+			if (getteduser.email != null) {
 				cb("User already exists!");
 			}
 			else{
@@ -118,13 +124,14 @@ module.exports = function(hostP, userP, passwordP, databaseP){
     			connection.connect();
 				let salt = Math.floor((Math.random() * 0x7FFFFFFFFFFFFFFF));
 				const hashC = crypto.createHash('sha256');
+				console.log("user.password+salt="+user.password+salt);
 				hashC.update(user.password+salt);
 				let hash = hashC.digest('base64');
-
+				console.log("hash="+hash);
 				// construct the "insert into User" table string
-				let insertStr = "insert ignore into User (email, pass, salt) values (?,\""+hash+"\",\""+salt+"\")";
+				let insertStr = "insert ignore into User (email,name, pass, salt) values (?,?,\""+hash+"\",\""+salt+"\")";
 				
-				connection.query(insertStr, [user.email],function(err, rows, fields) {
+				connection.query(insertStr, [user.email, user.name],function(err, rows, fields) {
 					if (!err){ cb (null,"ok");}
 					else 	 { cb('Error...');}	
 				}); 
@@ -391,7 +398,7 @@ module.exports = function(hostP, userP, passwordP, databaseP){
 		}else { 
 			 typeJoin="RIGHT JOIN";
 		}
-		connection.query('select user, count(distinct sessoes) as sessoes, count(discont) as discont from (select  User.email as user, Discontinuity.idSession as sessoes,  Discontinuity.id as discont from User '+typeJoin+' Discontinuity ON User.email=Discontinuity.idUser) as X group by user', function(err, rows, fields) {
+		connection.query('select username, usermail, count(distinct sessoes) as sessoes, count(discont) as discont from (select  User.name as username,User.email as usermail, Discontinuity.idSession as sessoes,  Discontinuity.id as discont from User '+typeJoin+' Discontinuity ON User.email=Discontinuity.idUser) as X group by usermail', function(err, rows, fields) {
 			if (!err){ 
 				cb(null,rows)}
 			});

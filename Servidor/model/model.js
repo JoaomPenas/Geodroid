@@ -8,7 +8,13 @@ var generator = require('generate-password');
 var nodemailer = require('nodemailer');
 const config  	= require('./../setup');
 
-function User(email, password){
+/*function User(email, password){
+    this.email=email;
+    this.password=password;
+}*/
+
+function User(name, email, password){
+    this.name=name;
     this.email=email;
     this.password=password;
 }
@@ -47,11 +53,11 @@ module.exports=function(_dal){
     * @param {string} password - A password do utilizador  
     * @param {function} cb - função de callback
     */
-    function CreateUser(email, password, cb){
+    function CreateUser(name, email, password, cb){
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!re.test(email)) {cb("Invalid email!");}
         else{
-            var user=new User(email, password);
+            var user=new User(name,email, password);
             dal.postUser (user, cb);
         }
     }
@@ -69,7 +75,7 @@ module.exports=function(_dal){
                         numbers: true
                     }); 
 
-        var user=new User(email, password);
+        var user=new User(username, email, password);
         
         dal.postUser (user, function (err){
             if (!err){
@@ -107,8 +113,7 @@ module.exports=function(_dal){
     }
     
     /**
-     * Função usada para Login
-     * (Usada apenas pelo webcontroler)
+     * Função usada pelo Passport
      * @param {string} email - designação do utilizador 
      * @param {function} cb - função de callback
      */
@@ -398,7 +403,7 @@ module.exports=function(_dal){
 					//console.log ("Generated hash: "+hash);
 					//console.log ("uPass: "+user.password);
 
-					if (hash !== user.password) {
+					if (hash !== user.passhash) {
 							console.log ("invalid password!");
 							return done(null, null);
 					}

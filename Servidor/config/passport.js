@@ -12,14 +12,12 @@ module.exports = function(passport, model) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user.username);
+        done(null, user.email);
     });
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        model.getUser(id, function(err, user) {
-            				done(err, user);}
-		);
+        model.getUser(id, function(err, user){done(err, user);}	);
     });
 
     // =========================================================================
@@ -30,9 +28,9 @@ module.exports = function(passport, model) {
 	// By default, LocalStrategy expects to find credentials in parameters named username and password. 
 	// If your site prefers to name these fields differently, options are available to change the defaults.
 
-    passport.use(new passportStrategy((username, password, cb) => {
+    passport.use(new passportStrategy((usermail, password, cb) => {
         model.authenticate(
-            username, 
+            usermail, 
             password,
             cb
         )

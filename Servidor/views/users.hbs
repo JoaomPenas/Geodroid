@@ -20,6 +20,7 @@
               <thead>
                 <tr>
                   <th>User</th>
+                  <th>Email</th>
                   <th>Num. of Sessions</th>
                   <th>Num. of Discontinuities</th>
                 </tr>
@@ -28,12 +29,13 @@
               <tbody>
                 {{#each users}}
                 <tr>
-                  <td>{{#if sessoes}}<a href="/users/{{user}}">{{/if}}{{user}}</a></td>
+                  <td>{{#if sessoes}}<a href="/users/{{usermail}}">{{/if}}{{username}}</td>
+                  <td>{{#if sessoes}}<a href="/users/{{usermail}}">{{/if}}{{usermail}}</a></td>
                   <td>{{sessoes}}</td>
                   <td>{{discont}}</td>
                 </tr>
                 <tr>
-                  {{/each}}
+                {{/each}}
               </tbody>
             </table>
           </div>

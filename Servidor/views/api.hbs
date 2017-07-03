@@ -44,21 +44,21 @@
           <p>Retrieve information for all users in our database.</p>
             <ul>
                 <li>URL: <b>/api/users</b></li>
-                <li>Example of the response: <p>{ "users": [{"email": "yx@mail.com","pass": "pqqSMMLNLhjR52iIMTkh9YfwOTgc1hf7mjiMmExWWM0=","salt": 556795943876104232 },
-                                            {"email": "x@mail.com","pass": "7zENUJrsmz/ISJrf6SLdZem/ws7B71yLf/vUPAKvYsM=", "salt": 316795907876104200}</p></li>  
+                <li>Example of the response: <p>{ "users": [{"email": "y@mail.com", "name": "Joana Y", "pass": "pqqSMMLNLhjR52iIMTkh9YfwOTgc1hf7mjiMmExWWM0=","salt": 556795943876104232 },
+                                            {"email": "x@mail.com", "name": "Pedro X", "pass": "7zENUJrsmz/ISJrf6SLdZem/ws7B71yLf/vUPAKvYsM=", "salt": 316795907876104200}</p></li>  
             </ul>
 
          <h4> POST for (...)/api/users</h4>
           <p>Post's a new user in database. Note that is only possible for administrator users</p>
           <ul>
                 <li>URL: <b>(...)/api/users</b></li>
-                <li>Example: POST for url: (...)/api/users</li>  
+                <li>Example of the Body (Content-Type: application/json): {"username":"José António","email":"xpto@xpto.com", "password":"123"} 
           </ul>
           </div>
-          <h4>DELETE for (...)api/discontinuities/deleteuser/:UserId</h4>
+          <h4>DELETE for (...)api/deleteuser/:UserId</h4>
           <p>Removes one user and the respectives discontinuities</p>
           <ul>
-                <li>URL: <b>(...)api/discontinuities/deleteuser/:UserId</b></li>
+                <li>URL: <b>(...)api/deleteuser/:UserId</b></li>
                 
           </ul>
 
@@ -107,7 +107,7 @@
                                                       }]}</p></li> 
           </ul>
           </div>
-          <h4>DELETE for (...)api/discontinuities/deletesession/:SessionId</h4>
+          <h4>DELETE for (...)api/deletesession/:SessionId</h4>
           <p>Removes one session and the respective Discontinuities</p>
           <ul>
                 <li>URL: <b>(...)api/discontinuities/deletesession/:SessionId</b></li>

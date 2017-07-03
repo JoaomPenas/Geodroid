@@ -23,11 +23,11 @@ module.exports = function(model, app) {
 				} else 
 				if (user) {
 					// if user is found and password is right create a token
-					var token = jwt.sign({username:user.username}, app.get('superSecret'),{expiresIn:'24h'});				
+					var token = jwt.sign({usermail:user.email}, app.get('superSecret'),{expiresIn:'24h'});				
 					// return the information including token as JSON
 					rsp.json({
 						success: true,
-						message: 'Enjoy your token!',
+						message: user.name,
 						token: token
 					});
 				}
@@ -50,11 +50,11 @@ module.exports = function(model, app) {
 
 	/**
 	 * Rota para inserir um novo user (necessário enviar um Json semelhante ao seguinte
-	 * exemplo: {"username":"wer4", "password":"123"}
+	 * exemplo: {"username":"António Xpto","email":"xpto@xpto.com", "password":"123"}
 	 * Função apenas disponível para o administrador (admin)
 	 */
 	router.post('/api/users', VerifyToken, IsAdmin, function (req,rsp,next){    
-	   model.createUser(req.body.username, req.body.password, function (err, message){
+	   model.createUser(req.body.username, req.body.email, req.body.password, function (err, message){
 		   if (!err){
 				//console.log(message+"created! :)");
 			   	rsp.status(201);
@@ -168,7 +168,7 @@ module.exports = function(model, app) {
 	/**
 	 * Devolve informação de todas as descontinuidades de forma paginada
 	 * Caso não seja definida a paginação é retornada a primeira pagina (pagina 0)
-	 * Exemplo de utilização: localhost:3010/api/discont?page=1
+	 * Exemplo de utilização: localhost:3010/api/discontinuities?page=1
 	 * Se tiver a página retorna a pagina; se não retorna 403
 	 */
 	router.get('/api/discontinuities', VerifyToken, function (req,rsp,next){
@@ -250,8 +250,9 @@ module.exports = function(model, app) {
 	/**
 	 * Rota para inserir na base de dados um conjunto de descontinuidades
 	 * Espera-se um pedido com dados Json com estrutura semelhante à seguinte:
-     * { "discontinuities": [{"aperture":5,"dip":66,"direction":50,"id":100,"infilling":5,"latitude":38,"longitude":9,"persistence":5,"roughness":5,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5 },
-     *                       {"aperture":2,"dip":66,"direction":50,"id":101,"infilling":4,"latitude":38,"longitude":9,"persistence":1,"roughness":3,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5 } ]}
+     * { "discontinuities": [{"aperture":5,"dip":66,"direction":50,"id":100,"infilling":5,"latitude":38,"longitude":9,"persistence":5,"roughness":5,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5,"note":"nota 1","datetime":"2010-10-10 10:10:10" }, 
+	 * 						 {"aperture":2,"dip":66,"direction":50,"id":101,"infilling":4,"latitude":38,"longitude":9,"persistence":1,"roughness":3,"idSession":"Oeiras","idUser": "w@mail.com","weathering": 5,"note":"nota 2","datetime":"2011-11-11 11:11:11" } ]}
+	 * 
 	 */
 	router.post('/api/discontinuities', VerifyToken, function (req,rsp,next){ 
 		model.postDiscontinuities(req.body,function (err,result){
@@ -303,8 +304,8 @@ module.exports = function(model, app) {
 	 * Deve ser usada depois da função VerifyToken
 	 */
 	function IsAdmin(req, res, next){
-		//console.log (req.decoded);
-		if (req.decoded.username ==="admin") next();
+		console.log (req.decoded);
+		if (req.decoded.usermail ==="admin") next();
 		else return res.json({ success: false, message: 'Function available only for admin' });    
 	}
 

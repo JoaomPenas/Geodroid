@@ -7,7 +7,7 @@ do sistema  */
 var config          = require('./setup');
 const usersDal      = require('./data-access/dal')(config.host, config.user, config.password, config.database);
 
-usersDal.postUser({email:'admin',password:'123'}, function (err){
+usersDal.postUser({name:'José Augusto',email:'admin',password:'123'}, function (err){
     if (!err) {
         console.log ("ok!")
     }
@@ -16,7 +16,7 @@ usersDal.postUser({email:'admin',password:'123'}, function (err){
     }
 });
 
-usersDal.postUser({email:'x@mail.com',password:'123'}, function (err){
+usersDal.postUser({name:'Pedro X',email:'x@mail.com',password:'123'}, function (err){
     if (!err) {
         console.log ("ok!")
     }
@@ -25,7 +25,7 @@ usersDal.postUser({email:'x@mail.com',password:'123'}, function (err){
     }
 });
 
-usersDal.postUser({email:'y@mail.com',password:'124'}, function (err){
+usersDal.postUser({name:'Joana Y',email:'y@mail.com',password:'124'}, function (err){
     if (!err) {
         console.log ("ok!")
     }
@@ -34,7 +34,7 @@ usersDal.postUser({email:'y@mail.com',password:'124'}, function (err){
     }
 });
 
-usersDal.postUser({email:'z@mail.com',password:'125'}, function (err){
+usersDal.postUser({name:'Afonso Z',email:'z@mail.com',password:'125'}, function (err){
     if (!err) {
         console.log ("ok!")
     }
@@ -43,7 +43,7 @@ usersDal.postUser({email:'z@mail.com',password:'125'}, function (err){
     }
 });
 
-usersDal.postUser({email:'w@mail.com',password:'126'}, function (err){
+usersDal.postUser({name:'António W',email:'w@mail.com',password:'126'}, function (err){
     if (!err) {
         console.log ("ok!")
     }
