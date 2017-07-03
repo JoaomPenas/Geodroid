@@ -70,6 +70,7 @@ public class SqlDataBase extends SQLiteOpenHelper {
     //USER TABLE
     private static final String USER_TABLE_NAME             = "user";
     private static final String USER_ID_EMAIL               = "email";
+    private static final String USER_NAME                   = "username";
     private static final String USER_PASS                   = "pass";
     private static final String USER_SALT                   = "salt";
     private static final String USER_TOKEN_API              = "apitoken";
@@ -105,10 +106,11 @@ public class SqlDataBase extends SQLiteOpenHelper {
             +" FOREIGN KEY ("+ FK_ID_USER                  +") REFERENCES "+USER_TABLE_NAME   +" ("+ DISCONTINUITY_ID+") );";
 
 
-    //Create user table String
+    //Create User table String
     private static final String CREATE_USER_TABLE = "CREATE TABLE "
         +USER_TABLE_NAME + " ("
         +USER_ID_EMAIL + " TEXT PRIMARY KEY, "
+        +USER_NAME + " TEXT NOT NULL,"
         +USER_PASS + " TEXT NOT NULL,"
         +USER_SALT + " BIGINT NOT NULL,"
         +USER_TOKEN_API + " TEXT );";
@@ -120,9 +122,9 @@ public class SqlDataBase extends SQLiteOpenHelper {
 
     // create discontinuityMaxId table string
     // discontinuityMaxId TABLE
-    private static final String DISCMAXID_TABLE_NAME          = "discontinuityMaxId";
-    private static final String DISCMAXID_CURRMAX             = "currentMax";
-    private static final String CREATE_CURRMAXID_TABLE =  "CREATE TABLE "
+    private static final String DISCMAXID_TABLE_NAME            = "discontinuityMaxId";
+    private static final String DISCMAXID_CURRMAX               = "currentMax";
+    private static final String CREATE_CURRMAXID_TABLE          = "CREATE TABLE "
             +DISCMAXID_TABLE_NAME + " ("
             +DISCMAXID_CURRMAX + " integer);";
 
@@ -175,12 +177,13 @@ public class SqlDataBase extends SQLiteOpenHelper {
      * @param token - current token given by the Api, if exists
      * @return - returns true if was well inserted in SQLiteDatabase or false if not
      */
-    public boolean insertUser(String userEmail, String pass,long salt,String token) {
+    public boolean insertUser(String userEmail, String username, String pass,long salt,String token) {
         SQLiteDatabase db = null;
         try {
             db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(USER_ID_EMAIL, userEmail);
+            values.put(USER_NAME, username);
             values.put(USER_PASS, pass);
             values.put(USER_SALT,salt);
             values.put(USER_TOKEN_API,token);

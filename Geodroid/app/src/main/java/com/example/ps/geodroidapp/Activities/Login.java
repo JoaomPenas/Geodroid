@@ -119,6 +119,7 @@ public class Login extends AppCompatActivity {
                 if(authenticateResponse.isSuccess()){
 
                     String token = authenticateResponse.getToken();
+                    String username = authenticateResponse.getMessage();
                     String userEmail = email.getText().toString();
 
                     if(extras != null){
@@ -130,10 +131,10 @@ public class Login extends AppCompatActivity {
                         finish();
                     }
                     else {
-                        Toast.makeText(Login.this,Login.this.getString(R.string.login_wellcome_to_geodroid), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Login.this,Login.this.getString(R.string.login_wellcome_to_geodroid) + " "+username+"!", Toast.LENGTH_LONG).show();
                         long randomSalt = new Random().nextLong();
                         String hashPass = Utils.createPassHash(pass.getText().toString(),randomSalt);
-                        db.insertUser(userEmail,hashPass,randomSalt,token);
+                        db.insertUser(userEmail,username,hashPass,randomSalt,token);
                         mainActivityStartIntent.putExtra("usermail", userEmail);
                         mainActivityStartIntent.putExtra("token", token);
                         startActivity(mainActivityStartIntent);

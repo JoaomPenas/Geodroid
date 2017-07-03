@@ -25,7 +25,7 @@
     <string name="login_authenticating">Authenticating...</string>
     <string name="login_wellcome">Wellcome again</string>
     <string name="login_authenticated">Autheticated!</string>
-    <string name="login_wellcome_to_geodroid">Wellcome to Geodroid!</string>
+    <string name="login_wellcome_to_geodroid">Wellcome </string>
     <string name="mainActivity_sessions">Sessions</string>
     <string name="mainActivity_addSession">Add Session</string>
     <string name="compass_btn_adquire">Adquire</string>
