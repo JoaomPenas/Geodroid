@@ -56,14 +56,12 @@ module.exports = function(model, app) {
 	router.post('/api/users', VerifyToken, IsAdmin, function (req,rsp,next){    
 	   model.createUser(req.body.username, req.body.email, req.body.password, function (err, message){
 		   if (!err){
-				//console.log(message+"created! :)");
 			   	rsp.status(201);
 				rsp.json({message:message})
 		   }
 		   else{
 			   rsp.status(500);
-			   rsp.json({message:'erro'})
-			   //rsp.render('error',{message:err})
+			   rsp.json({message:err})
 		   }
 		});
    	});
