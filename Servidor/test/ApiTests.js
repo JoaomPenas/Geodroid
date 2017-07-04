@@ -65,10 +65,11 @@ exports.unauthenticatedTests= {
         },post_data);
     
     }
-    
+
 } 
 
 exports.authenticatedTests = {
+
     setUp: function (callback) {
         if (!token){
             var post_data = "email=admin&pass=123";  
@@ -82,9 +83,10 @@ exports.authenticatedTests = {
             pedido (opt, function(err,data){token=data.token;}, post_data);
             setTimeout(function() {             // COMO ESPERAR O RESULTADO DE OUTRA FORMA...??
                 callback();
-            }, 2000);
+            }, 5000);
         } else callback();
     },
+
     tearDown: function (callback) {
         //console.log("Usar se necessário...");
         callback();
@@ -92,13 +94,16 @@ exports.authenticatedTests = {
     
     getUsersTest : function(test) { 
         let opt =   { host: API_HOST, port:PORT,
-                                method:"GET",     // não é necessário especificar...
+                                method:"GET",     
                                 headers: {'x-access-token': token},
                                 path: "/api/users"} ;
         pedido (opt, function (err,data){
             test.ok(data.users, "Verify in DB if exists one user...");
-                test.equal(data.users[0].email,"admin");
-                test.done();
+            test.ok(data.users[0].email);
+            test.ok(data.users[0].name);
+            test.ok(data.users[0].pass);
+            test.ok(data.users[0].salt);
+            test.done();
         });
         
     },
@@ -154,6 +159,36 @@ exports.authenticatedTests = {
         });
     },
 
+    getUserSummaryTest: function(test) { 
+        let opt =  {host: API_HOST, 
+                    port:PORT,
+                    headers: {'x-access-token': token},
+                    path: "/api/usersummary/w@mail.com"
+                    }
+        pedido (opt,function(err, r){
+            test.ok(r.summary);
+            test.ok(r.summary[0].NumDiscontinuities);
+            test.ok(r.summary[0].NumSessions);
+                
+            test.done();
+        });
+    },
+
+    getSessionSummaryTest: function(test) { 
+        let opt =  {host: API_HOST, 
+                    port:PORT,
+                    headers: {'x-access-token': token},
+                    path: "/api/sessionsummary/Arrabida"
+                    };
+        pedido (opt,function(err, r){
+            test.ok(r.summary);
+            test.ok(r.summary[0].NumDiscontinuities);
+            test.ok(r.summary[0].NumUsers);
+            
+            test.done();
+        });
+    },
+
     postAndDeleteUser: function(test) {
         let post_data = '{"username":"José António","email":"xpto@xpto.com", "password":"123"}';  
         let opt = { host: API_HOST, path: "/api/users",port:PORT,
@@ -168,15 +203,14 @@ exports.authenticatedTests = {
             test.equal(r.message, "ok");  // if the user dont exists
            
             pedido (opt, function(err,data){
-                test.equal(data.message, "User already exists!");  // if the user exists
+                test.equal(data.message, "User already exists!");  // if the user allready exists
                 
-
                 let opt2 = { host: API_HOST, path: "/api/deleteuser/xpto@xpto.com",port:PORT,
                                 method:"DELETE",
                                 headers: {
                                     'x-access-token': token
                                 }
-                    }
+                    };
                 pedido (opt2,function(err,d){
                     //console.log (d.message);
                     test.ok(d.message)
@@ -185,6 +219,34 @@ exports.authenticatedTests = {
             },post_data);
             
         },post_data);
-    }
+    },
 
+    postDiscontinuitiesAndDeleteSession: function(test) {
+        let post_data = '{"discontinuities": [{ "id": 201, "idUser": "w@mail.com", "idSession": "Xpto", "direction": 59, "dip": 44, "latitude": 38.52, "longitude": -8.99, "persistence": 2, "aperture": 4, "roughness": 1, "infilling": 2, "weathering": 2, "note":"nota1","datetime":"2017-07-02 12:29:14" }, { "id": 202, "idUser": "x@mail.com", "idSession": "Xpto", "direction": 11, "dip": 111, "latitude": 1.1, "longitude": 1.2, "persistence": 2, "aperture": 2, "roughness": 2, "infilling": 2, "weathering": 2, "note":"nota2","datetime":"2017-07-02 12:29:15"}]}';  
+        let opt = { host: API_HOST, 
+                    path: "/api/discontinuities",
+                    port:PORT,
+                    method:"POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Content-Length': Buffer.byteLength(post_data),
+                            'x-access-token': token
+                        }
+                    };
+        pedido(opt, function(err,r){
+            test.equal(r.message, "ok"); 
+            
+            let opt2 = { host: API_HOST, path: "/api/deletesession/Xpto",port:PORT,
+                            method:"DELETE",
+                            headers: {
+                                'x-access-token': token
+                            }
+                };
+            pedido (opt2,function(err,d){
+                test.equal(d.message,'session Xpto removida com sucesso!');
+                test.done();
+            }, null);
+            
+        },post_data);
+    }
 }

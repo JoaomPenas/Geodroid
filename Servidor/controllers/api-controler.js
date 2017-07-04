@@ -259,7 +259,7 @@ module.exports = function(model, app) {
 				rsp.status(500).json({ error: err });
 			}
 			else{
-				rsp.sendStatus(200);
+				rsp.status(200).json({message:"ok"});
 			}	
 		});
     });

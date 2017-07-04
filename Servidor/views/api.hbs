@@ -133,7 +133,8 @@
                                                                         "roughness": 1,
                                                                         "infilling": 2,
                                                                         "weathering": 2,
-                                                                        "note":"nota1"
+                                                                        "note":"nota1",
+                                                                        "datetime":"2017-07-02 12:29:14"
                                                                       },
                                                                       {
                                                                         "id": 1,
@@ -148,12 +149,13 @@
                                                                         "roughness": 2,
                                                                         "infilling": 2,
                                                                         "weathering": 2,
-                                                                        "note":"nota2" }]}</p></li>  
+                                                                        "note":"nota2",
+                                                                        "datetime":"2017-07-02 12:29:15" }]}</p></li>  
           </ul>
 
           <h4>POST for (...)api/discontinuities</h4>
           <p>Inserts in database an array of discontinuities in the follow format: discontinuity id, user id, session id, direction, dip direction, latitude, longitude, persistence, aperture, roughness, infilling and weathering.</p>
-          <p>Note that the (discontinuity id, user id, session id) must be unique. If this information is repeted in database will be ignored.</p>
+          <p>Note that the (discontinuity id, user id, session id) must be unique. If this information is repeted in database will be ignored. If session doesent exists will be created one.</p>
           <ul>
                 <li>URL: <b>(...)api/discontinuities</b></li>
                 <li>Example: POST for url: (...)/api/discontinuities</li>
