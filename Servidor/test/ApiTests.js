@@ -1,6 +1,6 @@
 // A ser usado com o módulo nodeunit!
-// É necessário corre o módulo init.js, de forma a ter os utilizadores usados nos testes
-// Testa a Api localmente. Para testar no heroku tem de se remover o PORT!
+// É necessário correr o módulo init.js, de forma a ter os utilizadores usados nos testes
+// Testa a Api a correr num servidor local. Para testar no heroku tem de se remover o PORT!
 
 'use strict'
 let http = require("http");
@@ -25,7 +25,6 @@ function pedido (options, cb, post_data) {
     }
 }
 
-
 exports.unauthenticatedTests= {
     /**
      * Testa pedido à Api sem passar o token
@@ -42,7 +41,6 @@ exports.unauthenticatedTests= {
                     });
     },
     
-
     /**
      * Testa o Pedido de Autenticação com credenciais do Administrador
      */
@@ -91,7 +89,9 @@ exports.authenticatedTests = {
         //console.log("Usar se necessário...");
         callback();
     },
-    
+    /**
+     * Testa a obtenção do conjunto de utilizadores (campos email, data, pass e salt)
+     */
     getUsersTest : function(test) { 
         let opt =   { host: API_HOST, port:PORT,
                                 method:"GET",     
@@ -103,23 +103,34 @@ exports.authenticatedTests = {
             test.ok(data.users[0].name);
             test.ok(data.users[0].pass);
             test.ok(data.users[0].salt);
+            test.ok(data.users[1].email);
+            test.ok(data.users[1].name);
+            test.ok(data.users[1].pass);
+            test.ok(data.users[1].salt);
             test.done();
         });
         
     },
 
+    /**
+     * Testa a obtenção do conjunto de sessões (e campo name)
+     */
     getSessionTest: function(test) {   
         let opt = { host: API_HOST, port:PORT,
                                 headers: {'x-access-token': token},
                                 path: "/api/sessions"};
         pedido (opt,function(err,data){
             test.ok(data.sessions, "Response doesn't have session field");
-                test.ok(data.sessions[0].name, "Verify in DB if exists at least one session..."); 
-                test.done();
+            test.ok(data.sessions[0].name, "Verify in DB if exists at least one session..."); 
+            test.ok(data.sessions[1].name, "Verify in DB if exists at least two sessions..."); 
+            test.done();
         });
                 
     },
 
+    /**
+     * Testa a obtenção do conjunto de descontinuidades (e respetivos campos) 
+     */
     getDiscontinuitiesTest: function(test) {   
         let opt = { host: API_HOST, port:PORT,
                                 headers: {'x-access-token': token},
@@ -140,10 +151,28 @@ exports.authenticatedTests = {
                 test.ok(data.discontinuities[0].weathering, "Verify in DB if exists at least one discontinuity...");
                 test.ok(data.discontinuities[0].note, "Verify in DB if exists at least one discontinuity...");
                 test.ok(data.discontinuities[0].datetime, "Verify in DB if exists at least one discontinuity...");
+
+                test.ok(data.discontinuities[1].id, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].idUser, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].idSession, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].direction, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].dip, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].latitude, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].longitude, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].persistence, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].aperture, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].roughness, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].infilling, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].weathering, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].note, "Verify in DB if exists at least two discontinuities...");
+                test.ok(data.discontinuities[1].datetime, "Verify in DB if exists at least two discontinuities...");
                 test.done();
         });
     },
 
+    /**
+     * Testa o endpoint que dá o resumo da BD (numero de utilizadores, sessões e descontinuidades)
+     */
     getSummaryTest: function(test) { 
         let opt =  {host: API_HOST, 
                     port:PORT,
@@ -151,14 +180,17 @@ exports.authenticatedTests = {
                     path: "/api/summary"
                     }
         pedido (opt,function(err, r){
-            test.ok(r.summary, "Response doesn't have discontinuities field...");
-                test.ok(r.summary[0].NumUsers, "Verify in DB if exists at least one discontinuity...");
-                test.ok(r.summary[0].NumSessions, "Verify in DB if exists at least one discontinuity...");
-                test.ok(r.summary[0].NumDiscontinuities, "Verify in DB if exists at least one discontinuity...");
-                test.done();
+            test.ok(r.summary);
+            test.ok(r.summary[0].NumUsers);
+            test.ok(r.summary[0].NumSessions);
+            test.ok(r.summary[0].NumDiscontinuities);
+            test.done();
         });
     },
 
+    /**
+     * Testa o endpoint que dá o resumo de um utilizador (número de descontinuidades e sessões)
+     */
     getUserSummaryTest: function(test) { 
         let opt =  {host: API_HOST, 
                     port:PORT,
@@ -174,6 +206,9 @@ exports.authenticatedTests = {
         });
     },
 
+    /**
+     * Testa o endpoint que dá o  resumo de uma sessão (número de descontinuidades e utilizadores)
+     */
     getSessionSummaryTest: function(test) { 
         let opt =  {host: API_HOST, 
                     port:PORT,
@@ -189,6 +224,9 @@ exports.authenticatedTests = {
         });
     },
 
+    /**
+     * Testa a insersão de um utilizador e a respectiva remoção da BD.
+     */
     postAndDeleteUser: function(test) {
         let post_data = '{"username":"José António","email":"xpto@xpto.com", "password":"123"}';  
         let opt = { host: API_HOST, path: "/api/users",port:PORT,
@@ -212,7 +250,6 @@ exports.authenticatedTests = {
                                 }
                     };
                 pedido (opt2,function(err,d){
-                    //console.log (d.message);
                     test.ok(d.message)
                     test.done();
                 }, null)
@@ -221,6 +258,9 @@ exports.authenticatedTests = {
         },post_data);
     },
 
+    /**
+     * Testa a inserção de um conjunto de descontinuidades e a remoção da respetiva sessão.
+     */
     postDiscontinuitiesAndDeleteSession: function(test) {
         let post_data = '{"discontinuities": [{ "id": 201, "idUser": "w@mail.com", "idSession": "Xpto", "direction": 59, "dip": 44, "latitude": 38.52, "longitude": -8.99, "persistence": 2, "aperture": 4, "roughness": 1, "infilling": 2, "weathering": 2, "note":"nota1","datetime":"2017-07-02 12:29:14" }, { "id": 202, "idUser": "x@mail.com", "idSession": "Xpto", "direction": 11, "dip": 111, "latitude": 1.1, "longitude": 1.2, "persistence": 2, "aperture": 2, "roughness": 2, "infilling": 2, "weathering": 2, "note":"nota2","datetime":"2017-07-02 12:29:15"}]}';  
         let opt = { host: API_HOST, 
