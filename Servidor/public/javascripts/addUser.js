@@ -21,7 +21,7 @@ function addUser() {
                 if (xhttp.readyState == 4 && xhttp.status == 500) {
                     if (xhttp.responseText==="User already exists!"){
                         $('#existinguser').show();
-                        setTimeout(function() { $("#existinguser").hide();window.location.replace("/admin/user"); }, 2000);
+                        setTimeout(function() { $("#existinguser").hide(); window.location.replace("/admin/user"); }, 2000);
                         //alert (xhttp.responseText);
                     }
                     else{

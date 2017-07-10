@@ -27,7 +27,7 @@ module.exports = function(app,passport,model) {
 		model.getDiscontinuitiesFromOneSessionOrUserCsv ("user",req.params.idUser, (err, res)=>{
 			if (!err){
 				rsp
-				 .set('Content-Disposition','attachment;filename=Discontinuities.csv')
+				 .set('Content-Disposition','attachment;filename=Discontinuities.csv') 
 				 .status(200)
 				 .end (res);
 			}
