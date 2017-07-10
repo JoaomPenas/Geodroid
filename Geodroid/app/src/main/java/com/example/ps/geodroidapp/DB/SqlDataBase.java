@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.ps.geodroidapp.Domain.Discontinuity;
 import com.example.ps.geodroidapp.Domain.Session;
+import com.example.ps.geodroidapp.R;
 import com.example.ps.geodroidapp.Utils.Utils;
 
 import java.util.ArrayList;
@@ -396,13 +397,13 @@ public class SqlDataBase extends SQLiteOpenHelper {
      * @param sessionId
      * @return a list of session discontinuities
      */
-    public ArrayList<Discontinuity> getAllDiscontinuities(String sessionId){
+    public ArrayList<Discontinuity> getAllDiscontinuities(String sessionId, String user){
         ArrayList<Discontinuity> list = new ArrayList<>();
         Discontinuity desc;
         SQLiteDatabase db = null;
         try {
             db = this.getReadableDatabase();
-            Cursor cursor =  db.rawQuery("select * from "+DISCONTINUITY_TABLE_NAME+" WHERE "+FK_DISCONTINUITY_ID_SESSION+"=\""+sessionId+"\"", null);
+            Cursor cursor =  db.rawQuery("select * from "+DISCONTINUITY_TABLE_NAME+" WHERE "+FK_DISCONTINUITY_ID_SESSION+"=\""+sessionId+"\""+" AND "+FK_ID_USER+"=\""+user+"\"", null);
             cursor.moveToFirst();
 
             while(cursor.isAfterLast() == false){
@@ -457,6 +458,22 @@ public class SqlDataBase extends SQLiteOpenHelper {
             return false;
     }
 
+    /**
+     *
+     * @param email - the identification of the user
+     * @return user name
+     */
+    public String getUserName(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("select * from "+USER_TABLE_NAME+" where "+USER_ID_EMAIL+" = ?", new String[]{email});
+        cursor.moveToFirst();
+        if (cursor.isFirst()) {
+            String name = cursor.getString(cursor.getColumnIndex(USER_NAME));
+            return name;
+        }
+        return null;
+    }
 
     /**
      * Gets from database the list of the existing sessions
@@ -486,45 +503,16 @@ public class SqlDataBase extends SQLiteOpenHelper {
         return list;
     }
 
-    /**
-     * Gets from database the list of the existing sessions of a user
-     * @param usermail
-     * @return the list of the existing sessions of a user
-     */
-    /* NOT USED...TO DELETE...
-    public ArrayList<Session> getUserSessions(String usermail){
-        ArrayList<Session> list = new ArrayList<>();
-        Session session;
-        SQLiteDatabase db = null;
-        try {
-            db = this.getReadableDatabase();
-            Cursor cursor =  db.rawQuery("select * from "+SESSION_TABLE_NAME +" where " +SESSION_ID_NAME+ " =?", new String[]{usermail});
-            cursor.moveToFirst();
-            while(cursor.isAfterLast() == false){
-                session = new Session();
-                session.setName(cursor.getString(cursor.getColumnIndex(SESSION_ID_NAME)));
-                list.add(session);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-        catch(Exception e) {
-        }
-        finally {
-            db.close();
-        }
-        return list;
-    }
-    */
+
 
     /**
      * Get's one list with the discontinuities that doesn't were sent to server (or with changes)
      * @param sessionId
      * @return one list with the discontinuities that are not, or are not update, in the server
      */
-    public ArrayList<Discontinuity> getDiscontinuitysNotUploaded(String sessionId) {
+    public ArrayList<Discontinuity> getDiscontinuitysNotUploaded(String sessionId, String user) {
         ArrayList<Discontinuity> list = new ArrayList<>();
-        for (Discontinuity discont: getAllDiscontinuities(sessionId)) {
+        for (Discontinuity discont: getAllDiscontinuities(sessionId,user)) {
             if(discont.getSent() == 0)
                 list.add(discont);
         }
@@ -581,7 +569,6 @@ public class SqlDataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = null;
         try {
             db = this.getWritableDatabase();
-            //db.beginTransaction();
             db.delete(DISCONTINUITY_TABLE_NAME,FK_DISCONTINUITY_ID_SESSION+"= ? and "+FK_ID_USER+"=?",new String[]{""+sessionName,""+user});
             Cursor cursor = db.rawQuery("select * from "+DISCONTINUITY_TABLE_NAME+" where "+FK_DISCONTINUITY_ID_SESSION+" = ?", new String[]{sessionName});
             cursor.moveToFirst();
@@ -589,22 +576,19 @@ public class SqlDataBase extends SQLiteOpenHelper {
             ab.setTitle("Information");
             if (!cursor.isFirst()) {
                 db.delete(SESSION_TABLE_NAME, SESSION_ID_NAME + " = ?", new String[]{"" + sessionName});
-                ab.setMessage("Removed discontinuities and "+sessionName+" session from database!")
-                        //.setCancelable(false)
+                ab.setMessage(R.string.deleted_discontinuity)
                         .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                             }
                         });
             }
             else {
-                ab.setMessage("Deleted discontinuities of the "+sessionName+" session, but not the session itself, because other users still have discontinuities in that session!")
-                  //.setCancelable(false)
+                ab.setMessage(R.string.deleted_discontinuity_notSession)
                   .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                             }
                         });
             }
-            //db.setTransactionSuccessful();
             AlertDialog alertDialog =ab.create();
             alertDialog.show();
             cursor.close();

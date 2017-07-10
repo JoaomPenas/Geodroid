@@ -58,7 +58,6 @@
                 android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:text="w@mail.com"
                 android:textColor="@color/common_google_signin_btn_text_dark_default"
                 android:textColorLink="#0275d8" />
 

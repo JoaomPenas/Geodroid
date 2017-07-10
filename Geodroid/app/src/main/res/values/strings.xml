@@ -61,5 +61,8 @@
     <string name="extradata_save_button">Save</string>
     <string name="login_sign_in">Sign in</string>
     <string name="compass_session">Session:</string>
+    <string name="deleted_discontinuity">Removed discontinuities and session! </string>
+    <string name="deleted_discontinuity_notSession">Deleted discontinuities of the session, but not the session itself, because other users still have discontinuities in that session!</string>
+
 
 </resources>

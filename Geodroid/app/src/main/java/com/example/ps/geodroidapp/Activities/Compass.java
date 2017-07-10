@@ -94,11 +94,11 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         Bundle extras = aux.getExtras();
         if (extras!=null){
             session = extras.getString("Session");
-            usermail = extras.getString("usermail");
+            usermail = extras.getString("User");
             tv_session.setText("User:"+usermail+"\n"+this.getString(R.string.compass_session) + session);
         }
         intentForParamsExtraActivity.putExtra("Session", session);
-        intentForParamsExtraActivity.putExtra("usermail",usermail);
+        intentForParamsExtraActivity.putExtra("User",usermail);
 
         locationListener = new LocationListener() {
             @Override

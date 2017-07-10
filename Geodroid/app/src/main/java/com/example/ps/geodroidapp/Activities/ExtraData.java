@@ -47,12 +47,12 @@ public class ExtraData extends AppCompatActivity {
         Bundle extras = i.getExtras();
         if (extras!=null){
             session = extras.getString("Session");
-            usermail= extras.getString("usermail");
+            usermail= extras.getString("User");
             id = extras.getInt("id",id);
         }
 
         // botão
-        Button b        = (Button) findViewById(R.id.extra_data_save_button);
+        Button saveButton        = (Button) findViewById(R.id.extra_data_save_button);
         editDescription = (EditText)findViewById(R.id.editText_extra_description);
 
         //TableRow
@@ -198,13 +198,13 @@ public class ExtraData extends AppCompatActivity {
         tv_weathering_5class.setOnClickListener(listener);
 
         //id = -1 insert id!=-1 update
-        b.setOnClickListener(new View.OnClickListener() {
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(id!=-1){
-                    //Toast.makeText(com.example.ps.geodroidapp.Activities.ExtraData.this,"UPDATE",Toast.LENGTH_LONG).show();
                     db.updateDiscontinuity(id,persistence,aperture,roughness,infilling,weathering,editDescription.getText().toString(),NOTSENT);
                     dataTable.putExtra("Session",session);
+                    dataTable.putExtra("User",usermail);
                     startActivity(dataTable);
                 }
                 else{

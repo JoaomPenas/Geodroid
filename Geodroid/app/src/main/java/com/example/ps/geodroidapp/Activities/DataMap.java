@@ -21,7 +21,7 @@ public class DataMap extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private SqlDataBase db;
-    private String session="";
+    private String session="",user="";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class DataMap extends FragmentActivity implements OnMapReadyCallback {
         Bundle extras = getIntent().getExtras();
         if(extras!=null){
             session = extras.getString("Session");
+            user = extras.getString("User");
         }
         
         db = SqlDataBase.getInstance(this);
@@ -55,7 +56,7 @@ public class DataMap extends FragmentActivity implements OnMapReadyCallback {
         mMap = googleMap;
 
         Discontinuity base =new Discontinuity();
-        ArrayList<Discontinuity> disc = db.getAllDiscontinuities(session);
+        ArrayList<Discontinuity> disc = db.getAllDiscontinuities(session,user);
         for (Discontinuity d:disc) {
            base=d;
             mMap.addMarker(new MarkerOptions()

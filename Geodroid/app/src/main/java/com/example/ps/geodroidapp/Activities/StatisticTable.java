@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class StatisticTable extends AppCompatActivity {
     private SqlDataBase db;
-    private String session="";
+    private String session="",user ="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +27,11 @@ public class StatisticTable extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras!=null){
             session = extras.getString("Session");
+            user = extras.getString("User");
         }
 
         db = SqlDataBase.getInstance(this);
-        ArrayList<Discontinuity> x = db.getAllDiscontinuities(session);
+        ArrayList<Discontinuity> x = db.getAllDiscontinuities(session,user);
 
         int count = x.size();
         float _0_29=0f, _30_59=0f, _60_89=0f, _90_119=0f,_120_149=0f,_150_179=0f,

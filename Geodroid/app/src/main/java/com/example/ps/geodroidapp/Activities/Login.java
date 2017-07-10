@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity {
 
                                 if ( db.isUserAvailable(userEmail, userPass) &&  !haveSession[0]){
                                     mainActivityStartIntent.putExtra("usermail", userEmail);
-                                    Toast.makeText(Login.this,Login.this.getString(R.string.login_wellcome) +" "+ userEmail+"!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Login.this,Login.this.getString(R.string.login_wellcome) +" "+ db.getUserName(userEmail)+"!", Toast.LENGTH_LONG).show();
                                     startActivity(mainActivityStartIntent);
                                     finish();
                                 }
@@ -93,7 +93,7 @@ public class Login extends AppCompatActivity {
         db.insertSession("Arrabida");
         db.insertSession("Foz Coa");
         db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"w@mail.com", "Arrabida");
-        db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"z@mail.com", "Arrabida");
+        db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidAppZ@mail", Utils.getCurrentDateTime(),0,"z@mail.com", "Arrabida");
         db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"w@mail.com", "Foz Coa");
         Toast.makeText(Login.this,"Inserted 3 new discontinuities: 2 in Arrabida (2 diferent users) and 1 in Foz Coa!", Toast.LENGTH_SHORT).show();
     }
