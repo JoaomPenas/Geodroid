@@ -80,7 +80,7 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 compassIntent.putExtra("Session", session);
-                compassIntent.putExtra("usermail",usermail);
+                compassIntent.putExtra("User",usermail);
                 startActivity(compassIntent);
             }
         });
@@ -89,6 +89,7 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dataTableIntent.putExtra("Session", session);
+                dataTableIntent.putExtra("User", usermail);
                 startActivity(dataTableIntent);
             }
         });
@@ -97,6 +98,7 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 statisticsIntent.putExtra("Session", session);
+                dataTableIntent.putExtra("User", usermail);
                 startActivity(statisticsIntent);
             }
         });
@@ -105,6 +107,7 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dataMapIntent.putExtra("Session", session);
+                dataTableIntent.putExtra("User", usermail);
                 startActivity(dataMapIntent);
             }
         });
@@ -112,7 +115,7 @@ public class SessionMenu extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.saveOnFile(SqlDataBase.getInstance(getApplicationContext()).getAllDiscontinuities(session),SessionMenu.this);
+                Utils.saveOnFile(SqlDataBase.getInstance(getApplicationContext()).getAllDiscontinuities(session,usermail),SessionMenu.this);
                 String fileName = "Session"+".csv";
                 File f = new File(SessionMenu.this.getExternalCacheDir(), fileName);
                 Intent emailIntent = ShareCompat.IntentBuilder
@@ -131,7 +134,7 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final View buttonUpload = v;
-                final ArrayList <Discontinuity>list = db.getDiscontinuitysNotUploaded(session);
+                final ArrayList <Discontinuity>list = db.getDiscontinuitysNotUploaded(session,usermail);
                 DtoDiscontinuity dtoDiscontinuity = new DtoDiscontinuity(list);
                 if(token == null ) {
                     token = db.getUserToken(usermail);
@@ -189,7 +192,7 @@ public class SessionMenu extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(db.getDiscontinuitysNotUploaded(session).size()!=0){
+        if(db.getDiscontinuitysNotUploaded(session,usermail).size()!=0){
             uploadButton.setVisibility(View.VISIBLE);
         }else
             uploadButton.setVisibility(View.INVISIBLE);

@@ -7,11 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,7 +28,7 @@ public class ListSession extends AppCompatActivity {
     private ListView list;
     private ArrayAdapter<String> adapter;
     private Button help;
-    private Intent sessionAct;
+    private Intent sessionMenuAct;
     private SqlDataBase db;
     SqlDataBase dataBase;
 
@@ -57,7 +54,7 @@ public class ListSession extends AppCompatActivity {
         for (Session s:sessions) {
             listSessions.add(s.getName());
         }
-        sessionAct = new Intent(this, SessionMenu.class);
+        sessionMenuAct = new Intent(this, SessionMenu.class);
 
         adapter = new ArrayAdapter<String>(this,R.layout.list_item,R.id.textView_item,new ArrayList<>(listSessions));
         list.setAdapter(adapter);
@@ -67,10 +64,10 @@ public class ListSession extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                sessionAct.putExtra("SessionName",((TextView)view.findViewById(R.id.textView_item)).getText().toString());
-                sessionAct.putExtra(("usermail"), usermail);
-                sessionAct.putExtra(("token"), token);
-                startActivity(sessionAct);
+                sessionMenuAct.putExtra("SessionName",((TextView)view.findViewById(R.id.textView_item)).getText().toString());
+                sessionMenuAct.putExtra(("usermail"), usermail);
+                sessionMenuAct.putExtra(("token"), token);
+                startActivity(sessionMenuAct);
             }
 
         });
@@ -110,7 +107,7 @@ public class ListSession extends AppCompatActivity {
             case R.id.menu_deleteSessionRow:
                 adapter.remove(adapter.getItem(info.position));
                 sessionName = ((TextView)info.targetView.findViewById(R.id.textView_item)).getText().toString();
-                if(db.getDiscontinuitysNotUploaded(sessionName).size() != 0 ){
+                if(db.getDiscontinuitysNotUploaded(sessionName,usermail).size() != 0 ){
                     AlertDialog.Builder builder = new AlertDialog.Builder(ListSession.this);
                     builder.setMessage("Some discontinuities have not uploaded! Do you want to proceed?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

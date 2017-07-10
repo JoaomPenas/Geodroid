@@ -22,7 +22,7 @@ import com.example.ps.geodroidapp.R;
 import java.util.ArrayList;
 
 public class DataTable extends AppCompatActivity {
-    String session="";
+    String session="",user = "";
     private TableLayout tl;
     private TableRow row2;
     SqlDataBase mydb2;
@@ -41,9 +41,10 @@ public class DataTable extends AppCompatActivity {
         final Bundle extras = getIntent().getExtras();
         if (extras!=null){
             session = extras.getString("Session");
+            user = extras.getString("User");
         }
 
-        ArrayList<Discontinuity> serieDescontinuidades = mydb2.getAllDiscontinuities(session);
+        ArrayList<Discontinuity> serieDescontinuidades = mydb2.getAllDiscontinuities(session,user);
         Toast.makeText(DataTable.this,session, Toast.LENGTH_SHORT).show();
 
         extraData = new Intent(this, com.example.ps.geodroidapp.Activities.ExtraData.class);
@@ -127,6 +128,7 @@ public class DataTable extends AppCompatActivity {
                 int weat    = Integer.parseInt(((TextView)tbr.getChildAt(7)).getText().toString());
 
                 extraData.putExtra("Session",session);
+                extraData.putExtra("User",user);
                 extraData.putExtra("id",id);
                 extraData.putExtra("pers",pers);
                 extraData.putExtra("aper",aper);

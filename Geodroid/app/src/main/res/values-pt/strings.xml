@@ -63,4 +63,7 @@
     <string name="extradata_save_button">Salvar</string>
     <string name="login_sign_in">Entrar</string>
     <string name="compass_session">Sessão:</string>
+    <string name="deleted_discontinuity">Descontinuidades e Sessão removidas </string>
+    <string name="deleted_discontinuity_notSession">Descontinuidades apagadas da sessão, mas a sessão permanece, porque existem outros utilizadores com essa sessão</string>
+
 </resources>
