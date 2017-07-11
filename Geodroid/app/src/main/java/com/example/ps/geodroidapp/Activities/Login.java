@@ -94,7 +94,7 @@ public class Login extends AppCompatActivity {
         db.insertSession("Foz Coa");
         db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"w@mail.com", "Arrabida");
         db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidAppZ@mail", Utils.getCurrentDateTime(),0,"z@mail.com", "Arrabida");
-        db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(38.52,38.6),RandRange(-9,-8.9),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"w@mail.com", "Foz Coa");
+        db.insertDiscontinuity(RandInt(360),RandInt(90),RandRange(41.10,41.2),RandRange(-7.12,-7.0),RandInt(5),RandInt(5),RandInt(5),RandInt(5),RandInt(5),"Random by AndroidApp", Utils.getCurrentDateTime(),0,"w@mail.com", "Foz Coa");
         Toast.makeText(Login.this,"Inserted 3 new discontinuities: 2 in Arrabida (2 diferent users) and 1 in Foz Coa!", Toast.LENGTH_SHORT).show();
     }
     private double RandRange(double Low, double High) {
