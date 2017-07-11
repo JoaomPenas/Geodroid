@@ -98,7 +98,7 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 statisticsIntent.putExtra("Session", session);
-                dataTableIntent.putExtra("User", usermail);
+                statisticsIntent.putExtra("User", usermail);
                 startActivity(statisticsIntent);
             }
         });
@@ -107,7 +107,7 @@ public class SessionMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dataMapIntent.putExtra("Session", session);
-                dataTableIntent.putExtra("User", usermail);
+                dataMapIntent.putExtra("User", usermail);
                 startActivity(dataMapIntent);
             }
         });
