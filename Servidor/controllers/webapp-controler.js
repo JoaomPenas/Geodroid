@@ -26,8 +26,9 @@ module.exports = function(app,passport,model) {
     router.get('/csvuserdiscontinuities/:idUser', isLoggedIn,function (req,rsp,next){
 		model.getDiscontinuitiesFromOneSessionOrUserCsv ("user",req.params.idUser, (err, res)=>{
 			if (!err){
+				var filename=req.params.idUser+'_discontinuities.csv'
 				rsp
-				 .set('Content-Disposition','attachment;filename=Discontinuities.csv') 
+				 .set('Content-Disposition','attachment;filename='+filename) 
 				 .status(200)
 				 .end (res);
 			}
@@ -46,8 +47,9 @@ module.exports = function(app,passport,model) {
 		
 		model.getDiscontinuitiesFromOneSessionOrUserCsv ("session",req.params.idSession, (err, res)=>{
 			if (!err){
+				var filename=req.params.idSession+'_discontinuities.csv'
 				rsp
-				.set('Content-Disposition','attachment;filename=Dicontinuities.csv')
+				.set('Content-Disposition','attachment;filename='+filename)
 				 .status(200)
 				 .end (res);
 			}
