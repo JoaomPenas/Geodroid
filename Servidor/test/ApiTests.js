@@ -1,11 +1,10 @@
 // A ser usado com o módulo nodeunit!
 // É necessário correr o módulo init.js, de forma a ter os utilizadores usados nos testes
-// Testa a Api a correr num servidor local. Para testar no heroku tem de se remover o PORT!
+// Testa a Api (a correr no Heroku)!
 
 'use strict'
-let http = require("http");
-let API_HOST="localhost";
-let PORT="3010"
+let http = require("https");
+let API_HOST="sgeotest.herokuapp.com";
 let token;
 
 function pedido (options, cb, post_data) {
@@ -33,7 +32,7 @@ exports.unauthenticatedTests= {
         
         pedido ({   host: API_HOST, 
                     method:"GET", 
-                    port:PORT,
+                
                     path: "/api/users"} , function (err,data){
                         test.equal(data.success, false, 'The response should be:{"success":false,"message":"No token provided."}' );
                         test.equal(data.message, "No token provided.", 'The response should be:{"success":false,"message":"No token provided."}');
@@ -49,7 +48,7 @@ exports.unauthenticatedTests= {
 
         var opt = { host: API_HOST, 
                                   path: "/api/authenticate",
-                                  port:PORT,
+                                 
                                   method:"POST",
                                   headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -71,7 +70,7 @@ exports.authenticatedTests = {
     setUp: function (callback) {
         if (!token){
             var post_data = "email=admin&pass=123";  
-            let opt = { host: API_HOST, path: "/api/authenticate",port:PORT,
+            let opt = { host: API_HOST, path: "/api/authenticate",
                                     method:"POST",
                                     headers: {
                                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -79,7 +78,7 @@ exports.authenticatedTests = {
                                     }
                         };
             pedido (opt, function(err,data){token=data.token;}, post_data);
-            setTimeout(function() {             // COMO ESPERAR O RESULTADO DE OUTRA FORMA...??
+            setTimeout(function() {       
                 callback();
             }, 5000);
         } else callback();
@@ -93,7 +92,7 @@ exports.authenticatedTests = {
      * Testa a obtenção do conjunto de utilizadores (campos email, data, pass e salt)
      */
     getUsersTest : function(test) { 
-        let opt =   { host: API_HOST, port:PORT,
+        let opt =   { host: API_HOST, 
                                 method:"GET",     
                                 headers: {'x-access-token': token},
                                 path: "/api/users"} ;
@@ -116,7 +115,7 @@ exports.authenticatedTests = {
      * Testa a obtenção do conjunto de sessões (e campo name)
      */
     getSessionTest: function(test) {   
-        let opt = { host: API_HOST, port:PORT,
+        let opt = { host: API_HOST, 
                                 headers: {'x-access-token': token},
                                 path: "/api/sessions"};
         pedido (opt,function(err,data){
@@ -132,7 +131,7 @@ exports.authenticatedTests = {
      * Testa a obtenção do conjunto de descontinuidades (e respetivos campos) 
      */
     getDiscontinuitiesTest: function(test) {   
-        let opt = { host: API_HOST, port:PORT,
+        let opt = { host: API_HOST,
                                 headers: {'x-access-token': token},
                                 path: "/api/discontinuities"}
         pedido (opt, function(err,data){
@@ -175,7 +174,6 @@ exports.authenticatedTests = {
      */
     getSummaryTest: function(test) { 
         let opt =  {host: API_HOST, 
-                    port:PORT,
                     headers: {'x-access-token': token},
                     path: "/api/summary"
                     }
@@ -193,7 +191,6 @@ exports.authenticatedTests = {
      */
     getUserSummaryTest: function(test) { 
         let opt =  {host: API_HOST, 
-                    port:PORT,
                     headers: {'x-access-token': token},
                     path: "/api/usersummary/w@mail.com"
                     }
@@ -211,7 +208,6 @@ exports.authenticatedTests = {
      */
     getSessionSummaryTest: function(test) { 
         let opt =  {host: API_HOST, 
-                    port:PORT,
                     headers: {'x-access-token': token},
                     path: "/api/sessionsummary/Arrabida"
                     };
@@ -229,7 +225,7 @@ exports.authenticatedTests = {
      */
     postAndDeleteUser: function(test) {
         let post_data = '{"username":"José António","email":"xpto@xpto.com", "password":"123"}';  
-        let opt = { host: API_HOST, path: "/api/users",port:PORT,
+        let opt = { host: API_HOST, path: "/api/users",
                                 method:"POST",
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -243,7 +239,7 @@ exports.authenticatedTests = {
             pedido (opt, function(err,data){
                 test.equal(data.message, "User already exists!");  // if the user allready exists
                 
-                let opt2 = { host: API_HOST, path: "/api/deleteuser/xpto@xpto.com",port:PORT,
+                let opt2 = { host: API_HOST, path: "/api/deleteuser/xpto@xpto.com",
                                 method:"DELETE",
                                 headers: {
                                     'x-access-token': token
@@ -265,7 +261,6 @@ exports.authenticatedTests = {
         let post_data = '{"discontinuities": [{ "id": 201, "idUser": "w@mail.com", "idSession": "Xpto", "direction": 59, "dip": 44, "latitude": 38.52, "longitude": -8.99, "persistence": 2, "aperture": 4, "roughness": 1, "infilling": 2, "weathering": 2, "note":"nota1","datetime":"2017-07-02 12:29:14" }, { "id": 202, "idUser": "x@mail.com", "idSession": "Xpto", "direction": 11, "dip": 111, "latitude": 1.1, "longitude": 1.2, "persistence": 2, "aperture": 2, "roughness": 2, "infilling": 2, "weathering": 2, "note":"nota2","datetime":"2017-07-02 12:29:15"}]}';  
         let opt = { host: API_HOST, 
                     path: "/api/discontinuities",
-                    port:PORT,
                     method:"POST",
                         headers: {
                             'Content-Type': 'application/json',
@@ -276,7 +271,7 @@ exports.authenticatedTests = {
         pedido(opt, function(err,r){
             test.equal(r.message, "ok"); 
             
-            let opt2 = { host: API_HOST, path: "/api/deletesession/Xpto",port:PORT,
+            let opt2 = { host: API_HOST, path: "/api/deletesession/Xpto",
                             method:"DELETE",
                             headers: {
                                 'x-access-token': token
