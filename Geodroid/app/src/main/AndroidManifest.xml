@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.MainActivityStart" android:screenOrientation="portrait"/>
-        <activity android:name=".Activities.Compass"  android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.Compass"/>
         <activity android:name=".Activities.DataTable" />
         <activity android:name=".Activities.ExtraData" android:screenOrientation="portrait"/>
         <activity android:name=".Activities.ListSession" />
