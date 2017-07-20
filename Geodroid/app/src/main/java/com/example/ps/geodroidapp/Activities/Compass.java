@@ -241,8 +241,9 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
                 handRigthAzimuth = azimuth;
                 dip = roll;
 
-                //Transform/calculate to handRightRule
-                if( roll > -90 && roll < 90) {                                  // gama de valores para dispositivo virado para cima
+                // Transform/calculate to handRightRule
+                // gama de valores para dispositivo virado para cima
+                if( roll > -90 && roll < 90) {
                     if (roll < 0) {
                         dip = -roll;
                         //1º e 2º Quadrante
@@ -250,10 +251,20 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
                         //3º e 4º Quadrante
                         if (azimuth >= 180) handRigthAzimuth = azimuth - 180;
                     }
-                    tv_degrees.setText("(" + Integer.toString(handRigthAzimuth) + (char) 0x00B0  +  ", " + Integer.toString(dip) + (char) 0x00B0+")");
-                    tv_direction.setText(Utils.getNormaliedAtitudeFromRawAtitude(handRigthAzimuth, dip));
-                    tv_pitch.setText("P=" + Integer.toString(pitch) +(char)0x00B0);
                 }
+                // dispositivo virado para baixo
+                if (roll <= -90) {dip = 180+roll;}
+                if (roll >=90) {
+                    dip = 180-roll;
+                    //1º e 2º Quadrante
+                    if (azimuth < 180) handRigthAzimuth = azimuth + 180;
+                    //3º e 4º Quadrante
+                    if (azimuth >= 180) handRigthAzimuth = azimuth - 180;
+                }
+                tv_degrees.setText("(" + Integer.toString(handRigthAzimuth) + (char) 0x00B0  +  ", " + Integer.toString(dip) + (char) 0x00B0+")");
+                tv_direction.setText(Utils.getNormaliedAtitudeFromRawAtitude(handRigthAzimuth, dip));
+                tv_pitch.setText("P=" + Integer.toString(pitch) +(char)0x00B0);
+
                 RotateAnimation ra = new RotateAnimation(
                         currentDegree,
                         -azimuth,
